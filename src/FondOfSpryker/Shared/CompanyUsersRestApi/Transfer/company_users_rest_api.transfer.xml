@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<transfers xmlns="spryker:transfer-01"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="spryker:transfer-01 http://static.spryker.com/transfer-01.xsd">
+
+    <transfer name="RestCompanyUsersRequest">
+        <property name="id" type="string" />
+        <property name="restCompanyUsersRequestAttributes" type="RestCompanyUsersRequestAttributes" />
+    </transfer>
+
+    <transfer name="RestCompanyUsersRequestAttributes">
+        <property name="customer" type="RestCustomer" />
+        <property name="company" type="RestCompany" />
+        <property name="companyBusinessUnit" type="RestCompanyBusinessUnit" />
+        <property name="isActive" type="bool"/>
+    </transfer>
+
+    <transfer name="RestCompany">
+        <property name="externalReference" type="string"/>
+    </transfer>
+
+    <transfer name="RestCompanyBusinessUnit">
+        <property name="externalReference" type="string"/>
+    </transfer>
+
+    <transfer name="RestCompanyUsersResponseAttributes">
+        <property name="uuid" type="string"/>
+        <property name="isActive" type="bool"/>
+    </transfer>
+
+    <transfer name="RestCompanyUsersError">
+        <property name="status" type="int"/>
+        <property name="code" type="string"/>
+        <property name="detail" type="string"/>
+        <property name="parameters" type="array"/>
+    </transfer>
+
+    <transfer name="RestCompanyUsersResponse">
+        <property name="isSuccess" type="bool" />
+        <property name="errors" type="RestCompanyUsersError[]" singular="error" />
+        <property name="restCompanyUsersResponseAttributes" type="RestCompanyUsersResponseAttributes" />
+    </transfer>
+
+    <transfer name="CompanyUser">
+        <property name="uuid" type="string"/>
+    </transfer>
+</transfers>
