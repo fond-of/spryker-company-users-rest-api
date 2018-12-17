@@ -41,7 +41,7 @@ class CompanyBusinessUnitCompanyUserMapper implements CompanyBusinessUnitCompany
         $companyBusinessUnitTransfer = $this->companyBusinessUnitsRestApiFacade
             ->findByExternalReference($restCompanyBusinessUnitTransfer->getExternalReference());
 
-        if ($companyBusinessUnitTransfer !== null) {
+        if ($companyBusinessUnitTransfer === null) {
             return $companyUserTransfer;
         }
 

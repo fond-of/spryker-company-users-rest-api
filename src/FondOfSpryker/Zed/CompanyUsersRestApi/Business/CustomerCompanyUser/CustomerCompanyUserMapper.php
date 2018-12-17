@@ -40,7 +40,7 @@ class CustomerCompanyUserMapper implements CustomerCompanyUserMapperInterface
         $customerTransfer = $this->customerFacade
             ->findByReference($restCustomerTransfer->getCustomerReference());
 
-        if ($customerTransfer !== null) {
+        if ($customerTransfer === null) {
             return $companyUserTransfer;
         }
 

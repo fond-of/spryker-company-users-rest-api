@@ -19,6 +19,10 @@
         <property name="externalReference" type="string"/>
     </transfer>
 
+    <transfer name="RestCustomer">
+        <property name="customerReference" type="string"/>
+    </transfer>
+
     <transfer name="RestCompanyBusinessUnit">
         <property name="externalReference" type="string"/>
     </transfer>

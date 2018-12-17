@@ -40,7 +40,7 @@ class CompanyCompanyUserMapper implements CompanyCompanyUserMapperInterface
         $companyTransfer = $this->companiesRestApiFacade
             ->findByExternalReference($restCompanyTransfer->getExternalReference());
 
-        if ($companyTransfer !== null) {
+        if ($companyTransfer === null) {
             return $companyUserTransfer;
         }
 

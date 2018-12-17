@@ -2,8 +2,9 @@
 
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
-use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface;
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
+use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStub;
+use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface;
 use Spryker\Client\Kernel\AbstractFactory;
 
 class CompanyUsersRestApiFactory extends AbstractFactory

@@ -31,7 +31,7 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
     {
         /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
         $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
-            '/companies-rest-api/gateway/create',
+            '/company-users-rest-api/gateway/create',
             $restCompanyUsersRequestAttributesTransfer
         );
 

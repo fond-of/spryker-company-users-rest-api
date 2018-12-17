@@ -34,6 +34,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCustomerFacade($container);
         $container = $this->addCompaniesRestApiFacade($container);
         $container = $this->addCompanyBusinessUnitsRestApiFacade($container);
+        $container = $this->addCompanyUserMapperPlugins($container);
 
         return $container;
     }

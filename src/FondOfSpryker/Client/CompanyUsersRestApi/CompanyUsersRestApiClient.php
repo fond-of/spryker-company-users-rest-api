@@ -19,6 +19,7 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
     public function create(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer
     {
-        // TODO: Implement create() method.
+        return $this->getFactory()->createZedCompanyUsersRestApiStub()
+            ->create($restCompanyUsersRequestAttributesTransfer);
     }
 }
