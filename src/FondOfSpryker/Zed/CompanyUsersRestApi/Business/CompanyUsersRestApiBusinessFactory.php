@@ -16,7 +16,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompaniesRestApiFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitsRestApiFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
@@ -73,9 +73,9 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface
      */
-    protected function getCustomerFacade(): CompanyUsersRestApiToCustomerFacadeInterface
+    protected function getCustomerFacade(): CompanyUsersRestApiToCustomerB2bFacadeInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_CUSTOMER);
     }

@@ -2,21 +2,21 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CustomerCompanyUser;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 
 class CustomerCompanyUserMapper implements CustomerCompanyUserMapperInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface
      */
     protected $customerFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface $customerFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface $customerFacade
      */
-    public function __construct(CompanyUsersRestApiToCustomerFacadeInterface $customerFacade)
+    public function __construct(CompanyUsersRestApiToCustomerB2bFacadeInterface $customerFacade)
     {
         $this->customerFacade = $customerFacade;
     }
@@ -33,19 +33,17 @@ class CustomerCompanyUserMapper implements CustomerCompanyUserMapperInterface
     ): CompanyUserTransfer {
         $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCustomer();
 
-        if ($restCustomerTransfer === null || $restCustomerTransfer->getCustomerReference() === null) {
+        if ($restCustomerTransfer === null || $restCustomerTransfer->getExternalReference() === null) {
             return $companyUserTransfer;
         }
 
-        $customerTransfer = $this->customerFacade
-            ->findByReference($restCustomerTransfer->getCustomerReference());
+        $customerResponseTransfer = $this->customerFacade
+            ->findCustomerByExternalReference($restCustomerTransfer->getExternalReference());
 
-        if ($customerTransfer === null) {
-            return $companyUserTransfer;
+        if ($customerResponseTransfer->getIsSuccess() && $customerResponseTransfer->getCustomerTransfer() !== null) {
+            $companyUserTransfer->setCustomer($customerResponseTransfer->getCustomerTransfer());
+            $companyUserTransfer->setFkCustomer($customerResponseTransfer->getCustomerTransfer()->getIdCustomer());
         }
-
-        $companyUserTransfer->setCustomer($customerTransfer)
-            ->setFkCustomer($customerTransfer->getIdCustomer());
 
         return $companyUserTransfer;
     }

@@ -9,7 +9,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\CompanyUsersRestA
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompaniesRestApiFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitsRestApiFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeBridge;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -63,8 +63,8 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     protected function addCustomerFacade(Container $container): Container
     {
         $container[static::FACADE_CUSTOMER] = function (Container $container) {
-            return new CompanyUsersRestApiToCustomerFacadeBridge(
-                $container->getLocator()->customer()->facade()
+            return new CompanyUsersRestApiToCustomerB2bFacadeBridge(
+                $container->getLocator()->customerB2b()->facade()
             );
         };
 
