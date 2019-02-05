@@ -5,9 +5,12 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CustomerCompanyUser;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
+use Spryker\Shared\Log\LoggerTrait;
 
 class CustomerCompanyUserMapper implements CustomerCompanyUserMapperInterface
 {
+    use LoggerTrait;
+
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface
      */

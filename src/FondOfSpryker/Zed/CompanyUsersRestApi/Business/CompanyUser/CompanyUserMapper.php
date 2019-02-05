@@ -23,6 +23,8 @@ class CompanyUserMapper implements CompanyUserMapperInterface
             );
         }
 
+        $companyUserTransfer->setExternalReference($restCompanyUsersRequestAttributesTransfer->getExternalReference());
+
         return $companyUserTransfer;
     }
 }
