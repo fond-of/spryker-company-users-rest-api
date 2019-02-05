@@ -26,12 +26,29 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function create(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer
-    {
+    public function create(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
         /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
         $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/create',
+            $restCompanyUsersRequestAttributesTransfer
+        );
+
+        return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function update(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
+        $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/update',
             $restCompanyUsersRequestAttributesTransfer
         );
 

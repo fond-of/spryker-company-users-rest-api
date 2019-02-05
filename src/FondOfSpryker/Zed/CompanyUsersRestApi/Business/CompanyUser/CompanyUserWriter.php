@@ -69,6 +69,41 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     }
 
     /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function update(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+
+        $restCompanyUsersRequestAttributesTransfer->requireExternalReference();
+
+        $companyUserTransfer = $this->companyUserFacade->getCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer->getExternalReference());
+
+        foreach ($this->companyUserMapperPlugins as $companyUserMapperPlugin) {
+            $companyUserTransfer = $companyUserMapperPlugin->map(
+                $restCompanyUsersRequestAttributesTransfer,
+                $companyUserTransfer
+            );
+        }
+
+        try {
+            $companyUserResponseTransfer = $this->companyUserFacade->update($companyUserTransfer);
+        } catch (PropelException $e) {
+            return $this->createCompanyUsersDataInvalidErrorResponse();
+        }
+
+        if (!$companyUserResponseTransfer->getIsSuccessful()) {
+            return $this->createCompanyUsersDataInvalidErrorResponse();
+        }
+
+        return $this->createCompanyUsersResponseTransfer(
+            $companyUserResponseTransfer->getCompanyUser()
+        );
+    }
+
+    /**
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
     protected function createCompanyUsersDataInvalidErrorResponse(): RestCompanyUsersResponseTransfer

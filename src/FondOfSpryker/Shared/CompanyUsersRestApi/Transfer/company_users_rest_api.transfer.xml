@@ -9,6 +9,7 @@
     </transfer>
 
     <transfer name="RestCompanyUsersRequestAttributes">
+        <property name="externalReference" type="string" />
         <property name="customer" type="RestCustomer" />
         <property name="company" type="RestCompany" />
         <property name="companyBusinessUnit" type="RestCompanyBusinessUnit" />

@@ -20,4 +20,14 @@ class GatewayController extends AbstractGatewayController
     {
         return $this->getFacade()->create($restCompanyUsersRequestAttributesTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function updateAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
+    {
+        return $this->getFacade()->update($restCompanyUsersRequestAttributesTransfer);
+    }
 }

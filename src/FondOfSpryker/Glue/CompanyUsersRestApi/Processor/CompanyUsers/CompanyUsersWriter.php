@@ -66,6 +66,27 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
     }
 
     /**
+     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
+    public function updateCompanyUser(
+        RestRequestInterface $restRequest,
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestResponseInterface {
+        $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->update(
+            $restCompanyUsersRequestAttributesTransfer
+        );
+
+        if (!$restCompanyUsersResponseTransfer->getIsSuccess()) {
+            return $this->createSaveCompanyUserFailedErrorResponse($restCompanyUsersResponseTransfer);
+        }
+
+        return $this->createCompanyUserSavedResponse($restCompanyUsersResponseTransfer);
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface

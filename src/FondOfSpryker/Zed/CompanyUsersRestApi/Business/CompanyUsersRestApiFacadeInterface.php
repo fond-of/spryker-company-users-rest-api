@@ -18,6 +18,15 @@ interface CompanyUsersRestApiFacadeInterface
     ): RestCompanyUsersResponseTransfer;
 
     /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function update(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer;
+
+    /**
      * Specification:
      * - Map to company user transfer
      *

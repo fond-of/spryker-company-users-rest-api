@@ -24,6 +24,17 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     }
 
     /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function update(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        return $this->getFactory()->createCompanyUserWriter()->update($restCompanyUsersRequestAttributesTransfer);
+    }
+
+    /**
      * Specification:
      * - Map to company user transfer
      *
