@@ -20,15 +20,22 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
     public function findCompanyUserByExternalReference(string $externalReference): ?CompanyUserTransfer
     {
         $query = $this->getFactory()
-            ->getCompanyUserPropelQuery()
+            ->createCompanyUserQuery()
             ->joinWithCustomer()
             ->leftJoinWithCompany()
             ->filterByExternalReference($externalReference);
 
-        $entityTransfer = $this->buildQueryFromCriteria($query)->findOne();
+        $companyUserEntityTransfer = $this->buildQueryFromCriteria($query)->findOne();
 
-        return $this->getFactory()
-            ->createCompanyUserMapper()
-            ->mapEntityTransferToCompanyUserTransfer($entityTransfer);
+        if ($companyUserEntityTransfer === null) {
+            return null;
+        }
+
+        $companyUserTransfer = (new CompanyUserTransfer())->fromArray(
+            $companyUserEntityTransfer->toArray(),
+            true
+        );
+
+        return $companyUserTransfer;
     }
 }
