@@ -4,6 +4,7 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
 class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
@@ -49,6 +50,23 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
         $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/update',
+            $restCompanyUsersRequestAttributesTransfer
+        );
+
+        return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyUserByExternalReference(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
+        $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/find-company-user-by-external-reference',
             $restCompanyUsersRequestAttributesTransfer
         );
 

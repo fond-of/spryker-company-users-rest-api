@@ -30,4 +30,14 @@ class GatewayController extends AbstractGatewayController
     {
         return $this->getFacade()->update($restCompanyUsersRequestAttributesTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyUserByExternalReferenceAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
+    {
+        return $this->getFacade()->findCompanyUserByExternalReferenceAction($restCompanyUsersRequestAttributesTransfer);
+    }
 }

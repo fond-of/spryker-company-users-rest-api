@@ -24,7 +24,8 @@ class CompanyUsersResourceRoutePlugin extends AbstractPlugin implements Resource
     {
         $resourceRouteCollection
             ->addPost(CompanyUsersRestApiConfig::ACTION_COMPANY_USERS_POST, true)
-            ->addPatch(CompanyUsersRestApiConfig::ACTION_COMPANY_USERS_PATCH, true);
+            ->addPatch(CompanyUsersRestApiConfig::ACTION_COMPANY_USERS_PATCH, true)
+            ->addGet(CompanyUsersRestApiConfig::ACTION_COMPANY_USERS_GET, true);
 
         return $resourceRouteCollection;
     }

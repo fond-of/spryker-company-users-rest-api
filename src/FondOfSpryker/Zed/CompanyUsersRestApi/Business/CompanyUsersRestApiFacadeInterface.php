@@ -89,4 +89,42 @@ interface CompanyUsersRestApiFacadeInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyUserTransfer $companyUserTransfer
     ): CompanyUserTransfer;
+
+    /**
+     * Specification:
+     * - Generate company user reference.
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function generateCompanyUserReference(): string;
+
+    /**
+     * Specification:
+     * - Retrieves company user information by external reference.
+     *
+     * @api
+     *
+     * @param string $externalReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function findByExternalReference(
+        string $externalReference
+    ): ?CompanyUserTransfer;
+
+    /**
+     * Specification:
+     * - Retrieves company user information by external reference.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyBusinessUnitByExternalReference(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer;
 }

@@ -9,6 +9,7 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiBusinessFactory getFactory()
+ * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface getRepository()
  */
 class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRestApiFacadeInterface
 {
@@ -116,5 +117,50 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
             $restCompanyUsersRequestAttributesTransfer,
             $companyUserTransfer
         );
+    }
+
+    /**
+     * Specification:
+     * - Generate company user reference.
+     *
+     * @api
+     *
+     * @return string
+     */
+    public function generateCompanyUserReference(): string
+    {
+        return $this->getFactory()->createCompanyUserReferenceGenerator()->generateCompanyUserReference();
+    }
+
+    /**
+     * Specification:
+     * - Retrieves company user information by external reference.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyBusinessUnitByExternalReference(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        return $this->getFactory()->createCompanyUserReader()
+            ->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
+    }
+
+    /**
+     * Specification:
+     * - Retrieves company user information by external reference.
+     *
+     * @api
+     *
+     * @param string $externalReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function findByExternalReference(string $externalReference): ?CompanyUserTransfer
+    {
+        return $this->getRepository()->findCompanyUserByExternalReference($externalReference);
     }
 }

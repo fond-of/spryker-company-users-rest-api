@@ -39,4 +39,15 @@ class CompanyUsersResourceController extends AbstractController
         return $this->getFactory()->createCompanyUsersWriter()
             ->updateCompanyUser($restRequest, $restCompanyUsersRequestAttributesTransfer);
     }
+
+    /**
+     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
+     *
+     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
+    public function getAction(RestRequestInterface $restRequest): RestResponseInterface
+    {
+        return $this->getFactory()->createCompanyUsersReader()
+            ->findCurrentCompanyUsers($restRequest);
+    }
 }

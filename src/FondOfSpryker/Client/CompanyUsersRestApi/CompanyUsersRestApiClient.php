@@ -34,4 +34,16 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
         return $this->getFactory()->createZedCompanyUsersRestApiStub()
             ->update($restCompanyUsersRequestAttributesTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyUserByExternalReference(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        return $this->getFactory()->createZedCompanyUsersRestApiStub()
+            ->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
+    }
 }
