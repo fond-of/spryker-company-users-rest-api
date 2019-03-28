@@ -41,9 +41,11 @@ class CompanyUsersMapper implements CompanyUsersMapperInterface
 
         $companyUsersResource = $this->restResourceBuilder->createRestResource(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
-            $companyUserTransfer->getIdCompanyUser(),
+            $companyUserTransfer->getCompanyUserReference(),
             $restCompanyUsersResponseAttributesTransfer
         );
+
+        $companyUsersResource->setPayload($companyUserTransfer);
 
         return $companyUsersResource;
     }
