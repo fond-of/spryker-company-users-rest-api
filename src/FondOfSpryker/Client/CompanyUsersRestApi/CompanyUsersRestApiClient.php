@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Spryker\Client\Kernel\AbstractClient;
@@ -45,5 +47,17 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
     ): RestCompanyUsersResponseTransfer {
         return $this->getFactory()->createZedCompanyUsersRestApiStub()
             ->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        return $this->getFactory()->createZedCompanyUsersRestApiStub()
+            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
     }
 }

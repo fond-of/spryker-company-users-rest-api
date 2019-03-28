@@ -17,4 +17,16 @@ interface CompanyUsersRestApiRepositoryInterface
      * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
      */
     public function findCompanyUserByExternalReference(string $externalReference): ?CompanyUserTransfer;
+
+    /**
+     * Specification:
+     *  - Retrieve a company user by companyUserReference
+     *
+     * @api
+     *
+     * @param string $companyUserReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function findCompanyUserByCompanyUserReference(string $companyUserReference): ?CompanyUserTransfer;
 }

@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
@@ -24,7 +26,6 @@ interface CompanyUsersRestApiClientInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer;
 
-
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
@@ -33,4 +34,13 @@ interface CompanyUsersRestApiClientInterface
     public function findCompanyUserByExternalReference(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer;
 }

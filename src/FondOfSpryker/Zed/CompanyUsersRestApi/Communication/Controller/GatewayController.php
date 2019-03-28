@@ -2,6 +2,8 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Controller;
 
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
@@ -38,6 +40,16 @@ class GatewayController extends AbstractGatewayController
      */
     public function findCompanyUserByExternalReferenceAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
     {
-        return $this->getFacade()->findCompanyUserByExternalReferenceAction($restCompanyUsersRequestAttributesTransfer);
+        return $this->getFacade()->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReferenceAction(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    {
+        return $this->getFacade()->findCompanyUserByCompanyUserReference($companyUserTransfer);
     }
 }

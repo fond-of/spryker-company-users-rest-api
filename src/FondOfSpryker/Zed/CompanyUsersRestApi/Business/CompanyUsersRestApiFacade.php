@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -142,7 +143,7 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function findCompanyBusinessUnitByExternalReference(
+    public function findCompanyUserByExternalReference(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
         return $this->getFactory()->createCompanyUserReader()
@@ -162,5 +163,22 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     public function findByExternalReference(string $externalReference): ?CompanyUserTransfer
     {
         return $this->getRepository()->findCompanyUserByExternalReference($externalReference);
+    }
+
+    /**
+     * Specification:
+     * - Retrieves company user information by company user reference.
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer
+    {
+        return $this->getFactory()->createCompanyUserReader()
+            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
     }
 }
