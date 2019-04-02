@@ -3,6 +3,8 @@
 namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
@@ -53,5 +55,39 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         );
 
         return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function findCompanyUserByExternalReference(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
+        $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/find-company-user-by-external-reference',
+            $restCompanyUsersRequestAttributesTransfer
+        );
+
+        return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        /** @var \Generated\Shared\Transfer\CompanyUserTransfer $companyUserResponseTransfer */
+        $companyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/find-company-user-by-company-user-reference',
+            $companyUserTransfer
+        );
+
+        return $companyUserResponseTransfer;
     }
 }

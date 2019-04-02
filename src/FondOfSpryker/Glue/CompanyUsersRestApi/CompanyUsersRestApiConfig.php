@@ -4,6 +4,7 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
 class CompanyUsersRestApiConfig
 {
+    public const ACTION_COMPANY_USERS_GET = 'get';
     public const ACTION_COMPANY_USERS_POST = 'post';
     public const ACTION_COMPANY_USERS_PATCH = 'patch';
 

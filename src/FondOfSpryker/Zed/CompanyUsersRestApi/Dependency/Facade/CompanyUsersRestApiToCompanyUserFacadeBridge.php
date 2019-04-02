@@ -2,9 +2,11 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade;
 
+use FondOfSpryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
+use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
-use FondOfSpryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
+use Generated\Shared\Transfer\CustomerTransfer;
 
 class CompanyUsersRestApiToCompanyUserFacadeBridge implements CompanyUsersRestApiToCompanyUserFacadeInterface
 {
@@ -49,5 +51,16 @@ class CompanyUsersRestApiToCompanyUserFacadeBridge implements CompanyUsersRestAp
     public function getCompanyUserByExternalReference(string $externalReference): CompanyUserTransfer
     {
         return $this->companyUserFacade->getCompanyUserByExternalReference($externalReference);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
+     */
+    public function getActiveCompanyUsersByCustomerReference(
+        CustomerTransfer $customerTransfer
+    ): CompanyUserCollectionTransfer {
+        return $this->companyUserFacade->getActiveCompanyUsersByCustomerReference($customerTransfer);
     }
 }
