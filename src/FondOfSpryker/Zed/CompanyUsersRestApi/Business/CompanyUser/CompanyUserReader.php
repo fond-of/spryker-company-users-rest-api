@@ -23,11 +23,20 @@ class CompanyUserReader implements CompanyUserReaderInterface
     protected $companyUsersRestApiRepository;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository
+     * @var \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[]
      */
-    public function __construct(CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository)
-    {
+    protected $companyUserHydrationPlugins;
+
+    /**
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository
+     * @param \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[] $companyUserHydrationPlugins
+     */
+    public function __construct(
+        CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository,
+        array $companyUserHydrationPlugins
+    ) {
         $this->companyUsersRestApiRepository = $companyUsersRestApiRepository;
+        $this->companyUserHydrationPlugins = $companyUserHydrationPlugins;
     }
 
     /**
@@ -38,12 +47,13 @@ class CompanyUserReader implements CompanyUserReaderInterface
     public function findCompanyUserByExternalReference(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
-        $companyBusinessUnitTransfer = $this->companyUsersRestApiRepository->findCompanyUserByExternalReference(
+        $companyUserTransfer = $this->companyUsersRestApiRepository->findCompanyUserByExternalReference(
             $restCompanyUsersRequestAttributesTransfer->getExternalReference()
         );
 
-        if ($companyBusinessUnitTransfer !== null) {
-            return $this->createRestCompanyUsersResponseTransfer($companyBusinessUnitTransfer);
+        if ($companyUserTransfer !== null) {
+            $companyUserTransfer = $this->executeHydrationPlugins($companyUserTransfer);
+            return $this->createRestCompanyUsersResponseTransfer($companyUserTransfer);
         }
 
         return $this->createCompanyUserFailedToLoadErrorResponseTransfer();
@@ -109,6 +119,9 @@ class CompanyUserReader implements CompanyUserReaderInterface
             ->setCompanyUser($companyUserTransfer);
 
         if ($companyUserTransfer !== null) {
+            $companyUserTransfer = $this->executeHydrationPlugins($companyUserTransfer);
+            $companyUserResponseTransfer->setCompanyUser($companyUserTransfer);
+
             return $companyUserResponseTransfer;
         }
 
@@ -116,5 +129,19 @@ class CompanyUserReader implements CompanyUserReaderInterface
             ->addMessage((new ResponseMessageTransfer())->setText(static::MESSAGE_COMPANY_USER_NOT_FOUND));
 
         return $companyUserResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    protected function executeHydrationPlugins(CompanyUserTransfer $companyUserTransfer): CompanyUserTransfer
+    {
+        foreach ($this->companyUserHydrationPlugins as $companyUserHydrationPlugin) {
+            $companyUserTransfer = $companyUserHydrationPlugin->hydrate($companyUserTransfer);
+        }
+
+        return $companyUserTransfer;
     }
 }

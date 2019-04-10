@@ -149,6 +149,19 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
      */
     public function createCompanyUserReader(): CompanyUserReaderInterface
     {
-        return new CompanyUserReader($this->getRepository());
+        return new CompanyUserReader(
+            $this->getRepository(),
+            $this->getCompanyUserHydrationPlugins()
+        );
+    }
+
+    /**
+     * @throws
+     *
+     * @return \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[]
+     */
+    protected function getCompanyUserHydrationPlugins(): array
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_HYDRATE);
     }
 }

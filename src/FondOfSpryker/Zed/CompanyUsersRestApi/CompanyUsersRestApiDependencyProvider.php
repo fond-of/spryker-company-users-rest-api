@@ -23,6 +23,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const FACADE_COMPANY_BUSINESS_UNITS_REST_API = 'FACADE_COMPANY_BUSINESS_UNITS_REST_API';
     public const FACADE_SEQUENCE_NUMBER = 'FACADE_SEQUENCE_NUMBER';
     public const PLUGINS_COMPANY_USER_MAPPER = 'PLUGINS_COMPANY_USER_MAPPER';
+    public const PLUGINS_COMPANY_USER_HYDRATE = 'PLUGINS_COMPANY_USER_HYDRATE';
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
 
     /**
@@ -39,6 +40,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCompaniesRestApiFacade($container);
         $container = $this->addCompanyBusinessUnitsRestApiFacade($container);
         $container = $this->addCompanyUserMapperPlugins($container);
+        $container = $this->addCompanyUserHydrationPlugins($container);
         $container = $this->addSequenceNumberFacade($container);
 
         return $container;
@@ -145,6 +147,28 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
             new CompanyBusinessUnitCompanyUserMapperPlugin(),
             new CustomerCompanyUserMapperPlugin(),
         ];
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addCompanyUserHydrationPlugins(Container $container): Container
+    {
+        $container[static::PLUGINS_COMPANY_USER_HYDRATE] = function () {
+            return $this->getCompanyUserHydrationPlugins();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[]
+     */
+    protected function getCompanyUserHydrationPlugins(): array
+    {
+        return [];
     }
 
     /**
