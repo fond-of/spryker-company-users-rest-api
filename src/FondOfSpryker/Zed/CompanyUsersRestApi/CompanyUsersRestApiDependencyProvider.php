@@ -22,6 +22,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const FACADE_COMPANIES_REST_API = 'FACADE_COMPANIES_REST_API';
     public const FACADE_COMPANY_BUSINESS_UNITS_REST_API = 'FACADE_COMPANY_BUSINESS_UNITS_REST_API';
     public const FACADE_SEQUENCE_NUMBER = 'FACADE_SEQUENCE_NUMBER';
+    public const FACADE_COMPANY_USERS_REST_API = 'FACADE_COMPANY_USERS_REST_API';
     public const PLUGINS_COMPANY_USER_MAPPER = 'PLUGINS_COMPANY_USER_MAPPER';
     public const PLUGINS_COMPANY_USER_HYDRATE = 'PLUGINS_COMPANY_USER_HYDRATE';
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
@@ -42,6 +43,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCompanyUserMapperPlugins($container);
         $container = $this->addCompanyUserHydrationPlugins($container);
         $container = $this->addSequenceNumberFacade($container);
+        $container = $this->addCompanyUsersRestApiFacade($container);
 
         return $container;
     }
@@ -194,6 +196,20 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     {
         $container[static::PROPEL_QUERY_COMPANY_USER] = function () {
             return SpyCompanyUserQuery::create();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addCompanyUsersRestApiFacade(Container $container): Container
+    {
+        $container[static::FACADE_COMPANY_USERS_REST_API] = function (Container $container) {
+            return $container->getLocator()->companyUsersRestApi()->facade();
         };
 
         return $container;
