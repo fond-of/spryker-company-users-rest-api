@@ -72,7 +72,8 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
 
         foreach ($companyUserCollectionTransfer->getCompanyUsers() as $companyUser) {
             $resource = $this->companyUserMapper
-                ->mapCompanyUsersResource($companyUser);
+                ->mapCompanyUsersResource($companyUser)
+                ->setPayload($companyUser);
 
             $restResponse->addResource($resource);
         }
