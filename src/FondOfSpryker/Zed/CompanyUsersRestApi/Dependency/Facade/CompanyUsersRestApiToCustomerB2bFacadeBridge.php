@@ -13,7 +13,7 @@ class CompanyUsersRestApiToCustomerB2bFacadeBridge implements CompanyUsersRestAp
     protected $customerB2bFacade;
 
     /**
-     * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerB2bFacade
+     * @param \FondOfSpryker\Zed\CustomerB2b\Business\CustomerB2bFacadeInterface $customerB2bFacade
      */
     public function __construct(CustomerB2bFacadeInterface $customerB2bFacade)
     {
