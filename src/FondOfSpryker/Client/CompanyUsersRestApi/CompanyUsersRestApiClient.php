@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -18,35 +20,13 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function create(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    public function create(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer
     {
-        return $this->getFactory()->createZedCompanyUsersRestApiStub()
+        return $this->getFactory()
+            ->createZedCompanyUsersRestApiStub()
             ->create($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function update(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()->createZedCompanyUsersRestApiStub()
-            ->update($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReference(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()->createZedCompanyUsersRestApiStub()
-            ->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
     }
 
     /**
@@ -54,10 +34,10 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function findCompanyUserByCompanyUserReference(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer {
-        return $this->getFactory()->createZedCompanyUsersRestApiStub()
-            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
+    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    {
+        return $this->getFactory()
+            ->createZedCompanyUsersRestApiStub()
+            ->delete($companyUserTransfer);
     }
 }

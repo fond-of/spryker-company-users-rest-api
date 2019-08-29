@@ -8,6 +8,8 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyBusinessUnitCompanyUse
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyBusinessUnitCompanyUser\CompanyBusinessUnitCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyCompanyUser\CompanyCompanyUserMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyCompanyUser\CompanyCompanyUserMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleter;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
@@ -18,19 +20,18 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CustomerCompanyUser\CustomerC
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CustomerCompanyUser\CustomerCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\ReferenceGenerator\CompanyUserReferenceGenerator;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\ReferenceGenerator\CompanyUserReferenceGeneratorInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\CheckoutRestApi\CompanyUserUnitAddressQuoteMapperPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompaniesRestApiFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitsRestApiFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerB2bFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToSequenceNumberFacadeInterface;
-use Spryker\Zed\CheckoutRestApiExtension\Dependency\Plugin\QuoteMapperPluginInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig getConfig()
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface getRepository()
+ * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface getEntityManager()
  */
 class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
 {
@@ -42,6 +43,17 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
         return new CompanyUserWriter(
             $this->getCompanyUserFacade(),
             $this->getCompanyUserMapperPlugins()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface
+     */
+    public function createCompanyUserDeleter(): CompanyUserDeleterInterface
+    {
+        return new CompanyUserDeleter(
+            $this->getEntityManager(),
+            $this->getRepository()
         );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client;
 
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;

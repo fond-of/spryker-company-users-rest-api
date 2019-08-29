@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
@@ -66,27 +68,6 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
     }
 
     /**
-     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
-     */
-    public function updateCompanyUser(
-        RestRequestInterface $restRequest,
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestResponseInterface {
-        $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->update(
-            $restCompanyUsersRequestAttributesTransfer
-        );
-
-        if (!$restCompanyUsersResponseTransfer->getIsSuccess()) {
-            return $this->createSaveCompanyUserFailedErrorResponse($restCompanyUsersResponseTransfer);
-        }
-
-        return $this->createCompanyUserSavedResponse($restCompanyUsersResponseTransfer);
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
@@ -113,11 +94,12 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
      */
     protected function createCompanyUserSavedResponse(RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer): RestResponseInterface
     {
+        /* @var \Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer $restCompanyUsersResponseAttributesTransfer */
         $restCompanyUsersResponseAttributesTransfer = $restCompanyUsersResponseTransfer->getRestCompanyUsersResponseAttributes();
 
         $restResource = $this->restResourceBuilder->createRestResource(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
-            $restCompanyUsersResponseAttributesTransfer->getUuid(),
+            $restCompanyUsersResponseAttributesTransfer->getCompanyUserReference(),
             $restCompanyUsersResponseAttributesTransfer
         );
 

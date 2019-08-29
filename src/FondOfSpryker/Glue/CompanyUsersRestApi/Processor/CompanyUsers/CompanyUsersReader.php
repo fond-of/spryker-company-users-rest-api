@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
@@ -58,7 +60,7 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
     public function findCurrentCompanyUsers(RestRequestInterface $restRequest): RestResponseInterface
     {
         $restResponse = $this->restResourceBuilder->createRestResponse();
-        $user = $restRequest->getUser();
+        $user = $restRequest->getRestUser();
 
         if ($user === null) {
             return $this->restApiError->addAccessDeniedError($restResponse);

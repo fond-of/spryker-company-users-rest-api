@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use FondOfSpryker\Shared\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersErrorTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Propel\Runtime\Exception\PropelException;
+use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
+use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface
+     * @var \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface
      */
     protected $companyUserFacade;
 
@@ -23,16 +26,23 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Plugin\CompanyUserMapperPluginInterface[]
      */
     protected $companyUserMapperPlugins;
+    /**
+     * @var \Spryker\Zed\Customer\Business\CustomerFacadeInterface
+     */
+    private $customerFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade
+     * @param \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface $companyUserFacade
+     * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Plugin\CompanyUserMapperPluginInterface[] $companyUserMapperPlugins
      */
     public function __construct(
-        CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade,
+        CompanyUserFacadeInterface $companyUserFacade,
+        CustomerFacadeInterface $customerFacade,
         array $companyUserMapperPlugins
     ) {
         $this->companyUserFacade = $companyUserFacade;
+        $this->customerFacade = $customerFacade;
         $this->companyUserMapperPlugins = $companyUserMapperPlugins;
     }
 
@@ -44,8 +54,12 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     public function create(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
-        $companyUserTransfer = new CompanyUserTransfer();
 
+        // check for customer id
+        // if customer exists create with this customertransfer the company user
+
+
+        $companyUserTransfer = new CompanyUserTransfer();
         foreach ($this->companyUserMapperPlugins as $companyUserMapperPlugin) {
             $companyUserTransfer = $companyUserMapperPlugin->map(
                 $restCompanyUsersRequestAttributesTransfer,

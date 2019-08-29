@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -7,31 +9,14 @@ use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
-interface CompanyUsersRestApiStubInterface
+interface   CompanyUsersRestApiStubInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function create(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function update(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReference(
+    public function create(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer;
 
@@ -40,7 +25,5 @@ interface CompanyUsersRestApiStubInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function findCompanyUserByCompanyUserReference(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer;
+    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer;
 }

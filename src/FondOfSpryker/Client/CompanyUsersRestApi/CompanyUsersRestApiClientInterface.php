@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -14,24 +16,7 @@ interface CompanyUsersRestApiClientInterface
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function create(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function update(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReference(
+    public function create(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer;
 
@@ -40,7 +25,5 @@ interface CompanyUsersRestApiClientInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function findCompanyUserByCompanyUserReference(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer;
+    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer;
 }

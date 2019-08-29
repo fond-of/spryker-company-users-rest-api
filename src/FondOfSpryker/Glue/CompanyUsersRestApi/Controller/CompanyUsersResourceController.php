@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Controller;
 
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
@@ -14,6 +16,18 @@ class CompanyUsersResourceController extends AbstractController
 {
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
+     *
+     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
+    public function getAction(RestRequestInterface $restRequest): RestResponseInterface
+    {
+        return $this->getFactory()
+            ->createCompanyUsersReader()
+            ->findCurrentCompanyUsers($restRequest);
+    }
+
+    /**
+     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
@@ -22,32 +36,20 @@ class CompanyUsersResourceController extends AbstractController
         RestRequestInterface $restRequest,
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface {
-        return $this->getFactory()->createCompanyUsersWriter()
+        return $this->getFactory()
+            ->createCompanyUsersWriter()
             ->createCompanyUser($restRequest, $restCompanyUsersRequestAttributesTransfer);
     }
 
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    public function patchAction(
-        RestRequestInterface $restRequest,
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestResponseInterface {
-        return $this->getFactory()->createCompanyUsersWriter()
-            ->updateCompanyUser($restRequest, $restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     *
-     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
-     */
-    public function getAction(RestRequestInterface $restRequest): RestResponseInterface
+    public function deleteAction(RestRequestInterface $restRequest): RestResponseInterface
     {
-        return $this->getFactory()->createCompanyUsersReader()
-            ->findCurrentCompanyUsers($restRequest);
+        return $this->getFactory()
+            ->createCompanyUsersDeleter()
+            ->delete($restRequest);
     }
 }

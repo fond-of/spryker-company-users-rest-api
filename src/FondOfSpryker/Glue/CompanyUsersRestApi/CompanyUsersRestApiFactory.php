@@ -1,8 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriter;
@@ -18,6 +22,30 @@ use Spryker\Glue\Kernel\AbstractFactory;
  */
 class CompanyUsersRestApiFactory extends AbstractFactory
 {
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface
+     */
+    public function createCompanyUsersReader(): CompanyUsersReaderInterface
+    {
+        return new CompanyUsersReader(
+            $this->getResourceBuilder(),
+            $this->getCompanyUserClient(),
+            $this->createCompanyUsersMapper(),
+            $this->createRestApiError()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface
+     */
+    public function createCompanyUsersDeleter(): CompanyUsersDeleterInterface
+    {
+        return new CompanyUsersDeleter(
+            $this->getResourceBuilder(),
+            $this->getClient()
+        );
+    }
+
     /**
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface
      */
@@ -45,19 +73,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     {
         return new CompanyUsersMapper(
             $this->getResourceBuilder()
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\BusinessOnBehalf\Business\Model\CompanyUser\CompanyUserReaderInterface
-     */
-    public function createCompanyUsersReader(): CompanyUsersReaderInterface
-    {
-        return new CompanyUsersReader(
-            $this->getResourceBuilder(),
-            $this->getCompanyUserClient(),
-            $this->createCompanyUsersMapper(),
-            $this->createRestApiError()
         );
     }
 

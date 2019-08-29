@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
 use FondOfSpryker\Shared\CompanyUsersRestApi\CompanyUsersRestApiConstants;

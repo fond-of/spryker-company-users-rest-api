@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -24,7 +26,9 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     public function create(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()->createCompanyUserWriter()->create($restCompanyUsersRequestAttributesTransfer);
+        return $this->getFactory()
+            ->createCompanyUserWriter()
+            ->create($restCompanyUsersRequestAttributesTransfer);
     }
 
     /**
@@ -35,15 +39,48 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     public function update(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()->createCompanyUserWriter()->update($restCompanyUsersRequestAttributesTransfer);
+        return $this->getFactory()
+            ->createCompanyUserWriter()
+            ->update($restCompanyUsersRequestAttributesTransfer);
     }
 
     /**
-     * Specification:
-     * - Map to company user transfer
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
-     * @api
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    {
+        return $this->getFactory()
+            ->createCompanyUserDeleter()
+            ->delete($companyUserTransfer);
+    }
+
+    /**
+     * @return string
+     */
+    public function generateCompanyUserReference(): string
+    {
+        return $this->getFactory()
+            ->createCompanyUserReferenceGenerator()
+            ->generateCompanyUserReference();
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer
+    {
+        return $this->getFactory()
+            ->createCompanyUserReader()
+            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -60,11 +97,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     }
 
     /**
-     * Specification:
-     * - Map customer to company user transfer
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -81,11 +113,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     }
 
     /**
-     * Specification:
-     * - Map company to company user transfer
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -102,11 +129,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     }
 
     /**
-     * Specification:
-     * - Map company business unit to company user transfer
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -120,68 +142,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
             $restCompanyUsersRequestAttributesTransfer,
             $companyUserTransfer
         );
-    }
-
-    /**
-     * Specification:
-     * - Generate company user reference.
-     *
-     * @api
-     *
-     * @return string
-     */
-    public function generateCompanyUserReference(): string
-    {
-        return $this->getFactory()->createCompanyUserReferenceGenerator()->generateCompanyUserReference();
-    }
-
-    /**
-     * Specification:
-     * - Retrieves company user information by external reference.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReference(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()->createCompanyUserReader()
-            ->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * Specification:
-     * - Retrieves company user information by external reference.
-     *
-     * @api
-     *
-     * @param string $externalReference
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
-     */
-    public function findByExternalReference(string $externalReference): ?CompanyUserTransfer
-    {
-        return $this->getRepository()->findCompanyUserByExternalReference($externalReference);
-    }
-
-    /**
-     * Specification:
-     * - Retrieves company user information by company user reference.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function findCompanyUserByCompanyUserReference(CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer
-    {
-        return $this->getFactory()->createCompanyUserReader()
-            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
     }
 
     /**

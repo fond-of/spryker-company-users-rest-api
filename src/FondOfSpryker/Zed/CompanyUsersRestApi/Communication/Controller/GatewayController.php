@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Controller;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -20,27 +22,8 @@ class GatewayController extends AbstractGatewayController
      */
     public function createAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
     {
-        return $this->getFacade()->create($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function updateAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
-    {
-        return $this->getFacade()->update($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReferenceAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
-    {
-        return $this->getFacade()->findCompanyUserByExternalReference($restCompanyUsersRequestAttributesTransfer);
+        return $this->getFacade()
+            ->create($restCompanyUsersRequestAttributesTransfer);
     }
 
     /**
@@ -48,8 +31,9 @@ class GatewayController extends AbstractGatewayController
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function findCompanyUserByCompanyUserReferenceAction(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    public function deleteAction(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
-        return $this->getFacade()->findCompanyUserByCompanyUserReference($companyUserTransfer);
+        return $this->getFacade()
+            ->delete($companyUserTransfer);
     }
 }

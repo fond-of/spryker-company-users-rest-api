@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
@@ -30,11 +31,13 @@ interface CompanyUsersRestApiFacadeInterface
     ): RestCompanyUsersResponseTransfer;
 
     /**
-     * Specification:
-     * - Map to company user transfer
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
-     * @api
-     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer;
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -46,11 +49,6 @@ interface CompanyUsersRestApiFacadeInterface
     ): CompanyUserTransfer;
 
     /**
-     * Specification:
-     * - Map customer to company user transfer
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -78,11 +76,6 @@ interface CompanyUsersRestApiFacadeInterface
     ): CompanyUserTransfer;
 
     /**
-     * Specification:
-     * - Map company business unit to company user transfer
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
@@ -94,49 +87,11 @@ interface CompanyUsersRestApiFacadeInterface
     ): CompanyUserTransfer;
 
     /**
-     * Specification:
-     * - Generate company user reference.
-     *
-     * @api
-     *
      * @return string
      */
     public function generateCompanyUserReference(): string;
 
     /**
-     * Specification:
-     * - Retrieves company user information by external reference.
-     *
-     * @api
-     *
-     * @param string $externalReference
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
-     */
-    public function findByExternalReference(
-        string $externalReference
-    ): ?CompanyUserTransfer;
-
-    /**
-     * Specification:
-     * - Retrieves company user information by external reference.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function findCompanyUserByExternalReference(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
-     * Specification:
-     * - Retrieves company user information by company user reference.
-     *
-     * @api
-     *
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer

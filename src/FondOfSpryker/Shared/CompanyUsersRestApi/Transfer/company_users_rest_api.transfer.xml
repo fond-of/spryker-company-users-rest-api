@@ -9,23 +9,8 @@
     </transfer>
 
     <transfer name="RestCompanyUsersRequestAttributes">
-        <property name="externalReference" type="string" />
         <property name="customer" type="RestCustomer" />
         <property name="company" type="RestCompany" />
-        <property name="companyBusinessUnit" type="RestCompanyBusinessUnit" />
-        <property name="isActive" type="bool"/>
-    </transfer>
-
-    <transfer name="RestCompany">
-        <property name="externalReference" type="string"/>
-    </transfer>
-
-    <transfer name="RestCustomer">
-        <property name="externalReference" type="string"/>
-    </transfer>
-
-    <transfer name="RestCompanyBusinessUnit">
-        <property name="externalReference" type="string"/>
     </transfer>
 
     <transfer name="RestCompanyUsersResponseAttributes">

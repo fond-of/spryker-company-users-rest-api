@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientBridge;
@@ -31,7 +33,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      */
     protected function addCompanyUserClient(Container $container): Container
     {
-        $container[static::CLIENT_COMPANY_USER] = function (Container $container) {
+        $container[static::CLIENT_COMPANY_USER] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyUserClientBridge($container->getLocator()->companyUser()->client());
         };
 
