@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper;
 
 use Generated\Shared\Transfer\QuoteTransfer;

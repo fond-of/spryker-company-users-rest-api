@@ -11,10 +11,6 @@
             <unique-column name="company_user_reference"/>
         </unique>
 
-        <column name="external_reference" type="VARCHAR" size="255" required="false"/>
-        <unique name="spy_company_user-unique-external_reference">
-            <unique-column name="external_reference"/>
-        </unique>
         <unique name="spy_company_user-unique-keys">
             <unique-column name="fk_company"/>
             <unique-column name="fk_company_business_unit"/>

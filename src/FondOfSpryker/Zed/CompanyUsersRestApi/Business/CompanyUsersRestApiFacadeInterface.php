@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
@@ -22,69 +23,11 @@ interface CompanyUsersRestApiFacadeInterface
     ): RestCompanyUsersResponseTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function update(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer;
-
-    /**
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
     public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCustomerToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer;
-
-    /**
-     * Specification:
-     * - Map company to company user transfer
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCompanyToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCompanyBusinessUnitToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer;
 
     /**
      * @return string

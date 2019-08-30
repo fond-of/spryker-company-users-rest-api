@@ -31,7 +31,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractDependencyProvider
      */
     protected function addZedRequestClient(Container $container): Container
     {
-        $container[static::CLIENT_ZED_REQUEST] = function (Container $container) {
+        $container[static::CLIENT_ZED_REQUEST] = static function (Container $container) {
             return new CompanyUsersRestApiToZedRequestClientBridge($container->getLocator()->zedRequest()->client());
         };
 

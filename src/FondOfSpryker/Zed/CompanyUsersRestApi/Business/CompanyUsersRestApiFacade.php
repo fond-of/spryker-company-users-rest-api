@@ -32,19 +32,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    public function update(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): RestCompanyUsersResponseTransfer {
-        return $this->getFactory()
-            ->createCompanyUserWriter()
-            ->update($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
@@ -78,70 +65,6 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
         return $this->getFactory()
             ->createCompanyUserReader()
             ->findCompanyUserByCompanyUserReference($companyUserTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer {
-        return $this->getFactory()->createCompanyUserMapper()->mapCompanyUser(
-            $restCompanyUsersRequestAttributesTransfer,
-            $companyUserTransfer
-        );
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCustomerToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer {
-        return $this->getFactory()->createCustomerCompanyUserMapper()->mapCustomerToCompanyUser(
-            $restCompanyUsersRequestAttributesTransfer,
-            $companyUserTransfer
-        );
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCompanyToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer {
-        return $this->getFactory()->createCompanyCompanyUserMapper()->mapCompanyToCompanyUser(
-            $restCompanyUsersRequestAttributesTransfer,
-            $companyUserTransfer
-        );
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    public function mapCompanyBusinessUnitToCompanyUser(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer {
-        return $this->getFactory()->createCompanyBusinessUnitCompanyUserMapper()->mapCompanyBusinessUnitToCompanyUser(
-            $restCompanyUsersRequestAttributesTransfer,
-            $companyUserTransfer
-        );
     }
 
     /**

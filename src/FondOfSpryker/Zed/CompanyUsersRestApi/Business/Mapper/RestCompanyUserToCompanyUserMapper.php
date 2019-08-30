@@ -1,11 +1,13 @@
 <?php
 
-namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
+declare(strict_types=1);
+
+namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper;
 
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 
-class CompanyUserMapper implements CompanyUserMapperInterface
+class RestCompanyUserToCompanyUserMapper implements RestCompanyUserToCompanyUserMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
@@ -13,7 +15,7 @@ class CompanyUserMapper implements CompanyUserMapperInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    public function mapCompanyUser(
+    public function mapRestCompanyUserToCompanyUser(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyUserTransfer $companyUserTransfer
     ): CompanyUserTransfer {
@@ -23,7 +25,11 @@ class CompanyUserMapper implements CompanyUserMapperInterface
             );
         }
 
-        $companyUserTransfer->setExternalReference($restCompanyUsersRequestAttributesTransfer->getExternalReference());
+        if ($restCompanyUsersRequestAttributesTransfer->getIsDefault() !== null) {
+            $companyUserTransfer->setIsDefault(
+                $restCompanyUsersRequestAttributesTransfer->getIsDefault()
+            );
+        }
 
         return $companyUserTransfer;
     }
