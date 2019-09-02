@@ -33,6 +33,25 @@ class RestApiError implements RestApiErrorInterface
     /**
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
+    public function createCompanyUserAlreadyExistErrorResponse(): RestCompanyUsersResponseTransfer
+    {
+        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
+
+        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COMPANY_USER_ALREADY_EXIST)
+            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COMPANY_USER_ALREADY_EXIST);
+
+        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
+
+        $restCompanyUsersResponseTransfer->setIsSuccess(false)
+            ->addError($restCompanyUsersErrorTransfer);
+
+        return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
     public function createDefaultCompanyBusinessUnitNotFoundErrorResponse(): RestCompanyUsersResponseTransfer
     {
         $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();

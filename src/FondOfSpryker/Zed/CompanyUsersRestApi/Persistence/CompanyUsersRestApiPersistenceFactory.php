@@ -6,6 +6,8 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
+use FondOfSpryker\Zed\CompanyUsersRestapi\Persistence\Mapper\CompanyUserMapper;
+use FondOfSpryker\Zed\CompanyUsersRestapi\Persistence\Mapper\CompanyUserMapperInterface;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 
 /**
@@ -20,5 +22,13 @@ class CompanyUsersRestApiPersistenceFactory extends AbstractPersistenceFactory
     public function getCompanyUserPropelQuery(): SpyCompanyUserQuery
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PROPEL_QUERY_COMPANY_USER);
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestapi\Persistence\Mapper\CompanyUserMapperInterface
+     */
+    public function createCompanyUserMapper(): CompanyUserMapperInterface
+    {
+        return new CompanyUserMapper();
     }
 }

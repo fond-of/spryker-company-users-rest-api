@@ -56,4 +56,9 @@
     <transfer name="CompanyUser">
         <property name="companyUserReference" type="string"/>
     </transfer>
+
+    <transfer name="CompanyUserCriteriaFilter">
+        <property name="idCustomer" type="int"/>
+        <property name="idCompanyBusinessUnit" type="int"/>
+    </transfer>
 </transfers>

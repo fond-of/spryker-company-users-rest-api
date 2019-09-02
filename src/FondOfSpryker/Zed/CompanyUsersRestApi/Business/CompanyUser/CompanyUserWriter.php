@@ -7,6 +7,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
+use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
@@ -58,6 +59,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $apiError;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
+     */
+    protected $companyUserReader;
+
+    /**
      * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
      * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
@@ -65,6 +71,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface $companyUserFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface $apiError
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -73,7 +80,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade,
         CompanyUserFacadeInterface $companyUserFacade,
         RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper,
-        RestApiErrorInterface $apiError
+        RestApiErrorInterface $apiError,
+        CompanyUserReaderInterface $companyUserReader
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -82,6 +90,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->companyUserFacade = $companyUserFacade;
         $this->restCompanyUserToCompanyUserMapper = $restCompanyUserToCompanyUserMapper;
         $this->apiError = $apiError;
+        $this->companyUserReader = $companyUserReader;
     }
 
     /**
@@ -100,15 +109,22 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyNotFoundErrorResponse();
         }
 
-        if (!$this->hasDefaultCompanyBusinessUnit($companyResponseTransfer->getCompanyTransfer())) {
+        $companyBusinessUnit = $this->findDefaultCompanyBusinessUnitOf($companyResponseTransfer->getCompanyTransfer());
+
+        if ($companyBusinessUnit === null) {
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
         $customerTransfer = $this->findOrCreateCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
 
         $companyUserTransfer = $this->createCompanyUser($restCompanyUsersRequestAttributesTransfer);
-        $companyUserTransfer = $this->assignCompany($companyUserTransfer, $companyResponseTransfer->getCompanyTransfer());
-        $companyUserTransfer = $this->assignCustomer($companyUserTransfer, $customerTransfer);
+        $companyUserTransfer = $this->assignCompanyTo($companyUserTransfer, $companyResponseTransfer->getCompanyTransfer());
+        $companyUserTransfer = $this->assignCompanyBusinessUnitTo($companyUserTransfer, $companyBusinessUnit);
+        $companyUserTransfer = $this->assignCustomerTo($companyUserTransfer, $customerTransfer);
+
+        if ($this->companyUserReader->doesCompanyUserAlreadyExist($companyUserTransfer)) {
+            return $this->apiError->createCompanyUserAlreadyExistErrorResponse();
+        }
 
         $companyUserResponseTransfer = $this->companyUserFacade->create($companyUserTransfer);
 
@@ -141,7 +157,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    protected function assignCompany(
+    protected function assignCompanyTo(
         CompanyUserTransfer $companyUserTransfer,
         CompanyTransfer $companyTransfer
     ): CompanyUserTransfer {
@@ -157,7 +173,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    protected function assignCustomer(
+    protected function assignCustomerTo(
         CompanyUserTransfer $companyUserTransfer,
         CustomerTransfer $customerTransfer
     ): CompanyUserTransfer {
@@ -166,6 +182,22 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         if ($customerTransfer->getIdCustomer() !== null) {
             $companyUserTransfer->setFkCustomer($customerTransfer->getIdCustomer());
         }
+
+        return $companyUserTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     * @param \Generated\Shared\Transfer\CompanyBusinessUnitTransfer $companyBusinessUnitTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    protected function assignCompanyBusinessUnitTo(
+        CompanyUserTransfer $companyUserTransfer,
+        CompanyBusinessUnitTransfer $companyBusinessUnitTransfer
+    ): CompanyUserTransfer {
+        $companyUserTransfer->setCompanyBusinessUnit($companyBusinessUnitTransfer);
+        $companyUserTransfer->setFkCompanyBusinessUnit($companyBusinessUnitTransfer->getIdCompanyBusinessUnit());
 
         return $companyUserTransfer;
     }
@@ -207,15 +239,13 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     /**
      * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
      *
-     * @return bool
+     * @return \Generated\Shared\Transfer\CompanyBusinessUnitTransfer|null
      */
-    protected function hasDefaultCompanyBusinessUnit(CompanyTransfer $companyTransfer): bool
+    protected function findDefaultCompanyBusinessUnitOf(CompanyTransfer $companyTransfer): ?CompanyBusinessUnitTransfer
     {
-        $companyBusinessUnitTransfer = $this->companyBusinessUnitFacade->findDefaultBusinessUnitByCompanyId(
+        return $this->companyBusinessUnitFacade->findDefaultBusinessUnitByCompanyId(
             $companyTransfer->getIdCompany()
         );
-
-        return $companyBusinessUnitTransfer !== null;
     }
 
     /**

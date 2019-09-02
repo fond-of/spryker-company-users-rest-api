@@ -17,4 +17,11 @@ interface CompanyUserReaderInterface
     public function findCompanyUserByCompanyUserReference(
         CompanyUserTransfer $companyUserTransfer
     ): CompanyUserResponseTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return bool
+     */
+    public function doesCompanyUserAlreadyExist(CompanyUserTransfer $companyUserTransfer): bool;
 }

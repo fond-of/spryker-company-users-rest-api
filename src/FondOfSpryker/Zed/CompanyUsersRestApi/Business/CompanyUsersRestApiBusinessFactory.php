@@ -59,7 +59,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getCompanyBusinessUnitFacade(),
             $this->getCompanyUserFacade(),
             $this->createRestCompanyUserToCompanyUserMapper(),
-            $this->createRestApiError()
+            $this->createRestApiError(),
+            $this->createCompanyUserReader()
         );
     }
 

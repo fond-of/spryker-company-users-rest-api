@@ -16,6 +16,11 @@ interface RestApiErrorInterface
     /**
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
+    public function createCompanyUserAlreadyExistErrorResponse(): RestCompanyUsersResponseTransfer;
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
     public function createDefaultCompanyBusinessUnitNotFoundErrorResponse(): RestCompanyUsersResponseTransfer;
 
     /**

@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface;
+use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\ResponseMessageTransfer;
+
+use function count;
 
 class CompanyUserReader implements CompanyUserReaderInterface
 {
@@ -63,6 +66,30 @@ class CompanyUserReader implements CompanyUserReaderInterface
             ->addMessage((new ResponseMessageTransfer())->setText(static::MESSAGE_COMPANY_USER_NOT_FOUND));
 
         return $companyUserResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return bool
+     */
+    public function doesCompanyUserAlreadyExist(CompanyUserTransfer $companyUserTransfer): bool
+    {
+        if ($companyUserTransfer->getFkCustomer() === null ||
+            $companyUserTransfer->getFkCompany() === null ||
+            $companyUserTransfer->getFkCompanyBusinessUnit() === null) {
+            return false;
+        }
+
+        $companyUserCriteriaFilterTransfer = new CompanyUserCriteriaFilterTransfer();
+        $companyUserCriteriaFilterTransfer->setIdCustomer($companyUserTransfer->getFkCustomer());
+        $companyUserCriteriaFilterTransfer->setIdCompany($companyUserTransfer->getFkCompany());
+        $companyUserCriteriaFilterTransfer->setIdCompanyBusinessUnit($companyUserTransfer->getFkCompanyBusinessUnit());
+
+        $companyUserCollection = $this->companyUsersRestApiRepository
+            ->findCompanyUsersByFilter($companyUserCriteriaFilterTransfer);
+
+        return $companyUserCollection->getCompanyUsers()->count() > 0;
     }
 
     /**
