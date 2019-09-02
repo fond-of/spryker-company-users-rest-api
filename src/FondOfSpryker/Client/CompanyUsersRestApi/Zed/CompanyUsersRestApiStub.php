@@ -26,6 +26,23 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
     }
 
     /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
+        $companyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/find-company-user-by-company-user-reference',
+            $companyUserTransfer
+        );
+
+        return $companyUserResponseTransfer;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer

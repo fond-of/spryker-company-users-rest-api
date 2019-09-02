@@ -16,6 +16,18 @@ use Spryker\Client\Kernel\AbstractClient;
 class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRestApiClientInterface
 {
     /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        return $this->getFactory()->createZedCompanyUsersRestApiStub()
+            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer

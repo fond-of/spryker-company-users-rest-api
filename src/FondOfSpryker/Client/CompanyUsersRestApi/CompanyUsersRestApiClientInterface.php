@@ -12,6 +12,15 @@ use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 interface CompanyUsersRestApiClientInterface
 {
     /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function findCompanyUserByCompanyUserReference(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer;
+
+    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer

@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
-use FondOfSpryker\Shared\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
-use Generated\Shared\Transfer\CompanyBusinessUnitCriteriaFilterTransfer;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
-use Generated\Shared\Transfer\RestCompanyUsersErrorTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -21,9 +19,6 @@ use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
-use Symfony\Component\HttpFoundation\Response;
-
-use function count;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
@@ -58,12 +53,18 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $restCompanyUserToCompanyUserMapper;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface
+     */
+    protected $apiError;
+
+    /**
      * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
      * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
      * @param \Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade
      * @param \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface $companyUserFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface $apiError
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -71,7 +72,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyFacadeInterface $companyFacade,
         CompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade,
         CompanyUserFacadeInterface $companyUserFacade,
-        RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper
+        RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper,
+        RestApiErrorInterface $apiError
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -79,6 +81,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->companyBusinessUnitFacade = $companyBusinessUnitFacade;
         $this->companyUserFacade = $companyUserFacade;
         $this->restCompanyUserToCompanyUserMapper = $restCompanyUserToCompanyUserMapper;
+        $this->apiError = $apiError;
     }
 
     /**
@@ -94,35 +97,23 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         );
 
         if (!$companyResponseTransfer->getIsSuccessful()) {
-            return $this->createCompanyNotFoundErrorResponse();
+            return $this->apiError->createCompanyNotFoundErrorResponse();
         }
 
-        // company business unit will be assigned by a company user before save plugin to avoid duplicate code.
-        if (!$this->hasAtLeastOneCompanyBusinessUnit($companyResponseTransfer->getCompanyTransfer())) {
-            return $this->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
+        if (!$this->hasDefaultCompanyBusinessUnit($companyResponseTransfer->getCompanyTransfer())) {
+            return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
-        // create company user
-        $companyUserTransfer = $this->restCompanyUserToCompanyUserMapper->mapRestCompanyUserToCompanyUser(
-            $restCompanyUsersRequestAttributesTransfer,
-            new CompanyUserTransfer()
-        );
+        $customerTransfer = $this->findOrCreateCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
 
-        // assign company to company user
-        $companyUserTransfer->setCompany($companyResponseTransfer->getCompanyTransfer());
-        $companyUserTransfer->setFkCompany($companyResponseTransfer->getCompanyTransfer()->getIdCompany());
-
-        // assign existing customer or create a new customer.
-        // new customer will be inserted in companyUserFacade.
-        $companyUserTransfer = $this->assignCustomerToCompanyUser(
-            $companyUserTransfer,
-            $restCompanyUsersRequestAttributesTransfer
-        );
+        $companyUserTransfer = $this->createCompanyUser($restCompanyUsersRequestAttributesTransfer);
+        $companyUserTransfer = $this->assignCompany($companyUserTransfer, $companyResponseTransfer->getCompanyTransfer());
+        $companyUserTransfer = $this->assignCustomer($companyUserTransfer, $customerTransfer);
 
         $companyUserResponseTransfer = $this->companyUserFacade->create($companyUserTransfer);
 
         if (!$companyUserResponseTransfer->getIsSuccessful()) {
-            return $this->createCompanyUsersDataInvalidErrorResponse();
+            return $this->apiError->createCompanyUsersDataInvalidErrorResponse();
         }
 
         return $this->createCompanyUsersResponseTransfer(
@@ -131,44 +122,73 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    protected function assignCustomerToCompanyUser(
-        CompanyUserTransfer $companyUserTransfer,
+    protected function createCompanyUser(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): CompanyUserTransfer {
+        return $this->restCompanyUserToCompanyUserMapper->mapRestCompanyUserToCompanyUser(
+            $restCompanyUsersRequestAttributesTransfer,
+            new CompanyUserTransfer()
+        );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    protected function assignCompany(
+        CompanyUserTransfer $companyUserTransfer,
+        CompanyTransfer $companyTransfer
+    ): CompanyUserTransfer {
+        $companyUserTransfer->setCompany($companyTransfer);
+        $companyUserTransfer->setFkCompany($companyTransfer->getIdCompany());
+
+        return $companyUserTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    protected function assignCustomer(
+        CompanyUserTransfer $companyUserTransfer,
+        CustomerTransfer $customerTransfer
+    ): CompanyUserTransfer {
+        $companyUserTransfer->setCustomer($customerTransfer);
+
+        if ($customerTransfer->getIdCustomer() !== null) {
+            $companyUserTransfer->setFkCustomer($customerTransfer->getIdCustomer());
+        }
+
+        return $companyUserTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer
+     */
+    protected function findOrCreateCustomerTransferFrom(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): CustomerTransfer {
         $customerTransfer = $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
             $restCompanyUsersRequestAttributesTransfer->getCustomer(),
             new CustomerTransfer()
         );
 
-        $companyUserTransfer->setCustomer($customerTransfer);
-
-        return $this->assignCustomerToCompanyUserIfCustomerAlreadyExists($companyUserTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected function assignCustomerToCompanyUserIfCustomerAlreadyExists(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserTransfer {
         try {
-            $customerTransfer = $this->customerFacade->getCustomer($companyUserTransfer->getCustomer());
-        } catch (CustomerNotFoundException $e) {
-            // customer doesnt exists with email.
-            return $companyUserTransfer;
+            return $this->customerFacade->getCustomer($customerTransfer);
+        } catch (CustomerNotFoundException $ex) {
+            // customer does not exist in db.
+            return $customerTransfer;
         }
-
-        $companyUserTransfer->setCustomer($customerTransfer);
-        $companyUserTransfer->setFkCustomer($customerTransfer->getIdCustomer());
-
-        return $companyUserTransfer;
     }
 
     /**
@@ -185,80 +205,17 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     }
 
     /**
-     * Just check if at least one company business unit exists.
-     * Company Business Unit will be assigned by "CompanyBusinessUnitAssigner"
-     *
      * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
      *
      * @return bool
      */
-    protected function hasAtLeastOneCompanyBusinessUnit(CompanyTransfer $companyTransfer): bool
+    protected function hasDefaultCompanyBusinessUnit(CompanyTransfer $companyTransfer): bool
     {
-        $companyBusinessUnitCriteriaFilterTransfer = new CompanyBusinessUnitCriteriaFilterTransfer();
-        $companyBusinessUnitCriteriaFilterTransfer->setIdCompany($companyTransfer->getIdCompany());
-
-        $companyBusinessUnitCollectionTransfer = $this->companyBusinessUnitFacade->getCompanyBusinessUnitCollection(
-            $companyBusinessUnitCriteriaFilterTransfer
+        $companyBusinessUnitTransfer = $this->companyBusinessUnitFacade->findDefaultBusinessUnitByCompanyId(
+            $companyTransfer->getIdCompany()
         );
 
-        return count($companyBusinessUnitCollectionTransfer->getCompanyBusinessUnits()) > 0;
-    }
-
-    /**
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    protected function createCompanyNotFoundErrorResponse(): RestCompanyUsersResponseTransfer
-    {
-        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
-
-        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COMPANY_NOT_FOUND)
-            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COMPANY_NOT_FOUND);
-
-        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
-
-        $restCompanyUsersResponseTransfer->setIsSuccess(false)
-            ->addError($restCompanyUsersErrorTransfer);
-
-        return $restCompanyUsersResponseTransfer;
-    }
-
-    /**
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    protected function createDefaultCompanyBusinessUnitNotFoundErrorResponse(): RestCompanyUsersResponseTransfer
-    {
-        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
-
-        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COMPANY_NOT_FOUND)
-            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COMPANY_NOT_FOUND);
-
-        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
-
-        $restCompanyUsersResponseTransfer->setIsSuccess(false)
-            ->addError($restCompanyUsersErrorTransfer);
-
-        return $restCompanyUsersResponseTransfer;
-    }
-
-    /**
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    protected function createCompanyUsersDataInvalidErrorResponse(): RestCompanyUsersResponseTransfer
-    {
-        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
-
-        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COMPANY_USER_DATA_INVALID)
-            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COMPANY_USER_DATA_INVALID);
-
-        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
-
-        $restCompanyUsersResponseTransfer->setIsSuccess(false)
-            ->addError($restCompanyUsersErrorTransfer);
-
-        return $restCompanyUsersResponseTransfer;
+        return $companyBusinessUnitTransfer !== null;
     }
 
     /**
@@ -266,8 +223,9 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    protected function createCompanyUsersResponseTransfer(CompanyUserTransfer $companyUserTransfer): RestCompanyUsersResponseTransfer
-    {
+    protected function createCompanyUsersResponseTransfer(
+        CompanyUserTransfer $companyUserTransfer
+    ): RestCompanyUsersResponseTransfer {
         $restCompanyUsersResponseAttributesTransfer = new RestCompanyUsersResponseAttributesTransfer();
 
         $restCompanyUsersResponseAttributesTransfer->fromArray(
