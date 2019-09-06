@@ -22,16 +22,8 @@
     <transfer name="RestCustomer">
         <property name="firstName" type="string" />
         <property name="lastName" type="string" />
-        <property name="gender" type="string" />
-        <property name="dateOfBirth" type="string" />
         <property name="salutation" type="string"/>
-        <property name="createdAt" type="string" />
-        <property name="updatedAt" type="string" />
         <property name="email" type="string" />
-        <property name="password" type="string" />
-        <property name="confirmPassword" type="string" />
-        <property name="acceptedTerms" type="bool" />
-        <property name="phone" type="string" />
         <property name="locale" type="Locale" />
     </transfer>
 
