@@ -38,4 +38,22 @@ class CompanyUsersRestApiConfig extends AbstractBundleConfig
     {
         return '-';
     }
+
+    /**
+     * @param string $token
+     *
+     * @return string
+     */
+    public function getCompanyUserPasswordRestoreTokenUrl(string $token): string
+    {
+        return $this->getHostApp() . '/invite?token=' . $token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHostApp(): string
+    {
+        return $this->get(CompanyUsersRestApiConstants::BASE_URL_APP);
+    }
 }

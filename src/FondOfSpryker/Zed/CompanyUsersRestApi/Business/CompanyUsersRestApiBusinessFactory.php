@@ -23,6 +23,8 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToSequenceNumberFacadeInterface;
+use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
+use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
@@ -60,7 +62,10 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getCompanyUserFacade(),
             $this->createRestCompanyUserToCompanyUserMapper(),
             $this->createRestApiError(),
-            $this->createCompanyUserReader()
+            $this->createCompanyUserReader(),
+            $this->getUtilTextService(),
+            $this->getConfig(),
+            $this->getMailFacade()
         );
     }
 
@@ -174,5 +179,21 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyUserHydrationPlugins(): array
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_HYDRATE);
+    }
+
+    /**
+     * @return \Spryker\Service\UtilText\UtilTextServiceInterface
+     */
+    protected function getUtilTextService(): UtilTextServiceInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
+     */
+    protected function getMailFacade(): MailFacadeInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_MAIL);
     }
 }

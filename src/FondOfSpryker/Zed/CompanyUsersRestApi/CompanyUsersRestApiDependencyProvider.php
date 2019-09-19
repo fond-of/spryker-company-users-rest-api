@@ -20,6 +20,8 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const FACADE_COMPANY_USERS_REST_API = 'FACADE_COMPANY_USERS_REST_API';
     public const PLUGINS_COMPANY_USER_HYDRATE = 'PLUGINS_COMPANY_USER_HYDRATE';
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
+    public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
+    public const FACADE_MAIL = 'FACADE_MAIL';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -37,6 +39,22 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCompanyUsersRestApiFacade($container);
         $container = $this->addCompanyBusinessUnitFacade($container);
         $container = $this->addCompanyUserHydrationPlugins($container);
+        $container = $this->addUtilTextService($container);
+        $container = $this->addMailFacade($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addMailFacade(Container $container): Container
+    {
+        $container[static::FACADE_MAIL] = static function (Container $container) {
+            return $container->getLocator()->mail()->facade();
+        };
 
         return $container;
     }
@@ -49,6 +67,20 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public function providePersistenceLayerDependencies(Container $container): Container
     {
         $container = $this->addCompanyUserPropelQuery($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addUtilTextService(Container $container): Container
+    {
+        $container[static::SERVICE_UTIL_TEXT] = static function (Container $container) {
+            return $container->getLocator()->utilText()->service();
+        };
 
         return $container;
     }

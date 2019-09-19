@@ -7,22 +7,30 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\Mail\CompanyUserInviteMailTypePlugin;
+use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
+use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\MailTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
+use DateTimeImmutable;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
+    protected const PASSWORD_LENGTH = 20;
+
     /**
      * @var \Spryker\Zed\Customer\Business\CustomerFacadeInterface
      */
@@ -64,6 +72,21 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUserReader;
 
     /**
+     * @var \Spryker\Service\UtilText\UtilTextServiceInterface
+     */
+    protected $utilTextService;
+
+    /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig
+     */
+    protected $companyUsersRestApiConfig;
+
+    /**
+     * @var \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
+     */
+    protected $mailFacade;
+
+    /**
      * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
      * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
@@ -72,6 +95,9 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface $apiError
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
+     * @param \Spryker\Service\UtilText\UtilTextServiceInterface $utilTextService
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
+     * @param \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -81,7 +107,10 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyUserFacadeInterface $companyUserFacade,
         RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper,
         RestApiErrorInterface $apiError,
-        CompanyUserReaderInterface $companyUserReader
+        CompanyUserReaderInterface $companyUserReader,
+        UtilTextServiceInterface $utilTextService,
+        CompanyUsersRestApiConfig $companyUsersRestApiConfig,
+        MailFacadeInterface $mailFacade
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -91,6 +120,9 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->restCompanyUserToCompanyUserMapper = $restCompanyUserToCompanyUserMapper;
         $this->apiError = $apiError;
         $this->companyUserReader = $companyUserReader;
+        $this->utilTextService = $utilTextService;
+        $this->companyUsersRestApiConfig = $companyUsersRestApiConfig;
+        $this->mailFacade = $mailFacade;
     }
 
     /**
@@ -115,7 +147,18 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
-        $customerTransfer = $this->findOrCreateCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
+        $originalCustomerTransfer = $this->createCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
+        $existingCustomerTransfer = $this->findCustomerTransferFrom($originalCustomerTransfer);
+
+        if ($existingCustomerTransfer === null) {
+            $customerTransfer = $this->createCustomer($originalCustomerTransfer);
+        } else {
+            $customerTransfer = $existingCustomerTransfer;
+        }
+
+        if ($customerTransfer === null) {
+            return $this->apiError->createCouldNotCreateCustomerErrorResponse();
+        }
 
         $companyUserTransfer = $this->createCompanyUser($restCompanyUsersRequestAttributesTransfer);
         $companyUserTransfer = $this->assignCompanyTo($companyUserTransfer, $companyResponseTransfer->getCompanyTransfer());
@@ -132,9 +175,66 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyUsersDataInvalidErrorResponse();
         }
 
+        // only send company user invitation mail if customer is new
+        if ($existingCustomerTransfer === null) {
+            $this->sendCompanyUserInviteMail($customerTransfer);
+        }
+
         return $this->createCompanyUsersResponseTransfer(
             $companyUserResponseTransfer->getCompanyUser()
         );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer
+     */
+    protected function createCustomerRestorePasswordProperties(CustomerTransfer $customerTransfer): CustomerTransfer
+    {
+        $customerTransfer->setPassword($this->generateRandomCustomerPassword());
+        $customerTransfer->setRestorePasswordDate(new DateTimeImmutable());
+        $customerTransfer->setRestorePasswordKey($this->generateKey());
+        $customerTransfer->setRestorePasswordLink(
+            $this->companyUsersRestApiConfig->getCompanyUserPasswordRestoreTokenUrl(
+                $customerTransfer->getRestorePasswordKey()
+            )
+        );
+
+        return $customerTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer
+     */
+    protected function sendCompanyUserInviteMail(CustomerTransfer $customerTransfer): CustomerTransfer
+    {
+        $mailTransfer = new MailTransfer();
+        $mailTransfer->setType(CompanyUserInviteMailTypePlugin::MAIL_TYPE);
+        $mailTransfer->setCustomer($customerTransfer);
+        $mailTransfer->setLocale($customerTransfer->getLocale());
+
+        $this->mailFacade->handleMail($mailTransfer);
+
+        return $customerTransfer;
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateKey(): string
+    {
+        return $this->utilTextService->generateRandomString(32);
+    }
+
+    /**
+     * @return string
+     */
+    protected function generateRandomCustomerPassword(): string
+    {
+        return $this->utilTextService->generateRandomString(static::PASSWORD_LENGTH);
     }
 
     /**
@@ -178,10 +278,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CustomerTransfer $customerTransfer
     ): CompanyUserTransfer {
         $companyUserTransfer->setCustomer($customerTransfer);
-
-        if ($customerTransfer->getIdCustomer() !== null) {
-            $companyUserTransfer->setFkCustomer($customerTransfer->getIdCustomer());
-        }
+        $companyUserTransfer->setFkCustomer($customerTransfer->getIdCustomer());
 
         return $companyUserTransfer;
     }
@@ -207,20 +304,46 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
-    protected function findOrCreateCustomerTransferFrom(
+    protected function createCustomerTransferFrom(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): CustomerTransfer {
-        $customerTransfer = $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
+        return $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
             $restCompanyUsersRequestAttributesTransfer->getCustomer(),
             new CustomerTransfer()
         );
+    }
 
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    protected function findCustomerTransferFrom(
+        CustomerTransfer $customerTransfer
+    ): ?CustomerTransfer {
         try {
             return $this->customerFacade->getCustomer($customerTransfer);
         } catch (CustomerNotFoundException $ex) {
-            // customer does not exist in db.
-            return $customerTransfer;
+            return null;
         }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    protected function createCustomer(CustomerTransfer $customerTransfer): ?CustomerTransfer
+    {
+        $customerTransfer = $this->createCustomerRestorePasswordProperties($customerTransfer);
+
+        $customerResponseTransfer = $this->customerFacade->addCustomer($customerTransfer);
+
+        if (!$customerResponseTransfer->getIsSuccess()) {
+            return null;
+        }
+
+        return $customerResponseTransfer->getCustomerTransfer();
     }
 
     /**

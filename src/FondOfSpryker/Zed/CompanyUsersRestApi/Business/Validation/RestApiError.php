@@ -86,4 +86,23 @@ class RestApiError implements RestApiErrorInterface
 
         return $restCompanyUsersResponseTransfer;
     }
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function createCouldNotCreateCustomerErrorResponse(): RestCompanyUsersResponseTransfer
+    {
+        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
+
+        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COULD_NOT_CREATE_CUSTOMER)
+            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COULD_NOT_CREATE_CUSTOMER);
+
+        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
+
+        $restCompanyUsersResponseTransfer->setIsSuccess(false)
+            ->addError($restCompanyUsersErrorTransfer);
+
+        return $restCompanyUsersResponseTransfer;
+    }
 }
