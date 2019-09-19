@@ -24,5 +24,5 @@ interface CompanyUserMapperInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
      */
-    public function mapCompanyUserCollection($collection): CompanyUserCollectionTransfer;
+    public function mapCompanyUserCollection(array $collection): CompanyUserCollectionTransfer;
 }
