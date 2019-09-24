@@ -147,13 +147,13 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
-        $originalCustomerTransfer = $this->createCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
-        $existingCustomerTransfer = $this->findCustomerTransferFrom($originalCustomerTransfer);
+        $filterCustomerTransfer = $this->createCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
+        $customerTransfer = $this->findCustomerTransferFrom($filterCustomerTransfer);
 
-        if ($existingCustomerTransfer === null) {
-            $customerTransfer = $this->createCustomer($originalCustomerTransfer);
-        } else {
-            $customerTransfer = $existingCustomerTransfer;
+        $sendPasswordRestoreMail = false;
+        if ($customerTransfer === null) {
+            $customerTransfer = $this->createCustomer($filterCustomerTransfer);
+            $sendPasswordRestoreMail = true;
         }
 
         if ($customerTransfer === null) {
@@ -176,7 +176,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         }
 
         // only send company user invitation mail if customer is new
-        if ($existingCustomerTransfer === null) {
+        if ($sendPasswordRestoreMail === true) {
             $this->sendCompanyUserInviteMail($customerTransfer);
         }
 

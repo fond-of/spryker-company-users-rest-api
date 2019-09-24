@@ -47,7 +47,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      */
     protected function setSubject(MailBuilderInterface $mailBuilder): self
     {
-        $mailBuilder->setSubject('mail.company_user.invite');
+        $mailBuilder->setSubject('mail.company_user.invite.subject');
 
         return $this;
     }
