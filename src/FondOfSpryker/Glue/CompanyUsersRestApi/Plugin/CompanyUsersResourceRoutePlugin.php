@@ -22,6 +22,7 @@ class CompanyUsersResourceRoutePlugin extends AbstractPlugin implements Resource
     {
         return $resourceRouteCollection
             ->addPost('post')
+            ->addPatch('patch')
             ->addDelete('delete')
             ->addGet('get');
     }

@@ -22,3 +22,10 @@ company-users:
           - NotBlank
           - Length:
                 max: 100
+
+  patch:
+    companyRole:
+    - Collection:
+        fields:
+          uuid:
+          - NotBlank

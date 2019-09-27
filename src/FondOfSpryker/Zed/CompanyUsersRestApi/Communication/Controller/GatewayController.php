@@ -20,8 +20,9 @@ class GatewayController extends AbstractGatewayController
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function findCompanyUserByCompanyUserReferenceAction(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
+    public function findCompanyUserByCompanyUserReferenceAction(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
         return $this->getFacade()
             ->findCompanyUserByCompanyUserReference($companyUserTransfer);
     }
@@ -31,8 +32,9 @@ class GatewayController extends AbstractGatewayController
      *
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
-    public function createAction(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer): RestCompanyUsersResponseTransfer
-    {
+    public function createAction(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): RestCompanyUsersResponseTransfer {
         return $this->getFacade()
             ->create($restCompanyUsersRequestAttributesTransfer);
     }
@@ -42,8 +44,9 @@ class GatewayController extends AbstractGatewayController
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function deleteAction(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
+    public function deleteAction(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
         return $this->getFacade()
             ->delete($companyUserTransfer);
     }

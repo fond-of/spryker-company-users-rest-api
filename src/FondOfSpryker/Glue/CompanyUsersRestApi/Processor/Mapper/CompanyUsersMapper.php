@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper;
 
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
