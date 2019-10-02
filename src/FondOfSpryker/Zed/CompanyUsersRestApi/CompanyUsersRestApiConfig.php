@@ -10,6 +10,8 @@ use Spryker\Shared\Kernel\Store;
 use Spryker\Shared\SequenceNumber\SequenceNumberConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
+use function sprintf;
+
 class CompanyUsersRestApiConfig extends AbstractBundleConfig
 {
     /**
@@ -46,7 +48,7 @@ class CompanyUsersRestApiConfig extends AbstractBundleConfig
      */
     public function getCompanyUserPasswordRestoreTokenUrl(string $token): string
     {
-        return $this->getHostApp() . '/invite/token/' . $token;
+        return sprintf('%s/invite/token/%s', $this->getHostApp(), $token);
     }
 
     /**
