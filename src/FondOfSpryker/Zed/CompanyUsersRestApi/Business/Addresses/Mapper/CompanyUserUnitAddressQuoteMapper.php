@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper;
 
@@ -69,10 +69,11 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
      *
      * @return \Generated\Shared\Transfer\AddressTransfer
      */
-    protected function getAddressTransfer(RestAddressTransfer $restAddressTransfer, CompanyUserTransfer $companyUserTransfer): AddressTransfer
-    {
+    protected function getAddressTransfer(
+        RestAddressTransfer $restAddressTransfer,
+        CompanyUserTransfer $companyUserTransfer
+    ): AddressTransfer {
         if ($restAddressTransfer->getId() && $companyUserTransfer->getCompanyBusinessUnit()) {
-
             $companyUnitAddressCollectionTransfer = $companyUserTransfer->getCompanyBusinessUnit()->getAddressCollection();
 
             if ($companyUnitAddressCollectionTransfer) {

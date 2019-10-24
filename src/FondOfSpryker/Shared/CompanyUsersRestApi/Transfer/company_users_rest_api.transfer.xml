@@ -58,4 +58,10 @@
         <property name="idCustomer" type="int"/>
         <property name="idCompanyBusinessUnit" type="int"/>
     </transfer>
+
+    <transfer name="Address">
+        <property name="idCompanyUnitAddress" type="int"/>
+        <property name="name1" type="string" />
+        <property name="name2" type="string" />
+    </transfer>
 </transfers>
