@@ -105,4 +105,23 @@ class RestApiError implements RestApiErrorInterface
 
         return $restCompanyUsersResponseTransfer;
     }
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function createDefaultCompanyRoleNotFoundErrorResponse(): RestCompanyUsersResponseTransfer
+    {
+        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
+
+        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_COMPANY_ROLE_NOT_FOUND)
+            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_COMPANY_ROLE_NOT_FOUND);
+
+        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
+
+        $restCompanyUsersResponseTransfer->setIsSuccess(false)
+            ->addError($restCompanyUsersErrorTransfer);
+
+        return $restCompanyUsersResponseTransfer;
+    }
 }

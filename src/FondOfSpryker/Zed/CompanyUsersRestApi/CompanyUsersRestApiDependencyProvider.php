@@ -15,13 +15,13 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const FACADE_CUSTOMER = 'FACADE_CUSTOMER';
     public const FACADE_COMPANY = 'FACADE_COMPANY';
     public const FACADE_COMPANY_BUSINESS_UNIT = 'FACADE_COMPANY_BUSINESS_UNIT';
-    public const FACADE_COMPANY_BUSINESS_UNITS_REST_API = 'FACADE_COMPANY_BUSINESS_UNITS_REST_API';
     public const FACADE_SEQUENCE_NUMBER = 'FACADE_SEQUENCE_NUMBER';
     public const FACADE_COMPANY_USERS_REST_API = 'FACADE_COMPANY_USERS_REST_API';
     public const PLUGINS_COMPANY_USER_HYDRATE = 'PLUGINS_COMPANY_USER_HYDRATE';
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
     public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
     public const FACADE_MAIL = 'FACADE_MAIL';
+    public const FACADE_COMPANY_ROLE = 'FACADE_COMPANY_ROLE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -41,6 +41,21 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCompanyUserHydrationPlugins($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addMailFacade($container);
+        $container = $this->addCompanyRoleFacade($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addCompanyRoleFacade(Container $container): Container
+    {
+        $container[static::FACADE_COMPANY_ROLE] = static function (Container $container) {
+            return $container->getLocator()->companyRole()->facade();
+        };
 
         return $container;
     }

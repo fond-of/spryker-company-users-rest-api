@@ -12,6 +12,9 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
+use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
+use Generated\Shared\Transfer\CompanyRoleResponseTransfer;
+use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
@@ -22,6 +25,7 @@ use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
+use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
@@ -87,6 +91,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $mailFacade;
 
     /**
+     * @var \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface
+     */
+    protected $companyRoleFacade;
+
+    /**
      * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
      * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
@@ -98,6 +107,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \Spryker\Service\UtilText\UtilTextServiceInterface $utilTextService
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
      * @param \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
+     * @param \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface $companyRoleFacade
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -110,7 +120,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyUserReaderInterface $companyUserReader,
         UtilTextServiceInterface $utilTextService,
         CompanyUsersRestApiConfig $companyUsersRestApiConfig,
-        MailFacadeInterface $mailFacade
+        MailFacadeInterface $mailFacade,
+        CompanyRoleFacadeInterface $companyRoleFacade
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -123,6 +134,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->utilTextService = $utilTextService;
         $this->companyUsersRestApiConfig = $companyUsersRestApiConfig;
         $this->mailFacade = $mailFacade;
+        $this->companyRoleFacade = $companyRoleFacade;
     }
 
     /**
@@ -160,10 +172,31 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCouldNotCreateCustomerErrorResponse();
         }
 
+        $companyRole = null;
+        if ($restCompanyUsersRequestAttributesTransfer->getCompanyRole() !== null) {
+            $companyRoleResponseTransfer = $this->findCompanyRoleBy(
+                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid()
+            );
+
+            if (!$companyRoleResponseTransfer->getIsSuccessful()) {
+                return $this->apiError->createDefaultCompanyRoleNotFoundErrorResponse();
+            }
+
+            $companyRoleCompanyId = $companyRoleResponseTransfer->getCompanyRoleTransfer()->getFkCompany();
+            $companyId = $companyResponseTransfer->getCompanyTransfer()->getIdCompany();
+
+            if ($companyRoleCompanyId !== $companyId) {
+                return $this->apiError->createDefaultCompanyRoleNotFoundErrorResponse();
+            }
+
+            $companyRole = $companyRoleResponseTransfer->getCompanyRoleTransfer();
+        }
+
         $companyUserTransfer = $this->createCompanyUser($restCompanyUsersRequestAttributesTransfer);
         $companyUserTransfer = $this->assignCompanyTo($companyUserTransfer, $companyResponseTransfer->getCompanyTransfer());
         $companyUserTransfer = $this->assignCompanyBusinessUnitTo($companyUserTransfer, $companyBusinessUnit);
         $companyUserTransfer = $this->assignCustomerTo($companyUserTransfer, $customerTransfer);
+        $companyUserTransfer = $this->assignCompanyRoleIfExistsTo($companyUserTransfer, $companyRole);
 
         if ($this->companyUserReader->doesCompanyUserAlreadyExist($companyUserTransfer)) {
             return $this->apiError->createCompanyUserAlreadyExistErrorResponse();
@@ -392,5 +425,36 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             ->setRestCompanyUsersResponseAttributes($restCompanyUsersResponseAttributesTransfer);
 
         return $restCompanyUsersResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     * @param \Generated\Shared\Transfer\CompanyRoleTransfer|null $companyRoleTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    protected function assignCompanyRoleIfExistsTo(
+        CompanyUserTransfer $companyUserTransfer,
+        ?CompanyRoleTransfer $companyRoleTransfer = null
+    ) : CompanyUserTransfer {
+        if ($companyRoleTransfer !== null) {
+            $companyUserTransfer->setCompanyRoleCollection(
+                (new CompanyRoleCollectionTransfer())->addRole($companyRoleTransfer)
+            );
+        }
+
+        return $companyUserTransfer;
+    }
+
+    /**
+     * @param string $companyRoleUuid
+     *
+     * @return \Generated\Shared\Transfer\CompanyRoleResponseTransfer
+     */
+    protected function findCompanyRoleBy(string $companyRoleUuid): CompanyRoleResponseTransfer
+    {
+        return $this->companyRoleFacade->findCompanyRoleByUuid(
+            (new CompanyRoleTransfer())->setUuid($companyRoleUuid)
+        );
     }
 }

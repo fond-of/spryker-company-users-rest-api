@@ -27,6 +27,7 @@ use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
+use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
@@ -65,7 +66,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->createCompanyUserReader(),
             $this->getUtilTextService(),
             $this->getConfig(),
-            $this->getMailFacade()
+            $this->getMailFacade(),
+            $this->getCompanyRoleFacade()
         );
     }
 
@@ -195,5 +197,13 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getMailFacade(): MailFacadeInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_MAIL);
+    }
+
+    /**
+     * @return \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface
+     */
+    protected function getCompanyRoleFacade(): CompanyRoleFacadeInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE);
     }
 }
