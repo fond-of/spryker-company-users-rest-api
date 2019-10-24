@@ -101,7 +101,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
             $restCompanyUsersResponseAttributesTransfer->getCompanyUserReference(),
             $restCompanyUsersResponseAttributesTransfer
-        );
+        )->setPayload($restCompanyUsersResponseTransfer->getCompanyUser());
 
         return $this->restResourceBuilder
             ->createRestResponse()

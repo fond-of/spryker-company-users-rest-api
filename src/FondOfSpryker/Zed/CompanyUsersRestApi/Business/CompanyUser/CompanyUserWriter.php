@@ -422,7 +422,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
 
         $restCompanyUsersResponseTransfer->setIsSuccess(true)
-            ->setRestCompanyUsersResponseAttributes($restCompanyUsersResponseAttributesTransfer);
+            ->setRestCompanyUsersResponseAttributes($restCompanyUsersResponseAttributesTransfer)
+            ->setCompanyUser($companyUserTransfer);
 
         return $restCompanyUsersResponseTransfer;
     }

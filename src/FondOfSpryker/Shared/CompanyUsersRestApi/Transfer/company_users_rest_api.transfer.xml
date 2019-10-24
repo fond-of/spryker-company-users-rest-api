@@ -48,6 +48,7 @@
         <property name="isSuccess" type="bool" />
         <property name="errors" type="RestCompanyUsersError[]" singular="error" />
         <property name="restCompanyUsersResponseAttributes" type="RestCompanyUsersResponseAttributes" />
+        <property name="companyUser" type="CompanyUser" />
     </transfer>
 
     <transfer name="CompanyUser">
