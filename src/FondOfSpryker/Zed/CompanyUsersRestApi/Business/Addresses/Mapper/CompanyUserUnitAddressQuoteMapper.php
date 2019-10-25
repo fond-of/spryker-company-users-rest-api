@@ -36,10 +36,11 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
         RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
+        $companyUserTransfer = (new CompanyUserTransfer())
+            ->setCompanyUserReference($quoteTransfer->getCompanyUserReference());
+        $companyUserResponseTransfer = $this->companyUsersRestApiFacade
+            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
 
-        $companyUserTransfer = new CompanyUserTransfer();
-        $companyUserTransfer->setCompanyUserReference($quoteTransfer->getCompanyUserReference());
-        $companyUserResponseTransfer = $this->companyUsersRestApiFacade->findCompanyUserByCompanyUserReference($companyUserTransfer);
         if (!$companyUserResponseTransfer->getIsSuccessful()) {
             return $quoteTransfer;
         }
@@ -73,22 +74,60 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
         RestAddressTransfer $restAddressTransfer,
         CompanyUserTransfer $companyUserTransfer
     ): AddressTransfer {
-        if ($restAddressTransfer->getId() && $companyUserTransfer->getCompanyBusinessUnit()) {
-            $companyUnitAddressCollectionTransfer = $companyUserTransfer->getCompanyBusinessUnit()->getAddressCollection();
+        $addressTransfer = (new AddressTransfer())
+            ->fromArray($restAddressTransfer->toArray(), true);
 
-            if ($companyUnitAddressCollectionTransfer) {
-                foreach ($companyUnitAddressCollectionTransfer->getCompanyUnitAddresses() as $companyUnitAddressTransfer) {
-                    if ($companyUnitAddressTransfer->getUuid() === $restAddressTransfer->getId()) {
-                        $addressTransfer = (new AddressTransfer())->fromArray($companyUnitAddressTransfer->toArray(), true);
-                        $addressTransfer->setFirstName($companyUserTransfer->getCompanyBusinessUnit()->getName());
-                        $addressTransfer->setLastName('');
-
-                        return $addressTransfer;
-                    }
-                }
-            }
+        if ($restAddressTransfer->getId() === null || $companyUserTransfer->getCompanyBusinessUnit() === null) {
+            return $addressTransfer;
         }
 
-        return (new AddressTransfer())->fromArray($restAddressTransfer->toArray(), true);
+        $companyUnitAddressCollectionTransfer = $companyUserTransfer->getCompanyBusinessUnit()->getAddressCollection();
+
+        if ($companyUnitAddressCollectionTransfer === null) {
+            return $addressTransfer;
+        }
+
+        foreach ($companyUnitAddressCollectionTransfer->getCompanyUnitAddresses() as $companyUnitAddressTransfer) {
+            if ($companyUnitAddressTransfer->getUuid() !== $restAddressTransfer->getId()) {
+                continue;
+            }
+
+            $addressTransfer = (new AddressTransfer())
+                ->fromArray($companyUnitAddressTransfer->toArray(), true)
+                ->setIdCompanyUnitAddress($companyUnitAddressTransfer->getIdCompanyUnitAddress());
+
+            $companyName = $this->getCompanyNameByCompanyUserTransfer($companyUserTransfer);
+
+            if ($companyName !== null) {
+                $addressTransfer->setFirstName($companyName)
+                    ->setLastName('');
+            }
+
+            break;
+        }
+
+        return $addressTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return string|null
+     */
+    protected function getCompanyNameByCompanyUserTransfer(CompanyUserTransfer $companyUserTransfer): ?string
+    {
+        $companyTransfer = $companyUserTransfer->getCompany();
+
+        if ($companyTransfer !== null && $companyTransfer->getName() !== null) {
+            return $companyTransfer->getName();
+        }
+
+        $companyBusinessUnitTransfer = $companyUserTransfer->getCompanyBusinessUnit();
+
+        if ($companyBusinessUnitTransfer === null || $companyBusinessUnitTransfer->getCompany() === null) {
+            return null;
+        }
+
+        return $companyBusinessUnitTransfer->getCompany()->getName();
     }
 }
