@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
+use FondOfSpryker\Client\CompanyUserPermission\Plugin\Permission\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
@@ -13,9 +14,12 @@ use Generated\Shared\Transfer\RestErrorMessageTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
+use Spryker\Glue\Kernel\PermissionAwareTrait;
 
 class CompanyUsersWriter implements CompanyUsersWriterInterface
 {
+    use PermissionAwareTrait;
+
     /**
      * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
      */
@@ -59,6 +63,15 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
         $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->create(
             $restCompanyUsersRequestAttributesTransfer
         );
+
+        $hasPermissionToWrite = $this->can(
+            WriteCompanyUserPermissionPlugin::KEY,
+            $restCompanyUsersResponseTransfer->getCompanyUser()->getFkCompany()
+        );
+
+        if (!$hasPermissionToWrite) {
+            return $this->restApiError->addAccessDeniedError($this->restResourceBuilder->createRestResponse());
+        }
 
         if (!$restCompanyUsersResponseTransfer->getIsSuccess()) {
             return $this->createSaveCompanyUserFailedErrorResponse($restCompanyUsersResponseTransfer);
