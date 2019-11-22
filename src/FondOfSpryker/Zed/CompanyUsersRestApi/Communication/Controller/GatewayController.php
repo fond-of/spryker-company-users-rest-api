@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Controller;
 
@@ -15,18 +15,6 @@ use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
  */
 class GatewayController extends AbstractGatewayController
 {
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function findCompanyUserByCompanyUserReferenceAction(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer {
-        return $this->getFacade()
-            ->findCompanyUserByCompanyUserReference($companyUserTransfer);
-    }
-
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *

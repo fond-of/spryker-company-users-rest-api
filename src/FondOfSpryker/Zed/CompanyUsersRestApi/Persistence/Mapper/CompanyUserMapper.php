@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\Mapper;
 
@@ -21,7 +21,10 @@ class CompanyUserMapper implements CompanyUserMapperInterface
     public function mapEntityTransferToCompanyUserTransfer(
         SpyCompanyUserEntityTransfer $companyUserEntityTransfer
     ): CompanyUserTransfer {
-        $companyUserTransfer = (new CompanyUserTransfer())->fromArray($companyUserEntityTransfer->modifiedToArray(), true);
+        $companyUserTransfer = (new CompanyUserTransfer())->fromArray(
+            $companyUserEntityTransfer->modifiedToArray(),
+            true
+        );
 
         if ($companyUserEntityTransfer->getCustomer()) {
             $customerTransfer = (new CustomerTransfer())->fromArray(

@@ -1,9 +1,8 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
-
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
@@ -17,12 +16,10 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompa
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\ReferenceGenerator\CompanyUserReferenceGenerator;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\ReferenceGenerator\CompanyUserReferenceGeneratorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToSequenceNumberFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
@@ -45,8 +42,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createCompanyUserReader(): CompanyUserReaderInterface
     {
         return new CompanyUserReader(
-            $this->getRepository(),
-            $this->getCompanyUserHydrationPlugins()
+            $this->getRepository()
         );
     }
 
@@ -77,8 +73,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createCompanyUserDeleter(): CompanyUserDeleterInterface
     {
         return new CompanyUserDeleter(
-            $this->getEntityManager(),
-            $this->getRepository()
+            $this->getCompanyUserReferenceFacade(),
+            $this->getEntityManager()
         );
     }
 
@@ -107,35 +103,18 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\ReferenceGenerator\CompanyUserReferenceGeneratorInterface
-     */
-    public function createCompanyUserReferenceGenerator(): CompanyUserReferenceGeneratorInterface
-    {
-        return new CompanyUserReferenceGenerator(
-            $this->getSequenceNumberFacade(),
-            $this->getConfig()->getCompanyUserReferenceDefaults()
-        );
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToSequenceNumberFacadeInterface
-     */
-    protected function getSequenceNumberFacade(): CompanyUsersRestApiToSequenceNumberFacadeInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_SEQUENCE_NUMBER);
-    }
-
-    /**
      * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface
      */
     public function createCompanyUserUnitAddressQuoteMapper(): CompanyUserUnitAddressQuoteMapperInterface
     {
         return new CompanyUserUnitAddressQuoteMapper(
-            $this->getCompanyUsersRestApiFacade()
+            $this->getCompanyUserReferenceFacade()
         );
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Zed\Company\Business\CompanyFacadeInterface
      */
     protected function getCompanyFacade(): CompanyFacadeInterface
@@ -144,6 +123,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface
      */
     protected function getCompanyUserFacade(): CompanyUserFacadeInterface
@@ -152,6 +133,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Zed\Customer\Business\CustomerFacadeInterface
      */
     protected function getCustomerFacade(): CustomerFacadeInterface
@@ -160,6 +143,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface
      */
     protected function getCompanyBusinessUnitFacade(): CompanyBusinessUnitFacadeInterface
@@ -168,22 +153,18 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface
+     * @throws
+     *
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
-    protected function getCompanyUsersRestApiFacade(): CompanyUsersRestApiFacadeInterface
+    protected function getCompanyUserReferenceFacade(): CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
     {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USERS_REST_API);
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE);
     }
 
     /**
-     * @return \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[]
-     */
-    protected function getCompanyUserHydrationPlugins(): array
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_HYDRATE);
-    }
-
-    /**
+     * @throws
+     *
      * @return \Spryker\Service\UtilText\UtilTextServiceInterface
      */
     protected function getUtilTextService(): UtilTextServiceInterface
@@ -192,6 +173,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
      */
     protected function getMailFacade(): MailFacadeInterface
@@ -200,6 +183,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface
      */
     protected function getCompanyRoleFacade(): CompanyRoleFacadeInterface

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
@@ -23,23 +23,6 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
     public function __construct(CompanyUsersRestApiToZedRequestClientInterface $zedRequestClient)
     {
         $this->zedRequestClient = $zedRequestClient;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function findCompanyUserByCompanyUserReference(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer {
-        /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
-        $companyUserResponseTransfer = $this->zedRequestClient->call(
-            '/company-users-rest-api/gateway/find-company-user-by-company-user-reference',
-            $companyUserTransfer
-        );
-
-        return $companyUserResponseTransfer;
     }
 
     /**

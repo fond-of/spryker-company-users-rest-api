@@ -1,12 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -15,31 +14,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class CompanyUsersRestApiRepository extends AbstractRepository implements CompanyUsersRestApiRepositoryInterface
 {
-    /**
-     * @param string $companyUserReference
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
-     */
-    public function findCompanyUserByCompanyUserReference(string $companyUserReference): ?CompanyUserTransfer
-    {
-        $query = $this->getFactory()
-            ->getCompanyUserPropelQuery()
-            ->filterByCompanyUserReference($companyUserReference);
-
-        $companyUserEntityTransfer = $this->buildQueryFromCriteria($query)->findOne();
-
-        if ($companyUserEntityTransfer === null) {
-            return null;
-        }
-
-        $companyUserTransfer = (new CompanyUserTransfer())->fromArray(
-            $companyUserEntityTransfer->toArray(),
-            true
-        );
-
-        return $companyUserTransfer;
-    }
-
     /**
      * @param \Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer $companyUserCriteriaFilterTransfer
      *
@@ -63,6 +37,8 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
     /**
      * @param \Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery $queryCompanyUser
      * @param \Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer $criteriaFilterTransfer
+     *
+     * @throws
      *
      * @return void
      */

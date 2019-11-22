@@ -1,11 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
@@ -20,20 +20,20 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     protected $companyUsersRestApiEntityManager;
 
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
-    protected $companyUsersRestApiRepository;
+    protected $companyUserReferenceFacade;
 
     /**
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository
      */
     public function __construct(
-        CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager,
-        CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository
+        CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade,
+        CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
     ) {
+        $this->companyUserReferenceFacade = $companyUserReferenceFacade;
         $this->companyUsersRestApiEntityManager = $companyUsersRestApiEntityManager;
-        $this->companyUsersRestApiRepository = $companyUsersRestApiRepository;
     }
 
     /**
@@ -44,16 +44,21 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
         return $this->getTransactionHandler()->handleTransaction(function () use ($companyUserTransfer) {
-            /* @var \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer */
-            $dbCompanyUserTransfer = $this->companyUsersRestApiRepository->findCompanyUserByCompanyUserReference(
-                $companyUserTransfer->getCompanyUserReference()
+            $companyUserResponseTransfer = $this->companyUserReferenceFacade->findCompanyUserByCompanyUserReference(
+                $companyUserTransfer
             );
 
-            if ($dbCompanyUserTransfer === null) {
+            if (!$companyUserResponseTransfer->getIsSuccessful()) {
                 return (new CompanyUserResponseTransfer())->setIsSuccessful(false);
             }
 
-            $this->companyUsersRestApiEntityManager->deleteCompanyUserById($dbCompanyUserTransfer->getIdCompanyUser());
+            $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
+
+            if ($companyUserTransfer === null || $companyUserTransfer->getIdCompanyUser() === null) {
+                return (new CompanyUserResponseTransfer())->setIsSuccessful(false);
+            }
+
+            $this->companyUsersRestApiEntityManager->deleteCompanyUserById($companyUserTransfer->getIdCompanyUser());
 
             return (new CompanyUserResponseTransfer())->setIsSuccessful(true);
         });

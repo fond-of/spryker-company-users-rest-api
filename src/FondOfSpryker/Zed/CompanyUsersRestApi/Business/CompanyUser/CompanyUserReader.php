@@ -1,71 +1,27 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
-use Generated\Shared\Transfer\ResponseMessageTransfer;
-
-use function count;
 
 class CompanyUserReader implements CompanyUserReaderInterface
 {
-    protected const MESSAGE_COMPANY_USER_NOT_FOUND = 'message.company_user.not_found';
-
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface
      */
-    protected $companyUsersRestApiRepository;
+    protected $repository;
 
     /**
-     * @var \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[]
-     */
-    protected $companyUserHydrationPlugins;
-
-    /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository
-     * @param \Spryker\Zed\CompanyUserExtension\Dependency\Plugin\CompanyUserHydrationPluginInterface[] $companyUserHydrationPlugins
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $repository
      */
     public function __construct(
-        CompanyUsersRestApiRepositoryInterface $companyUsersRestApiRepository,
-        array $companyUserHydrationPlugins
+        CompanyUsersRestApiRepositoryInterface $repository
     ) {
-        $this->companyUsersRestApiRepository = $companyUsersRestApiRepository;
-        $this->companyUserHydrationPlugins = $companyUserHydrationPlugins;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function findCompanyUserByCompanyUserReference(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer {
-        $companyUserTransfer = $this->companyUsersRestApiRepository->findCompanyUserByCompanyUserReference(
-            $companyUserTransfer->getCompanyUserReference()
-        );
-
-        $companyUserResponseTransfer = new CompanyUserResponseTransfer();
-
-        $companyUserResponseTransfer->setIsSuccessful(true)
-            ->setCompanyUser($companyUserTransfer);
-
-        if ($companyUserTransfer !== null) {
-            $companyUserTransfer = $this->executeHydrationPlugins($companyUserTransfer);
-            $companyUserResponseTransfer->setCompanyUser($companyUserTransfer);
-
-            return $companyUserResponseTransfer;
-        }
-
-        $companyUserResponseTransfer->setIsSuccessful(false)
-            ->addMessage((new ResponseMessageTransfer())->setText(static::MESSAGE_COMPANY_USER_NOT_FOUND));
-
-        return $companyUserResponseTransfer;
+        $this->repository = $repository;
     }
 
     /**
@@ -81,28 +37,14 @@ class CompanyUserReader implements CompanyUserReaderInterface
             return false;
         }
 
-        $companyUserCriteriaFilterTransfer = new CompanyUserCriteriaFilterTransfer();
-        $companyUserCriteriaFilterTransfer->setIdCustomer($companyUserTransfer->getFkCustomer());
-        $companyUserCriteriaFilterTransfer->setIdCompany($companyUserTransfer->getFkCompany());
-        $companyUserCriteriaFilterTransfer->setIdCompanyBusinessUnit($companyUserTransfer->getFkCompanyBusinessUnit());
+        $companyUserCriteriaFilterTransfer = (new CompanyUserCriteriaFilterTransfer())
+            ->setIdCustomer($companyUserTransfer->getFkCustomer())
+            ->setIdCompany($companyUserTransfer->getFkCompany())
+            ->setIdCompanyBusinessUnit($companyUserTransfer->getFkCompanyBusinessUnit());
 
-        $companyUserCollection = $this->companyUsersRestApiRepository
+        $companyUserCollection = $this->repository
             ->findCompanyUsersByFilter($companyUserCriteriaFilterTransfer);
 
         return $companyUserCollection->getCompanyUsers()->count() > 0;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected function executeHydrationPlugins(CompanyUserTransfer $companyUserTransfer): CompanyUserTransfer
-    {
-        foreach ($this->companyUserHydrationPlugins as $companyUserHydrationPlugin) {
-            $companyUserTransfer = $companyUserHydrationPlugin->hydrate($companyUserTransfer);
-        }
-
-        return $companyUserTransfer;
     }
 }

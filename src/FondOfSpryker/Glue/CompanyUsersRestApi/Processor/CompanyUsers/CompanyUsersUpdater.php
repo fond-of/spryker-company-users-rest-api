@@ -1,11 +1,12 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
@@ -41,6 +42,11 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
     protected $companyUserClient;
 
     /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
+     */
+    protected $companyUserReferenceClient;
+
+    /**
      * @var \Spryker\Client\CompanyRole\CompanyRoleClientInterface
      */
     protected $companyRoleClient;
@@ -60,6 +66,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
      * @param \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface $companyUsersRestApiClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient
+     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient
      * @param \Spryker\Client\CompanyRole\CompanyRoleClientInterface $companyRoleClient
      * @param \Spryker\Client\Customer\CustomerClientInterface $customerClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface $companyUsersMapper
@@ -69,6 +76,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
         CompanyUsersRestApiClientInterface $companyUsersRestApiClient,
         RestApiErrorInterface $restApiError,
         CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient,
+        CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient,
         CompanyRoleClientInterface $companyRoleClient,
         CustomerClientInterface $customerClient,
         CompanyUsersMapperInterface $companyUsersMapper
@@ -77,6 +85,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
         $this->companyUsersRestApiClient = $companyUsersRestApiClient;
         $this->restApiError = $restApiError;
         $this->companyUserClient = $companyUserClient;
+        $this->companyUserReferenceClient = $companyUserReferenceClient;
         $this->companyRoleClient = $companyRoleClient;
         $this->customerClient = $customerClient;
         $this->companyUsersMapper = $companyUsersMapper;
@@ -104,7 +113,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
             return $this->restApiError->addCompanyRoleNotFoundError($restResponse);
         }
 
-        $companyUserResponseTransfer = $this->companyUsersRestApiClient->findCompanyUserByCompanyUserReference(
+        $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
             (new CompanyUserTransfer())->setCompanyUserReference(
                 $restRequest->getResource()->getId()
             )

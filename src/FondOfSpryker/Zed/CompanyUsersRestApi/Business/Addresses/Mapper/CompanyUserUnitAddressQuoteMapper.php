@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -14,16 +14,16 @@ use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMapperInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
-    protected $companyUsersRestApiFacade;
+    protected $companyUserReferenceFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface $companyUsersRestApiFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      */
-    public function __construct(CompanyUsersRestApiFacadeInterface $companyUsersRestApiFacade)
+    public function __construct(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade)
     {
-        $this->companyUsersRestApiFacade = $companyUsersRestApiFacade;
+        $this->companyUserReferenceFacade = $companyUserReferenceFacade;
     }
 
     /**
@@ -38,7 +38,8 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
     ): QuoteTransfer {
         $companyUserTransfer = (new CompanyUserTransfer())
             ->setCompanyUserReference($quoteTransfer->getCompanyUserReference());
-        $companyUserResponseTransfer = $this->companyUsersRestApiFacade
+
+        $companyUserResponseTransfer = $this->companyUserReferenceFacade
             ->findCompanyUserByCompanyUserReference($companyUserTransfer);
 
         if (!$companyUserResponseTransfer->getIsSuccessful()) {

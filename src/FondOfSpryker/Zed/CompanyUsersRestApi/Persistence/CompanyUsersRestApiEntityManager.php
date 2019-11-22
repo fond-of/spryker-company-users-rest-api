@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
@@ -14,6 +14,8 @@ class CompanyUsersRestApiEntityManager extends AbstractEntityManager implements 
 {
     /**
      * @param int $idCompanyUser
+     *
+     * @throws
      *
      * @return void
      */
