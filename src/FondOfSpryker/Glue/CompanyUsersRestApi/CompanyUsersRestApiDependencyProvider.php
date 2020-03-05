@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientBridge;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientBridge;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientBridge;
 use Spryker\Glue\Kernel\AbstractBundleDependencyProvider;
@@ -15,6 +16,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const CLIENT_COMPANY_USER = 'CLIENT_COMPANY_USER';
     public const CLIENT_COMPANY_USER_REFERENCE = 'CLIENT_COMPANY_USER_REFERENCE';
     public const CLIENT_CUSTOMER = 'CLIENT_CUSTOMER';
+    public const CLIENT_COMPANY = 'CLIENT_COMPANY';
 
     /**
      * @param \Spryker\Glue\Kernel\Container $container
@@ -26,6 +28,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = parent::provideDependencies($container);
 
         $container = $this->addCompanyRole($container);
+        $container = $this->addCompanyClient($container);
         $container = $this->addCompanyUserClient($container);
         $container = $this->addCompanyUserReferenceClient($container);
         $container = $this->addCustomerClient($container);
@@ -75,11 +78,32 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         return $container;
     }
 
+    /**
+     * @param \Spryker\Glue\Kernel\Container $container
+     *
+     * @return \Spryker\Glue\Kernel\Container
+     */
     protected function addCompanyUserReferenceClient(Container $container): Container
     {
         $container[static::CLIENT_COMPANY_USER_REFERENCE] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyUserReferenceClientBridge(
                 $container->getLocator()->companyUserReference()->client()
+            );
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Glue\Kernel\Container $container
+     *
+     * @return \Spryker\Glue\Kernel\Container
+     */
+    protected function addCompanyClient(Container $container): Container
+    {
+        $container[static::CLIENT_COMPANY] = static function (Container $container) {
+            return new CompanyUsersRestApiToCompanyClientBridge(
+                $container->getLocator()->company()->client()
             );
         };
 

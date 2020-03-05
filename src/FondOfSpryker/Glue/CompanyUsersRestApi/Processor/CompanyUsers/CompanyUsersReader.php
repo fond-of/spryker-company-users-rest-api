@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
@@ -66,8 +66,7 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
             return $this->restApiError->addAccessDeniedError($restResponse);
         }
 
-        $customerTransfer = new CustomerTransfer();
-        $customerTransfer->setCustomerReference($user->getNaturalIdentifier());
+        $customerTransfer = (new CustomerTransfer())->setCustomerReference($user->getNaturalIdentifier());
 
         $companyUserCollectionTransfer = $this->companyUserClient
             ->getActiveCompanyUsersByCustomerReference($customerTransfer);

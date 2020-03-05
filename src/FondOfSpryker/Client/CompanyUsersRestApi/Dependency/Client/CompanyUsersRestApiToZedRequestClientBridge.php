@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client;
 
+use Spryker\Client\ZedRequest\ZedRequestClientInterface;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 class CompanyUsersRestApiToZedRequestClientBridge implements CompanyUsersRestApiToZedRequestClientInterface
@@ -16,7 +17,7 @@ class CompanyUsersRestApiToZedRequestClientBridge implements CompanyUsersRestApi
     /**
      * @param \Spryker\Client\ZedRequest\ZedRequestClientInterface $zedRequestClient
      */
-    public function __construct($zedRequestClient)
+    public function __construct(ZedRequestClientInterface $zedRequestClient)
     {
         $this->zedRequestClient = $zedRequestClient;
     }

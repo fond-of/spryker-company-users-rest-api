@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
@@ -79,17 +79,17 @@ class CompanyUsersDeleter implements CompanyUsersDeleterInterface
     }
 
     /**
-     * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface $response
+     * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface $restResponse
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    protected function createFailedDeletingCompanyUserError(RestResponseInterface $response): RestResponseInterface
+    protected function createFailedDeletingCompanyUserError(RestResponseInterface $restResponse): RestResponseInterface
     {
         $restErrorTransfer = (new RestErrorMessageTransfer())
             ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_FAILED_DELETING_COMPANY_USER)
             ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
             ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_FAILED_DELETING_COMPANY_USER);
 
-        return $response->addError($restErrorTransfer);
+        return $restResponse->addError($restErrorTransfer);
     }
 }

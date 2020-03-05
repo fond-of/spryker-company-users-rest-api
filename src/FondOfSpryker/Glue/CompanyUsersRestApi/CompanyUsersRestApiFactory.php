@@ -1,10 +1,13 @@
 <?php
 
-declare(strict_types=1);
+
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleter;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
@@ -58,6 +61,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
         return new CompanyUsersWriter(
             $this->getResourceBuilder(),
             $this->getClient(),
+            $this->getCompanyClient(),
             $this->createRestApiError()
         );
     }
@@ -72,6 +76,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getClient(),
             $this->createRestApiError(),
             $this->getCompanyUserClient(),
+            $this->getCompanyUserReferenceClient(),
             $this->getCompanyRoleClient(),
             $this->getCustomerClient(),
             $this->createCompanyUsersMapper()
@@ -97,6 +102,28 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
+     */
+    public function getCompanyUserReferenceClient(): CompanyUsersRestApiToCompanyUserReferenceClientInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::CLIENT_COMPANY_USER_REFERENCE);
+    }
+
+    /**
+     * @throws
+     *
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface
+     */
+    public function getCompanyClient(): CompanyUsersRestApiToCompanyClientInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::CLIENT_COMPANY);
+    }
+
+    /**
+     * @throws
+     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
      */
     public function getCompanyUserClient(): CompanyUsersRestApiToCompanyUserClientInterface
@@ -105,6 +132,8 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Client\CompanyRole\CompanyRoleClientInterface
      */
     public function getCompanyRoleClient(): CompanyRoleClientInterface
@@ -113,6 +142,8 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
+     * @throws
+     *
      * @return \Spryker\Client\Customer\CustomerClientInterface
      */
     public function getCustomerClient(): CustomerClientInterface
