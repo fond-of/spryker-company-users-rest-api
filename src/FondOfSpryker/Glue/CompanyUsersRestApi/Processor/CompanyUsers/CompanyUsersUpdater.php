@@ -120,7 +120,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
         );
 
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
-        if (!$companyUserResponseTransfer->getIsSuccessful() || $companyUserTransfer === null) {
+        if ($companyUserTransfer === null || !$companyUserResponseTransfer->getIsSuccessful()) {
             return $this->restApiError->addCompanyUserNotFoundError($restResponse);
         }
 

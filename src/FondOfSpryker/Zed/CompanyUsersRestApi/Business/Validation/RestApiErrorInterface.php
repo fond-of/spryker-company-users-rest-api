@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation;
 
@@ -32,4 +32,9 @@ interface RestApiErrorInterface
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
     public function createCouldNotCreateCustomerErrorResponse(): RestCompanyUsersResponseTransfer;
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function createDefaultCompanyRoleNotFoundErrorResponse(): RestCompanyUsersResponseTransfer;
 }

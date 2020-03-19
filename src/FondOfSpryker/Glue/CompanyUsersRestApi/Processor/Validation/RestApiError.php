@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation;
 
@@ -40,6 +40,7 @@ class RestApiError implements RestApiErrorInterface
 
         return $restResponse->addError($restErrorTransfer);
     }
+
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface $restResponse
      *

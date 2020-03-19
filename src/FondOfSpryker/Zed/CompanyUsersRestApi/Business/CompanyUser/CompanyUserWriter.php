@@ -1,9 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
+use DateTimeImmutable;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
@@ -29,7 +30,6 @@ use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
-use DateTimeImmutable;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
@@ -221,6 +221,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
+     * @throws
+     *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
     protected function createCustomerRestorePasswordProperties(CustomerTransfer $customerTransfer): CustomerTransfer
@@ -347,7 +349,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\CustomerTransfer
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer|null
      */
@@ -437,7 +439,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected function assignCompanyRoleIfExistsTo(
         CompanyUserTransfer $companyUserTransfer,
         ?CompanyRoleTransfer $companyRoleTransfer = null
-    ) : CompanyUserTransfer {
+    ): CompanyUserTransfer {
         if ($companyRoleTransfer !== null) {
             $companyUserTransfer->setCompanyRoleCollection(
                 (new CompanyRoleCollectionTransfer())->addRole($companyRoleTransfer)
