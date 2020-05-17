@@ -102,8 +102,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
      */
     public function getCompanyUserReferenceClient(): CompanyUsersRestApiToCompanyUserReferenceClientInterface
@@ -112,8 +110,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface
      */
     public function getCompanyClient(): CompanyUsersRestApiToCompanyClientInterface
@@ -122,8 +118,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
      */
     public function getCompanyUserClient(): CompanyUsersRestApiToCompanyUserClientInterface
@@ -132,8 +126,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Client\CompanyRole\CompanyRoleClientInterface
      */
     public function getCompanyRoleClient(): CompanyRoleClientInterface
@@ -142,8 +134,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Client\Customer\CustomerClientInterface
      */
     public function getCustomerClient(): CustomerClientInterface

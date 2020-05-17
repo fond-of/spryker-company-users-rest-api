@@ -15,8 +15,6 @@ class CompanyUsersRestApiEntityManager extends AbstractEntityManager implements 
     /**
      * @param int $idCompanyUser
      *
-     * @throws
-     *
      * @return void
      */
     public function deleteCompanyUserById(int $idCompanyUser): void

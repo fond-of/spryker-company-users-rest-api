@@ -221,8 +221,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
-     * @throws
-     *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
     protected function createCustomerRestorePasswordProperties(CustomerTransfer $customerTransfer): CustomerTransfer

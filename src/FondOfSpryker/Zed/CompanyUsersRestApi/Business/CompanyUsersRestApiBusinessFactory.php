@@ -113,8 +113,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\Company\Business\CompanyFacadeInterface
      */
     protected function getCompanyFacade(): CompanyFacadeInterface
@@ -123,8 +121,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface
      */
     protected function getCompanyUserFacade(): CompanyUserFacadeInterface
@@ -133,8 +129,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\Customer\Business\CustomerFacadeInterface
      */
     protected function getCustomerFacade(): CustomerFacadeInterface
@@ -143,8 +137,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface
      */
     protected function getCompanyBusinessUnitFacade(): CompanyBusinessUnitFacadeInterface
@@ -153,8 +145,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
     protected function getCompanyUserReferenceFacade(): CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
@@ -163,8 +153,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Service\UtilText\UtilTextServiceInterface
      */
     protected function getUtilTextService(): UtilTextServiceInterface
@@ -173,8 +161,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
      */
     protected function getMailFacade(): MailFacadeInterface
@@ -183,8 +169,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface
      */
     protected function getCompanyRoleFacade(): CompanyRoleFacadeInterface
