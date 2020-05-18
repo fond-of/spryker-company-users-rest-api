@@ -10,6 +10,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManager;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepository;
 use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
@@ -89,6 +90,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock;
 
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface
+     */
+    protected $companyUsersRestApiToEventInterfaceMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -138,6 +144,10 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUsersRestApiToEventInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToEventInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -207,8 +217,13 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('get')
-            ->with(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE)
-            ->willReturn($this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock);
+            ->withConsecutive(
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
+                [CompanyUsersRestApiDependencyProvider::FACADE_EVENT]
+            )->willReturnOnConsecutiveCalls(
+                $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock,
+                $this->companyUsersRestApiToEventInterfaceMock
+            );
 
         $this->assertInstanceOf(
             CompanyUserDeleter::class,

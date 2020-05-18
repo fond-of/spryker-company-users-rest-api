@@ -32,8 +32,10 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     protected $eventFacade;
 
     /**
+     * CompanyUserDeleter constructor.
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface|null $eventFacade
      */
     public function __construct(
         CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade,
