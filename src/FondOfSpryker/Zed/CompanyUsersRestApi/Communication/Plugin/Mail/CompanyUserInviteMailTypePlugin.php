@@ -45,7 +45,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      *
      * @return $this
      */
-    protected function setSubject(MailBuilderInterface $mailBuilder): self
+    protected function setSubject(MailBuilderInterface $mailBuilder)
     {
         $mailBuilder->setSubject('mail.company_user.invite.subject');
 
@@ -57,7 +57,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      *
      * @return $this
      */
-    protected function setHtmlTemplate(MailBuilderInterface $mailBuilder): self
+    protected function setHtmlTemplate(MailBuilderInterface $mailBuilder)
     {
         $mailBuilder->setHtmlTemplate('company-users-rest-api/mail/company_user_invite.html.twig');
 
@@ -69,7 +69,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      *
      * @return $this
      */
-    protected function setTextTemplate(MailBuilderInterface $mailBuilder): self
+    protected function setTextTemplate(MailBuilderInterface $mailBuilder)
     {
         $mailBuilder->setTextTemplate('company-users-rest-api/mail/company_user_invite.text.twig');
 
@@ -81,7 +81,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      *
      * @return $this
      */
-    protected function setRecipient(MailBuilderInterface $mailBuilder): self
+    protected function setRecipient(MailBuilderInterface $mailBuilder)
     {
         $customerTransfer = $mailBuilder->getMailTransfer()->requireCustomer()->getCustomer();
 
@@ -98,7 +98,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
      *
      * @return $this
      */
-    protected function setSender(MailBuilderInterface $mailBuilder): self
+    protected function setSender(MailBuilderInterface $mailBuilder)
     {
         $mailBuilder->setSender('mail.sender.email', 'mail.sender.name');
 

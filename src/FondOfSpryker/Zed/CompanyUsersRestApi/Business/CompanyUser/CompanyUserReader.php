@@ -31,9 +31,11 @@ class CompanyUserReader implements CompanyUserReaderInterface
      */
     public function doesCompanyUserAlreadyExist(CompanyUserTransfer $companyUserTransfer): bool
     {
-        if ($companyUserTransfer->getFkCustomer() === null ||
+        if (
+            $companyUserTransfer->getFkCustomer() === null ||
             $companyUserTransfer->getFkCompany() === null ||
-            $companyUserTransfer->getFkCompanyBusinessUnit() === null) {
+            $companyUserTransfer->getFkCompanyBusinessUnit() === null
+        ) {
             return false;
         }
 

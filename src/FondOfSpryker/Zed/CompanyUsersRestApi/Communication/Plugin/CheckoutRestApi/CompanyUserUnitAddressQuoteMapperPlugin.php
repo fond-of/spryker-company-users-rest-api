@@ -10,6 +10,7 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface getFacade()
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig getConfig()
+ * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Communication\CompanyUsersRestApiCommunicationFactory getFactory()
  */
 class CompanyUserUnitAddressQuoteMapperPlugin extends AbstractPlugin implements QuoteMapperPluginInterface
 {
@@ -24,7 +25,8 @@ class CompanyUserUnitAddressQuoteMapperPlugin extends AbstractPlugin implements 
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
         return $this->getFacade()->mapCompanyUserUnitAddressesToQuote(
-            $restCheckoutRequestAttributesTransfer, $quoteTransfer
+            $restCheckoutRequestAttributesTransfer,
+            $quoteTransfer
         );
     }
 }
