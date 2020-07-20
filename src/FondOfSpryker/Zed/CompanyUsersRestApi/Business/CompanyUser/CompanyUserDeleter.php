@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\CompanyUsersRestApiEvents;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
@@ -25,15 +27,24 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     protected $companyUserReferenceFacade;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface|null
+     */
+    protected $eventFacade;
+
+    /**
+     * CompanyUserDeleter constructor.
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface|null $eventFacade
      */
     public function __construct(
         CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade,
-        CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
+        CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager,
+        ?CompanyUsersRestApiToEventInterface $eventFacade
     ) {
         $this->companyUserReferenceFacade = $companyUserReferenceFacade;
         $this->companyUsersRestApiEntityManager = $companyUsersRestApiEntityManager;
+        $this->eventFacade = $eventFacade;
     }
 
     /**
@@ -59,8 +70,29 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
             }
 
             $this->companyUsersRestApiEntityManager->deleteCompanyUserById($companyUserTransfer->getIdCompanyUser());
+            $companyUserTransfer->setIsDeleted(true);
+
+            $this->triggerEvent(
+                CompanyUsersRestApiEvents::COMPANY_USER_AFTER_DELETE,
+                $companyUserTransfer
+            );
 
             return (new CompanyUserResponseTransfer())->setIsSuccessful(true);
         });
+    }
+
+    /**
+     * @param string $eventName
+     * @param \Generated\Shared\Transfer\CompanyUnitAddressTransfer $companyUnitAddressTransfer
+     *
+     * @return void
+     */
+    protected function triggerEvent(string $eventName, CompanyUserTransfer $companyUserTransfer): void
+    {
+        if ($this->eventFacade === null) {
+            return;
+        }
+
+        $this->eventFacade->trigger($eventName, $companyUserTransfer);
     }
 }
