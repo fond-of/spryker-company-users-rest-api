@@ -179,7 +179,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\CompanyUsersRestApiEvents
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface
      */
     protected function getEventFacade(): CompanyUsersRestApiToEventInterface
     {

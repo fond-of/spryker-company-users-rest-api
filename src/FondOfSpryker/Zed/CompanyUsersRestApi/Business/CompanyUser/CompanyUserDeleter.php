@@ -32,7 +32,6 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     protected $eventFacade;
 
     /**
-     * CompanyUserDeleter constructor.
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface $companyUsersRestApiEntityManager
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface|null $eventFacade
@@ -83,7 +82,7 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
 
     /**
      * @param string $eventName
-     * @param \Generated\Shared\Transfer\CompanyUnitAddressTransfer $companyUnitAddressTransfer
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
      * @return void
      */
