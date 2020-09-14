@@ -18,7 +18,7 @@
     "fond-of-spryker/company-business-units-rest-api": "dev-master",
     "fond-of-spryker/company-user-reference": "dev-master",
     "fond-of-spryker/company-user-permission": "dev-master",
-    "fond-of-spryker/customer-b2b": "dev-master",
+    "fond-of-spryker/customer-b2b": "dev-spryker_upgrade",
     "fond-of-spryker/mail": "dev-spryker_upgrade",
     "spryker/company-role": "^1.0.0",
     "spryker/glue-application": "^1.0.0"
