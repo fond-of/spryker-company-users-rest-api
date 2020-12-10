@@ -97,7 +97,7 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
                 ->fromArray($companyUnitAddressTransfer->toArray(), true)
                 ->setIdCompanyUnitAddress($companyUnitAddressTransfer->getIdCompanyUnitAddress())
                 ->setFirstName($companyUnitAddressTransfer->getName1())
-                ->setLastName($companyUnitAddressTransfer->getName2());
+                ->setLastName($companyUnitAddressTransfer->getName2() ?? '');
 
             break;
         }
