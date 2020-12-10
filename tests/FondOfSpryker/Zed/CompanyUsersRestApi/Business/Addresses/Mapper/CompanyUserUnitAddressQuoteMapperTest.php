@@ -99,7 +99,12 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
     /**
      * @var string
      */
-    protected $nameCompany;
+    protected $name1;
+
+    /**
+     * @var string
+     */
+    protected $name2;
 
     /**
      * @return void
@@ -158,7 +163,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->nameCompany = 'name-company';
+        $this->name1 = 'Name1';
+        $this->name2 = 'Name2';
 
         $this->companyUserUnitAddressQuoteMapper = new CompanyUserUnitAddressQuoteMapper(
             $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock
@@ -170,72 +176,72 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
      */
     public function testMapCompanyUserUnitAddressesToQuote(): void
     {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->quoteTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUserReference')
             ->willReturn($this->companyUserReference);
 
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUser')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getBillingAddress')
             ->willReturn($this->restAddressTransferMock);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('getId')
             ->willReturn($this->id);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyBusinessUnit')
             ->willReturn($this->companyBusinessUnitTransferMock);
 
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
+        $this->companyBusinessUnitTransferMock->expects(static::atLeastOnce())
             ->method('getAddressCollection')
             ->willReturn($this->companyUnitAddressCollectionTransferMock);
 
-        $this->companyUnitAddressCollectionTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressCollectionTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUnitAddresses')
             ->willReturn($this->companyUnitAddresses);
 
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
             ->method('getUuid')
             ->willReturn($this->uuid);
 
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompanyUnitAddress')
             ->willReturn($this->idCompanyUnitAddress);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
+            ->method('getName1')
+            ->willReturn($this->name1);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
-            ->method('getName')
-            ->willReturn($this->nameCompany);
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
+            ->method('getName2')
+            ->willReturn($this->name2);
 
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getShippingAddress')
             ->willReturn($this->restAddressTransferMock);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteTransferMock
@@ -248,20 +254,20 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
      */
     public function testMapCompanyUserUnitAddressesToQuoteCompanyUserResponseNotSuccessful(): void
     {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->quoteTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUserReference')
             ->willReturn($this->companyUserReference);
 
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(false);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteTransferMock
@@ -274,40 +280,40 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
      */
     public function testMapCompanyUserUnitAddressesToQuoteCompanyBusinessUnitNull(): void
     {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->quoteTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUserReference')
             ->willReturn($this->companyUserReference);
 
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUser')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getBillingAddress')
             ->willReturn($this->restAddressTransferMock);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('getId')
             ->willReturn($this->id);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyBusinessUnit')
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteTransferMock
@@ -320,44 +326,44 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
      */
     public function testMapCompanyUserUnitAddressesToQuoteAddressCollectionNull(): void
     {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->quoteTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUserReference')
             ->willReturn($this->companyUserReference);
 
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUser')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getBillingAddress')
             ->willReturn($this->restAddressTransferMock);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('getId')
             ->willReturn($this->id);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyBusinessUnit')
             ->willReturn($this->companyBusinessUnitTransferMock);
 
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
+        $this->companyBusinessUnitTransferMock->expects(static::atLeastOnce())
             ->method('getAddressCollection')
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteTransferMock
@@ -370,220 +376,52 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
      */
     public function testMapCompanyUserUnitAddressesToQuoteContinueCompanyUnitAddress(): void
     {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->quoteTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUserReference')
             ->willReturn($this->companyUserReference);
 
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUser')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getBillingAddress')
             ->willReturn($this->restAddressTransferMock);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
+        $this->restAddressTransferMock->expects(static::atLeastOnce())
             ->method('getId')
             ->willReturn($this->id);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyBusinessUnit')
             ->willReturn($this->companyBusinessUnitTransferMock);
 
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
+        $this->companyBusinessUnitTransferMock->expects(static::atLeastOnce())
             ->method('getAddressCollection')
             ->willReturn($this->companyUnitAddressCollectionTransferMock);
 
-        $this->companyUnitAddressCollectionTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressCollectionTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUnitAddresses')
             ->willReturn($this->companyUnitAddresses);
 
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
+        $this->companyUnitAddressTransferMock->expects(static::atLeastOnce())
             ->method('getUuid')
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
-            $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
-                $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testMapCompanyUserUnitAddressesToQuoteCompanyBusinessUnitCompanyName(): void
-    {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUserReference')
-            ->willReturn($this->companyUserReference);
-
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyUserByCompanyUserReference')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getBillingAddress')
-            ->willReturn($this->restAddressTransferMock);
-
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getId')
-            ->willReturn($this->id);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyBusinessUnit')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
-            ->method('getAddressCollection')
-            ->willReturn($this->companyUnitAddressCollectionTransferMock);
-
-        $this->companyUnitAddressCollectionTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUnitAddresses')
-            ->willReturn($this->companyUnitAddresses);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompanyUnitAddress')
-            ->willReturn($this->idCompanyUnitAddress);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn(null);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyBusinessUnit')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
-
-        $this->companyTransferMock->expects($this->atLeastOnce())
-            ->method('getName')
-            ->willReturn($this->nameCompany);
-
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getShippingAddress')
-            ->willReturn($this->restAddressTransferMock);
-
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
-            $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
-                $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testMapCompanyUserUnitAddressesToQuoteNoCompany(): void
-    {
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUserReference')
-            ->willReturn($this->companyUserReference);
-
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyUserByCompanyUserReference')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getBillingAddress')
-            ->willReturn($this->restAddressTransferMock);
-
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->restAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getId')
-            ->willReturn($this->id);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyBusinessUnit')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
-            ->method('getAddressCollection')
-            ->willReturn($this->companyUnitAddressCollectionTransferMock);
-
-        $this->companyUnitAddressCollectionTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUnitAddresses')
-            ->willReturn($this->companyUnitAddresses);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->companyUnitAddressTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompanyUnitAddress')
-            ->willReturn($this->idCompanyUnitAddress);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn(null);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyBusinessUnit')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->companyBusinessUnitTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn(null);
-
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getShippingAddress')
-            ->willReturn($this->restAddressTransferMock);
-
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteTransferMock

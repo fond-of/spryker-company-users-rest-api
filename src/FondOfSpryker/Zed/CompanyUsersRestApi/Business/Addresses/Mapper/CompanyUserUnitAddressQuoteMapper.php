@@ -95,40 +95,13 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
 
             $addressTransfer = (new AddressTransfer())
                 ->fromArray($companyUnitAddressTransfer->toArray(), true)
-                ->setIdCompanyUnitAddress($companyUnitAddressTransfer->getIdCompanyUnitAddress());
-
-            $companyName = $this->getCompanyNameByCompanyUserTransfer($companyUserTransfer);
-
-            if ($companyName !== null) {
-                $addressTransfer->setFirstName($companyName)
-                    ->setLastName('');
-            }
+                ->setIdCompanyUnitAddress($companyUnitAddressTransfer->getIdCompanyUnitAddress())
+                ->setFirstName($companyUnitAddressTransfer->getName1())
+                ->setLastName($companyUnitAddressTransfer->getName2());
 
             break;
         }
 
         return $addressTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return string|null
-     */
-    protected function getCompanyNameByCompanyUserTransfer(CompanyUserTransfer $companyUserTransfer): ?string
-    {
-        $companyTransfer = $companyUserTransfer->getCompany();
-
-        if ($companyTransfer !== null && $companyTransfer->getName() !== null) {
-            return $companyTransfer->getName();
-        }
-
-        $companyBusinessUnitTransfer = $companyUserTransfer->getCompanyBusinessUnit();
-
-        if ($companyBusinessUnitTransfer === null || $companyBusinessUnitTransfer->getCompany() === null) {
-            return null;
-        }
-
-        return $companyBusinessUnitTransfer->getCompany()->getName();
     }
 }
