@@ -24,7 +24,7 @@
     "spryker/glue-application": "^1.0.0"
   },
   "require-dev": {
-    "fond-of-codeception/spryker": "dev-master as 1.0.0",
+    "fond-of-codeception/spryker": "^1.0",
     "spryker/code-sniffer": "^0.12",
     "codeception/codeception": "^2.4",
     "codeception/mockery-module": "^0.2",
