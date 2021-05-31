@@ -13,7 +13,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManager;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepository;
-use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
@@ -70,7 +70,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyUsersRestApiConfigMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Mail\Business\MailFacadeInterface
      */
     protected $mailFacadeInterfaceMock;
 

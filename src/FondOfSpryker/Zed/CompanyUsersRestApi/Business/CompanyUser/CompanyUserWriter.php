@@ -10,7 +10,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomer
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\Mail\CompanyUserInviteMailTypePlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
@@ -86,7 +86,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUsersRestApiConfig;
 
     /**
-     * @var \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
+     * @var \Spryker\Zed\Mail\Business\MailFacadeInterface
      */
     protected $mailFacade;
 
@@ -106,7 +106,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
      * @param \Spryker\Service\UtilText\UtilTextServiceInterface $utilTextService
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
-     * @param \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
+     * @param \Spryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
      * @param \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface $companyRoleFacade
      */
     public function __construct(
