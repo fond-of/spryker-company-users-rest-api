@@ -21,7 +21,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterf
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
-use FondOfSpryker\Zed\Mail\Business\MailFacadeInterface;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
@@ -163,7 +163,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\Mail\Business\MailFacadeInterface
+     * @return \Spryker\Zed\Mail\Business\MailFacadeInterface
      */
     protected function getMailFacade(): MailFacadeInterface
     {
