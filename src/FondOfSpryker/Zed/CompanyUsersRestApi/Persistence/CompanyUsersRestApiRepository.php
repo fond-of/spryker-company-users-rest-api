@@ -41,6 +41,8 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                     ->useFosBrandQuery()
                     ->endUse()
                 ->endUse()
+                ->usePriceListQuery()
+                ->endUse()
             ->endUse()
             ->useCompanyBusinessUnitQuery()
             ->endUse()
@@ -54,17 +56,18 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
 
         foreach ($companyUsers as $companyUser) {
             $companyUserTransfer = (new CompanyUserTransfer())
-                ->fromArray($companyUser->toArray(), false);
+                ->fromArray($companyUser->toArray(), true);
 
             $company = $companyUser->getCompany();
 
             if ($companyUser->getCompany() !== null) {
                 $companyTransfer = (new CompanyTransfer())
-                    ->fromArray($companyUser->getCompany()->toArray(), false);
+                    ->fromArray($companyUser->getCompany()->toArray(), true);
 
                 if ($company->getPriceList() !== null) {
                     $companyTransfer->setPriceList(
-                        (new PriceListTransfer())->fromArray($company->getPriceList()->toArray(), false)
+                        (new PriceListTransfer())
+                            ->fromArray($company->getPriceList()->toArray(), true)
                     );
                 }
 
@@ -86,7 +89,7 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
             if ($companyUser->getCompanyBusinessUnit() !== null) {
                 $companyUserTransfer->setCompanyBusinessUnit(
                     (new CompanyBusinessUnitTransfer())
-                        ->fromArray($companyUser->getCompanyBusinessUnit()->toArray(), false)
+                        ->fromArray($companyUser->getCompanyBusinessUnit()->toArray(), true)
                 );
             }
 
@@ -98,7 +101,7 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 }
 
                 $companyRoleTransfers[] = (new CompanyRoleTransfer())
-                    ->fromArray($companyRoleToCompanyUsers->getCompanyRole()->toArray(), false);
+                    ->fromArray($companyRoleToCompanyUsers->getCompanyRole()->toArray(), true);
             }
 
             $companyUserTransfers[] = $companyUserTransfer
