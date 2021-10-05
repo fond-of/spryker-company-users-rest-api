@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\PriceListTransfer;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -60,6 +61,13 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
             if ($companyUser->getCompany() !== null) {
                 $companyTransfer = (new CompanyTransfer())
                     ->fromArray($companyUser->getCompany()->toArray(), false);
+
+                if ($company->getPriceList() !== null) {
+                    $companyTransfer->setPriceList(
+                        (new PriceListTransfer())->fromArray($company->getPriceList()->toArray(), false)
+                    );
+                }
+
                 $brandTransfers = [];
 
                 foreach ($company->getFosBrandCompanies() as $brand) {
