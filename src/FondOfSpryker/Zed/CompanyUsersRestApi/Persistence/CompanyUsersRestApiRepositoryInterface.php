@@ -10,6 +10,13 @@ use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 interface CompanyUsersRestApiRepositoryInterface
 {
     /**
+     * @param string $customerReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer[]
+     */
+    public function findActiveCompanyUsersByCustomerReference(string $customerReference): array;
+
+    /**
      * @param \Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer $companyUserCriteriaFilterTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer

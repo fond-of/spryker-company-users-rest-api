@@ -4,8 +4,16 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
+use ArrayObject;
+use Generated\Shared\Transfer\BrandTransfer;
+use Generated\Shared\Transfer\CompanyBrandRelationTransfer;
+use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
+use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
+use Generated\Shared\Transfer\CompanyRoleTransfer;
+use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
@@ -14,6 +22,84 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class CompanyUsersRestApiRepository extends AbstractRepository implements CompanyUsersRestApiRepositoryInterface
 {
+    /**
+     * @param string $customerReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer[]
+     */
+    public function findActiveCompanyUsersByCustomerReference(string $customerReference): array
+    {
+        /** @var \Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser[] $companyUsers */
+        $companyUsers = $this->getFactory()
+            ->getCompanyUserPropelQuery()
+            ->useCustomerQuery()
+                ->filterByCustomerReference($customerReference)
+            ->endUse()
+            ->useCompanyQuery()
+                ->useFosBrandCompanyQuery()
+                    ->useFosBrandQuery()
+                    ->endUse()
+                ->endUse()
+            ->endUse()
+            ->useCompanyBusinessUnitQuery()
+            ->endUse()
+            ->useSpyCompanyRoleToCompanyUserQuery()
+                ->useCompanyRoleQuery()
+                ->endUse()
+            ->endUse()
+            ->find();
+
+        $companyUserTransfers = [];
+
+        foreach ($companyUsers as $companyUser) {
+            $companyUserTransfer = (new CompanyUserTransfer())
+                ->fromArray($companyUser->toArray(), false);
+
+            $company = $companyUser->getCompany();
+
+            if ($companyUser->getCompany() !== null) {
+                $companyTransfer = (new CompanyTransfer())
+                    ->fromArray($companyUser->getCompany()->toArray(), false);
+                $brandTransfers = [];
+
+                foreach ($company->getFosBrandCompanies() as $brand) {
+                    if ($brand->getFosBrand() === null) {
+                        continue;
+                    }
+                    $brandTransfers[] = (new BrandTransfer())
+                        ->fromArray($brand->getFosBrand()->toArray());
+                }
+
+                $companyUserTransfer->setCompany(
+                    $companyTransfer->setBrandRelation((new CompanyBrandRelationTransfer())->setBrands(new ArrayObject($brandTransfers)))
+                );
+            }
+
+            if ($companyUser->getCompanyBusinessUnit() !== null) {
+                $companyUserTransfer->setCompanyBusinessUnit(
+                    (new CompanyBusinessUnitTransfer())
+                        ->fromArray($companyUser->getCompanyBusinessUnit()->toArray(), false)
+                );
+            }
+
+            $companyRoleTransfers = [];
+
+            foreach ($companyUser->getSpyCompanyRoleToCompanyUsers() as $companyRoleToCompanyUsers) {
+                if ($companyRoleToCompanyUsers->getCompanyRole() === null) {
+                    continue;
+                }
+
+                $companyRoleTransfers[] = (new CompanyRoleTransfer())
+                    ->fromArray($companyRoleToCompanyUsers->getCompanyRole()->toArray(), false);
+            }
+
+            $companyUserTransfers[] = $companyUserTransfer
+                ->setCompanyRoleCollection((new CompanyRoleCollectionTransfer())->setRoles(new ArrayObject($companyRoleTransfers)));
+        }
+
+        return $companyUserTransfers;
+    }
+
     /**
      * @param \Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer $companyUserCriteriaFilterTransfer
      *

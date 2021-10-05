@@ -36,7 +36,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     {
         return new CompanyUsersReader(
             $this->getResourceBuilder(),
-            $this->getCompanyUserClient(),
+            $this->getClient(),
             $this->createCompanyUsersMapper(),
             $this->createRestApiError()
         );
