@@ -74,9 +74,6 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 $brandTransfers = [];
 
                 foreach ($company->getFosBrandCompanies() as $brand) {
-                    if ($brand->getFosBrand() === null) {
-                        continue;
-                    }
                     $brandTransfers[] = (new BrandTransfer())
                         ->fromArray($brand->getFosBrand()->toArray());
                 }
@@ -96,10 +93,6 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
             $companyRoleTransfers = [];
 
             foreach ($companyUser->getSpyCompanyRoleToCompanyUsers() as $companyRoleToCompanyUsers) {
-                if ($companyRoleToCompanyUsers->getCompanyRole() === null) {
-                    continue;
-                }
-
                 $companyRoleTransfers[] = (new CompanyRoleTransfer())
                     ->fromArray($companyRoleToCompanyUsers->getCompanyRole()->toArray(), true);
             }

@@ -61,9 +61,9 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
      */
     public function findActiveCompanyUsersByCustomerReference(
         CustomerTransfer $customerTransfer
