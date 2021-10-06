@@ -17,6 +17,7 @@ use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\PriceListTransfer;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
+use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiPersistenceFactory getFactory()
@@ -37,8 +38,8 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 ->filterByCustomerReference($customerReference)
             ->endUse()
             ->useCompanyQuery()
-                ->useFosBrandCompanyQuery()
-                    ->useFosBrandQuery()
+                ->useFosBrandCompanyQuery(null, Criteria::LEFT_JOIN)
+                    ->useFosBrandQuery(null, Criteria::LEFT_JOIN)
                     ->endUse()
                 ->endUse()
                 ->usePriceListQuery()
