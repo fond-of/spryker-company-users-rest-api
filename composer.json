@@ -17,11 +17,11 @@
     "fond-of-spryker/companies-rest-api": "dev-spryker_upgrade",
     "fond-of-spryker/company-business-units-rest-api": "dev-master",
     "fond-of-spryker/company-user-reference": "dev-master",
-    "fond-of-spryker/company-user-permission": "dev-master",
     "fond-of-spryker/customer-b2b": "dev-spryker_upgrade",
     "spryker/company-role": "^1.0.0",
     "spryker/glue-application": "^1.0.0",
-    "spryker/mail": "^4.0.0"
+    "spryker/mail": "^4.0.0",
+    "spryker/permission": "^1.0.0"
   },
   "require-dev": {
     "fond-of-codeception/spryker": "^1.0",

@@ -37,4 +37,9 @@ interface RestApiErrorInterface
      * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
     public function createDefaultCompanyRoleNotFoundErrorResponse(): RestCompanyUsersResponseTransfer;
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function createAccessDeniedErrorResponse(): RestCompanyUsersResponseTransfer;
 }

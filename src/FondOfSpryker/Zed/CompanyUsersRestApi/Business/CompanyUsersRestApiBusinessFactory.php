@@ -21,7 +21,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterf
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
-use Spryker\Zed\Mail\Business\MailFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
@@ -29,6 +29,7 @@ use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig getConfig()
@@ -64,7 +65,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getUtilTextService(),
             $this->getConfig(),
             $this->getMailFacade(),
-            $this->getCompanyRoleFacade()
+            $this->getCompanyRoleFacade(),
+            $this->getPermissionFacade()
         );
     }
 
@@ -184,5 +186,13 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getEventFacade(): CompanyUsersRestApiToEventInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_EVENT);
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface
+     */
+    protected function getPermissionFacade(): CompanyUsersRestApiToPermissionFacadeInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION);
     }
 }

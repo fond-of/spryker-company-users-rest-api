@@ -6,8 +6,9 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use Spryker\Zed\Mail\Business\MailFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyRoleResponseTransfer;
@@ -19,6 +20,7 @@ use Generated\Shared\Transfer\CustomerResponseTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
 use Generated\Shared\Transfer\RestCompanyRoleTransfer;
+use Generated\Shared\Transfer\RestCompanyTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
@@ -29,6 +31,7 @@ use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 class CompanyUserWriterTest extends Unit
 {
@@ -195,7 +198,27 @@ class CompanyUserWriterTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject
      */
-    private $customerResponseTransferMock;
+    protected $customerResponseTransferMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface
+     */
+    protected $permissionFacadeMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestCustomerTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $currentRestCustomerTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\CompanyUserTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $currentCompanyUserTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestCompanyTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restCompanyTransferMock;
 
     /**
      * @return void
@@ -262,6 +285,10 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->restCompanyTransferMock = $this->getMockBuilder(RestCompanyTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->idCompanyString = 'id-company';
 
         $this->idCompany = 1;
@@ -271,6 +298,10 @@ class CompanyUserWriterTest extends Unit
             ->getMock();
 
         $this->restCustomerTransferMock = $this->getMockBuilder(RestCustomerTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->currentRestCustomerTransferMock = $this->getMockBuilder(RestCustomerTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -296,6 +327,10 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->currentCompanyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -318,6 +353,10 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->permissionFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToPermissionFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->companyUserWriter = new CompanyUserWriter(
             $this->customerFacadeInterfaceMock,
             $this->restCustomerToCustomerMapperInterfaceMock,
@@ -330,7 +369,8 @@ class CompanyUserWriterTest extends Unit
             $this->utilTextServiceInterfaceMock,
             $this->companyUsersRestApiConfigMock,
             $this->mailFacadeInterfaceMock,
-            $this->companyRoleFacadeInterfaceMock
+            $this->companyRoleFacadeInterfaceMock,
+            $this->permissionFacadeMock
         );
     }
 
@@ -339,13 +379,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreate(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -358,6 +401,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -471,15 +539,19 @@ class CompanyUserWriterTest extends Unit
     {
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
             ->willReturn($this->companyResponseTransferMock);
+
+        $this->companyResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getCompanyTransfer')
+            ->willReturn($this->companyTransferMock);
 
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getIsSuccessful')
@@ -498,13 +570,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCompanyBusinessUnitNull(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -517,6 +592,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -535,13 +635,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCustomerNew(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -554,6 +657,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -645,13 +773,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCustomerCustomerTranfserNull(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -664,6 +795,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -731,13 +887,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateDefaultCompanyRoleNotFoundError(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -750,6 +909,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -797,13 +981,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCompanyIdNotMatch(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompanyString);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -816,6 +1003,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -875,13 +1087,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCompanyUserAlreadyExists(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -894,6 +1109,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')
@@ -989,13 +1229,16 @@ class CompanyUserWriterTest extends Unit
      */
     public function testCreateCompanyUserResponseNotSuccessful(): void
     {
+        $currentIdCustomer = 6;
+        $currentIdCompanyUser = 6;
+
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getCompany')
-            ->willReturn($this->companyTransferMock);
+            ->willReturn($this->restCompanyTransferMock);
 
-        $this->companyTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyTransferMock->expects(static::atLeastOnce())
             ->method('getIdCompany')
-            ->willReturnOnConsecutiveCalls($this->idCompanyString, $this->idCompany, $this->idCompany);
+            ->willReturn($this->idCompanyString);
 
         $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findCompanyByUuid')
@@ -1008,6 +1251,31 @@ class CompanyUserWriterTest extends Unit
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
+
+        $this->companyTransferMock->expects($this->atLeastOnce())
+            ->method('getIdCompany')
+            ->willReturn($this->idCompany);
+
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
+            ->method('getCurrentCustomer')
+            ->willReturn($this->currentRestCustomerTransferMock);
+
+        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($currentIdCustomer);
+
+        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
+            ->method('getByIdCustomerAndIdCompany')
+            ->willReturn($this->currentCompanyUserTransferMock);
+
+        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCompanyUser')
+            ->willReturn($currentIdCompanyUser);
+
+        $this->permissionFacadeMock->expects(static::atLeastOnce())
+            ->method('can')
+            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
+            ->willReturn(true);
 
         $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('findDefaultBusinessUnitByCompanyId')

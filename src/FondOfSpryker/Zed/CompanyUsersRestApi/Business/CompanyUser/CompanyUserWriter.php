@@ -9,8 +9,9 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompa
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\Mail\CompanyUserInviteMailTypePlugin;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use Spryker\Zed\Mail\Business\MailFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
@@ -30,6 +31,7 @@ use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
@@ -96,6 +98,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyRoleFacade;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface
+     */
+    protected $permissionFacade;
+
+    /**
      * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
      * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
@@ -108,6 +115,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
      * @param \Spryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
      * @param \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface $companyRoleFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -121,7 +129,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         UtilTextServiceInterface $utilTextService,
         CompanyUsersRestApiConfig $companyUsersRestApiConfig,
         MailFacadeInterface $mailFacade,
-        CompanyRoleFacadeInterface $companyRoleFacade
+        CompanyRoleFacadeInterface $companyRoleFacade,
+        CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -135,6 +144,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->companyUsersRestApiConfig = $companyUsersRestApiConfig;
         $this->mailFacade = $mailFacade;
         $this->companyRoleFacade = $companyRoleFacade;
+        $this->permissionFacade = $permissionFacade;
     }
 
     /**
@@ -149,11 +159,17 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             $restCompanyUsersRequestAttributesTransfer->getCompany()->getIdCompany()
         );
 
-        if (!$companyResponseTransfer->getIsSuccessful()) {
+        $companyTransfer = $companyResponseTransfer->getCompanyTransfer();
+
+        if ($companyTransfer === null || !$companyResponseTransfer->getIsSuccessful()) {
             return $this->apiError->createCompanyNotFoundErrorResponse();
         }
 
-        $companyBusinessUnit = $this->findDefaultCompanyBusinessUnitOf($companyResponseTransfer->getCompanyTransfer());
+        if (!$this->canCreate($restCompanyUsersRequestAttributesTransfer, $companyTransfer)) {
+            return $this->apiError->createAccessDeniedErrorResponse();
+        }
+
+        $companyBusinessUnit = $this->findDefaultCompanyBusinessUnitOf($companyTransfer);
 
         if ($companyBusinessUnit === null) {
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
@@ -456,6 +472,37 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     {
         return $this->companyRoleFacade->findCompanyRoleByUuid(
             (new CompanyRoleTransfer())->setUuid($companyRoleUuid)
+        );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
+     *
+     * @return bool
+     */
+    protected function canCreate(RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer, CompanyTransfer $companyTransfer): bool
+    {
+        $idCompany = $companyTransfer->getIdCompany();
+
+        $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCurrentCustomer();
+
+        if ($idCompany === null || $restCustomerTransfer === null || $restCustomerTransfer->getIdCustomer() === null) {
+            return false;
+        }
+
+        $companyUserTransfer = $this->companyUserReader->getByIdCustomerAndIdCompany(
+            $restCustomerTransfer->getIdCustomer(),
+            $idCompany
+        );
+
+        if ($companyUserTransfer === null || $companyUserTransfer->getIdCompanyUser() === null) {
+            return false;
+        }
+
+        return $this->permissionFacade->can(
+            WriteCompanyUserPermissionPlugin::KEY,
+            $companyUserTransfer->getIdCompanyUser()
         );
     }
 }

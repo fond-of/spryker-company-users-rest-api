@@ -49,4 +49,27 @@ class CompanyUserReader implements CompanyUserReaderInterface
 
         return $companyUserCollection->getCompanyUsers()->count() > 0;
     }
+
+    /**
+     * @param int $idCustomer
+     * @param int $idCompany
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getByIdCustomerAndIdCompany(int $idCustomer, int $idCompany): ?CompanyUserTransfer
+    {
+        $companyUserCriteriaFilterTransfer = (new CompanyUserCriteriaFilterTransfer())
+            ->setIdCustomer($idCustomer)
+            ->setIdCompany($idCompany);
+
+        $companyUserCollection = $this->repository
+            ->findCompanyUsersByFilter($companyUserCriteriaFilterTransfer);
+
+        if ($companyUserCollection->getCompanyUsers()->count() !== 1) {
+            return null;
+        }
+
+        return $companyUserCollection->getCompanyUsers()
+            ->offsetGet(0);
+    }
 }
