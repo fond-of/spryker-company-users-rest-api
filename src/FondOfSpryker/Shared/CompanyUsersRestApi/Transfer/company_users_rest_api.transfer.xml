@@ -9,6 +9,7 @@
     </transfer>
 
     <transfer name="RestCompanyUsersRequestAttributes">
+        <property name="currentCustomer" type="RestCustomer" />
         <property name="customer" type="RestCustomer" />
         <property name="company" type="RestCompany" />
         <property name="companyRole" type="RestCompanyRole" />

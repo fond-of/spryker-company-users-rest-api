@@ -6,6 +6,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeBridge;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -20,6 +21,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const FACADE_CUSTOMER = 'FACADE_CUSTOMER';
     public const FACADE_EVENT = 'FACADE_EVENT';
     public const FACADE_MAIL = 'FACADE_MAIL';
+    public const FACADE_PERMISSION = 'FACADE_PERMISSION';
 
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
 
@@ -44,7 +46,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addMailFacade($container);
         $container = $this->addUtilTextService($container);
 
-        return $container;
+        return $this->addPermissionFacade($container);
     }
 
     /**
@@ -195,6 +197,22 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container[static::FACADE_COMPANY_USER_REFERENCE] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyUserReferenceFacadeBridge(
                 $container->getLocator()->companyUserReference()->facade()
+            );
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addPermissionFacade(Container $container): Container
+    {
+        $container[static::FACADE_PERMISSION] = static function (Container $container) {
+            return new CompanyUsersRestApiToPermissionFacadeBridge(
+                $container->getLocator()->permission()->facade()
             );
         };
 

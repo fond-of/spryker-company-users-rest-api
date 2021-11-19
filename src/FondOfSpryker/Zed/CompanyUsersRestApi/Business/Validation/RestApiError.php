@@ -124,4 +124,23 @@ class RestApiError implements RestApiErrorInterface
 
         return $restCompanyUsersResponseTransfer;
     }
+
+    /**
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    public function createAccessDeniedErrorResponse(): RestCompanyUsersResponseTransfer
+    {
+        $restCompanyUsersErrorTransfer = new RestCompanyUsersErrorTransfer();
+
+        $restCompanyUsersErrorTransfer->setStatus(Response::HTTP_FORBIDDEN)
+            ->setCode(CompanyUsersRestApiConfig::RESPONSE_CODE_ACCESS_DENIED)
+            ->setDetail(CompanyUsersRestApiConfig::RESPONSE_DETAILS_ACCESS_DENIED);
+
+        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
+
+        $restCompanyUsersResponseTransfer->setIsSuccess(false)
+            ->addError($restCompanyUsersErrorTransfer);
+
+        return $restCompanyUsersResponseTransfer;
+    }
 }

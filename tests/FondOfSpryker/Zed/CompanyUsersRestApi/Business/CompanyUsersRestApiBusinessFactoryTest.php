@@ -11,9 +11,9 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManager;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepository;
-use Spryker\Zed\Mail\Business\MailFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
 use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
@@ -21,6 +21,7 @@ use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
 use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Kernel\Container;
+use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 class CompanyUsersRestApiBusinessFactoryTest extends Unit
 {
@@ -95,6 +96,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyUsersRestApiToEventInterfaceMock;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $permissionFacadeMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -151,6 +157,10 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->permissionFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToPermissionFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->companyUsersRestApiBusinessFactory = new CompanyUsersRestApiBusinessFactory();
         $this->companyUsersRestApiBusinessFactory->setEntityManager($this->companyUsersRestApiEntityManagerMock);
         $this->companyUsersRestApiBusinessFactory->setRepository($this->companyUsersRestApiRepositoryMock);
@@ -188,7 +198,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
                 [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_MAIL],
-                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE]
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE],
+                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION]
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeInterfaceMock,
                 $this->customerFacadeInterfaceMock,
@@ -197,7 +208,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 $this->companyUserFacadeInterfaceMock,
                 $this->utilTextServiceInterfaceMock,
                 $this->mailFacadeInterfaceMock,
-                $this->companyRoleFacadeInterfaceMock
+                $this->companyRoleFacadeInterfaceMock,
+                $this->permissionFacadeMock
             );
 
         $this->assertInstanceOf(

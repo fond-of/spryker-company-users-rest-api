@@ -4,14 +4,13 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
-use FondOfSpryker\Client\CompanyUserPermission\Plugin\Permission\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
-use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestCustomerTransfer;
 use Generated\Shared\Transfer\RestErrorMessageTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
@@ -70,22 +69,16 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
         RestRequestInterface $restRequest,
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface {
-        $companyTransfer = $this->getCompanyByRestCompanyUsersRequestAttributesTransfer(
-            $restCompanyUsersRequestAttributesTransfer
-        );
+        $restUser = $restRequest->getRestUser();
 
-        if ($companyTransfer === null || $companyTransfer->getIdCompany() === null) {
+        if ($restUser === null || $restUser->getSurrogateIdentifier() === null) {
             return $this->restApiError->addAccessDeniedError($this->restResourceBuilder->createRestResponse());
         }
 
-        $hasPermissionToWrite = $this->can(
-            WriteCompanyUserPermissionPlugin::KEY,
-            $companyTransfer->getIdCompany()
-        );
+        $restCustomerTransfer = (new RestCustomerTransfer())
+            ->setIdCustomer($restUser->getSurrogateIdentifier());
 
-        if (!$hasPermissionToWrite) {
-            return $this->restApiError->addAccessDeniedError($this->restResourceBuilder->createRestResponse());
-        }
+        $restCompanyUsersRequestAttributesTransfer->setCurrentCustomer($restCustomerTransfer);
 
         $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->create(
             $restCompanyUsersRequestAttributesTransfer
@@ -137,26 +130,5 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
         return $this->restResourceBuilder
             ->createRestResponse()
             ->addResource($restResource);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyTransfer|null
-     */
-    protected function getCompanyByRestCompanyUsersRequestAttributesTransfer(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): ?CompanyTransfer {
-        $restCompanyTransfer = $restCompanyUsersRequestAttributesTransfer->getCompany();
-
-        if ($restCompanyTransfer === null || $restCompanyTransfer->getIdCompany() === null) {
-            return null;
-        }
-
-        $companyTransfer = (new CompanyTransfer())->setUuid($restCompanyTransfer->getIdCompany());
-
-        $companyResponseTransfer = $this->companyClient->findCompanyByUuid($companyTransfer);
-
-        return $companyResponseTransfer->getCompanyTransfer();
     }
 }

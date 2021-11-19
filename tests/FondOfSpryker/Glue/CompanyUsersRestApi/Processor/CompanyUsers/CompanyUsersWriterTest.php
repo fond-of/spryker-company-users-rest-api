@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\RestCompanyTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestUserTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
@@ -183,25 +184,16 @@ class CompanyUsersWriterTest extends Unit
      */
     public function testCreateCompanyUserAccessDeniedError(): void
     {
+        $this->restRequestInterfaceMock->expects(static::atLeastOnce())
+            ->method('getRestUser')
+            ->willReturn(null);
 
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->restCompanyTransferMock);
+        $this->restApiErrorInterfaceMock->expects(static::atLeastOnce())
+            ->method('addAccessDeniedError')
+            ->willReturn($this->restResponseInterfaceMock);
 
-        $this->restCompanyTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompany);
-
-        $this->companyUsersRestApiToCompanyClientInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyByUuid')
-            ->willReturn($this->companyResponseTransferMock);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyTransfer')
-            ->willReturn($this->companyTransferMock);
-
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        $this->assertEquals(
+            $this->restResponseInterfaceMock,
             $this->companyUsersWriter->createCompanyUser(
                 $this->restRequestInterfaceMock,
                 $this->restCompanyUsersRequestAttributesTransferMock
@@ -212,16 +204,54 @@ class CompanyUsersWriterTest extends Unit
     /**
      * @return void
      */
-    public function testCreateCompanyUserIdCompanyNull(): void
+    public function testCreateCompanyUser(): void
     {
+        $idCustomer = 1;
+        $restUserMock = $this->getMockBuilder(RestUserTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restRequestInterfaceMock->expects(static::atLeastOnce())
+            ->method('getRestUser')
+            ->willReturn($restUserMock);
+
+        $restUserMock->expects(static::atLeastOnce())
+            ->method('getSurrogateIdentifier')
+            ->willReturn($idCustomer);
 
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->restCompanyTransferMock);
+            ->method('setCurrentCustomer')
+            ->willReturn($this->restCompanyUsersRequestAttributesTransferMock);
 
-        $this->restCompanyTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn(null);
+        $this->companyUsersRestApiClientInterfaceMock->expects($this->atLeastOnce())
+            ->method('create')
+            ->with($this->restCompanyUsersRequestAttributesTransferMock)
+            ->willReturn($this->restCompanyUsersResponseTransferMock);
+
+        $this->restCompanyUsersResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getIsSuccess')
+            ->willReturn(true);
+
+        $this->restCompanyUsersResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getRestCompanyUsersResponseAttributes')
+            ->willReturn($this->restCompanyUsersResponseAttributesTransferMock);
+
+        $this->restResourceBuilderInterfaceMock->expects(static::atLeastOnce())
+            ->method('createRestResource')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->restResourceInterfaceMock->expects(static::atLeastOnce())
+            ->method('setPayload')
+            ->willReturn($this->restResourceInterfaceMock);
+
+        $this->restResourceBuilderInterfaceMock->expects(static::atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseInterfaceMock);
+
+        $this->restResponseInterfaceMock->expects(static::atLeastOnce())
+            ->method('addResource')
+            ->with($this->restResourceInterfaceMock)
+            ->willReturn($this->restResponseInterfaceMock);
 
         $this->assertInstanceOf(
             RestResponseInterface::class,

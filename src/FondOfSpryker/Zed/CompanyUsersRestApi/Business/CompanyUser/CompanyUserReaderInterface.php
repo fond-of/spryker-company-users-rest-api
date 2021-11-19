@@ -14,4 +14,12 @@ interface CompanyUserReaderInterface
      * @return bool
      */
     public function doesCompanyUserAlreadyExist(CompanyUserTransfer $companyUserTransfer): bool;
+
+    /**
+     * @param int $idCustomer
+     * @param int $idCompany
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    public function getByIdCustomerAndIdCompany(int $idCustomer, int $idCompany): ?CompanyUserTransfer;
 }
