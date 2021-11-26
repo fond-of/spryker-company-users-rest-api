@@ -13,7 +13,7 @@ company-users:
           - Email
           salutation:
           - NotBlank
-          - Choice: [Mr, Mrs]
+          - Choice: [Mr, Mrs, Ms, Diverse, Dr]
           firstName:
           - NotBlank
           - Length:
