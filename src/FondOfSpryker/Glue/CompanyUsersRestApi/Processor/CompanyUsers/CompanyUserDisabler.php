@@ -14,6 +14,7 @@ use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
+use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
 use Spryker\Client\CompanyRole\CompanyRoleClientInterface;
 use Spryker\Client\Customer\CustomerClientInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
@@ -72,19 +73,19 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
 
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     * @param \Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer $restDisableCompanyUserRequestAttributesTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
     public function disableCompanyUser(
         RestRequestInterface $restRequest,
-        RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
+        RestDisableCompanyUserRequestAttributesTransfer $restDisableCompanyUserRequestAttributesTransfer
     ): RestResponseInterface {
         $restResponse = $this->restResourceBuilder->createRestResponse();
 
         $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
             (new CompanyUserTransfer())->setCompanyUserReference(
-                $restDisableCompanyUserAttributesTransfer->getCompanyUserReference()
+                $restDisableCompanyUserRequestAttributesTransfer->getCompanyUserReference()
             )
         );
 
@@ -96,10 +97,6 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
         $companyUserResponseTransfer = $this->companyUserClient->disableCompanyUser(
             $companyUserResponseTransfer->getCompanyUser()
         );
-
-        if (!$companyUserResponseTransfer->getIsSuccessful()) {
-            return $this->restApiError->addCompanyUserNotFoundError($restResponse);
-        }
 
         $resource = $this->companyUsersMapper
             ->mapCompanyUsersResource($companyUserResponseTransfer->getCompanyUser())

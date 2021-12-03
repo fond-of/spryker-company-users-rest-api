@@ -52,7 +52,7 @@
         <property name="companyUser" type="CompanyUser" />
     </transfer>
 
-    <transfer name="RestDisableCompanyUserAttributes">
+    <transfer name="RestDisableCompanyUserRequestAttributes">
         <property name="companyUserReference" type="string" />
     </transfer>
 

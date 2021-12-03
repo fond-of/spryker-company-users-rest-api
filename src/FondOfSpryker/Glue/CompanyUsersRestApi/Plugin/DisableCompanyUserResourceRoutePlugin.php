@@ -5,7 +5,7 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Plugin;
 
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
+use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRouteCollectionInterface;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRoutePluginInterface;
 use Spryker\Glue\Kernel\AbstractPlugin;
@@ -66,6 +66,6 @@ class DisableCompanyUserResourceRoutePlugin extends AbstractPlugin implements Re
      */
     public function getResourceAttributesClassName(): string
     {
-        return RestDisableCompanyUserAttributesTransfer::class;
+        return RestDisableCompanyUserRequestAttributesTransfer::class;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Controller;
 
 use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
+use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 use Spryker\Glue\Kernel\Controller\AbstractController;
@@ -31,19 +32,16 @@ class DisableCompanyUserResourceController extends AbstractController
      * })
      *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     * @param \Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer $restDisableCompanyUserRequestAttributesTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
     public function postAction(
         RestRequestInterface $restRequest,
-        RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
+        RestDisableCompanyUserRequestAttributesTransfer $restDisableCompanyUserRequestAttributesTransfer
     ): RestResponseInterface {
         return $this->getFactory()
             ->createCompanyUsersDisabler()
-            ->disableCompanyUser(
-                $restRequest,
-                $restDisableCompanyUserAttributesTransfer
-            );
+            ->disableCompanyUser($restRequest, $restDisableCompanyUserRequestAttributesTransfer);
     }
 }
