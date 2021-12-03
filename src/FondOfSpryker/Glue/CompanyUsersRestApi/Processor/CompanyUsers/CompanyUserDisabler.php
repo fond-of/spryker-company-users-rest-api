@@ -13,23 +13,19 @@ use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
 use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
 use Spryker\Client\CompanyRole\CompanyRoleClientInterface;
 use Spryker\Client\Customer\CustomerClientInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
+class CompanyUserDisabler implements CompanyUserDisablerInterface
 {
     /**
      * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
      */
     protected $restResourceBuilder;
-
-    /**
-     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
-     */
-    protected $companyUsersRestApiClient;
 
     /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface
@@ -47,75 +43,48 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
     protected $companyUserReferenceClient;
 
     /**
-     * @var \Spryker\Client\CompanyRole\CompanyRoleClientInterface
-     */
-    protected $companyRoleClient;
-
-    /**
-     * @var \Spryker\Client\Customer\CustomerClientInterface
-     */
-    protected $customerClient;
-
-    /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface
      */
     protected $companyUsersMapper;
 
     /**
+     * CompanyUserDisabler constructor.
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
-     * @param \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface $companyUsersRestApiClient
-     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient
-     * @param \Spryker\Client\CompanyRole\CompanyRoleClientInterface $companyRoleClient
-     * @param \Spryker\Client\Customer\CustomerClientInterface $customerClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface $companyUsersMapper
+     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
-        CompanyUsersRestApiClientInterface $companyUsersRestApiClient,
-        RestApiErrorInterface $restApiError,
         CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient,
         CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient,
-        CompanyRoleClientInterface $companyRoleClient,
-        CustomerClientInterface $customerClient,
-        CompanyUsersMapperInterface $companyUsersMapper
+        CompanyUsersMapperInterface $companyUsersMapper,
+        RestApiErrorInterface $restApiError
     ) {
         $this->restResourceBuilder = $restResourceBuilder;
-        $this->companyUsersRestApiClient = $companyUsersRestApiClient;
-        $this->restApiError = $restApiError;
-        $this->companyUserClient = $companyUserClient;
         $this->companyUserReferenceClient = $companyUserReferenceClient;
-        $this->companyRoleClient = $companyRoleClient;
-        $this->customerClient = $customerClient;
+        $this->companyUserClient = $companyUserClient;
         $this->companyUsersMapper = $companyUsersMapper;
+        $this->restApiError = $restApiError;
     }
 
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    public function update(
+    public function disableCompanyUser(
         RestRequestInterface $restRequest,
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+        RestDisableCompanyUserAttributesTransfer $restDisableCompanyUserAttributesTransfer
     ): RestResponseInterface {
         $restResponse = $this->restResourceBuilder->createRestResponse();
 
-        $companyRoleResponseTransfer = $this->companyRoleClient->findCompanyRoleByUuid(
-            (new CompanyRoleTransfer())->setUuid(
-                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid()
-            )
-        );
-
-        if (!$companyRoleResponseTransfer->getIsSuccessful()) {
-            return $this->restApiError->addCompanyRoleNotFoundError($restResponse);
-        }
-
         $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
             (new CompanyUserTransfer())->setCompanyUserReference(
-                $restRequest->getResource()->getId()
+                $restDisableCompanyUserAttributesTransfer->getCompanyUserReference()
             )
         );
 
@@ -124,10 +93,9 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
             return $this->restApiError->addCompanyUserNotFoundError($restResponse);
         }
 
-        $companyUserTransfer = $this->assignCustomer($companyUserTransfer);
-        $companyUserTransfer = $this->assignCompanyRole($companyUserTransfer, $companyRoleResponseTransfer->getCompanyRoleTransfer());
-        $companyUserTransfer->setIsActive(true);
-        $companyUserResponseTransfer = $this->companyUserClient->updateCompanyUser($companyUserTransfer);
+        $companyUserResponseTransfer = $this->companyUserClient->disableCompanyUser(
+            $companyUserResponseTransfer->getCompanyUser()
+        );
 
         if (!$companyUserResponseTransfer->getIsSuccessful()) {
             return $this->restApiError->addCompanyUserNotFoundError($restResponse);
@@ -140,37 +108,5 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
         $restResponse->addResource($resource);
 
         return $restResponse;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     * @param \Generated\Shared\Transfer\CompanyRoleTransfer $companyRoleTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected function assignCompanyRole(
-        CompanyUserTransfer $companyUserTransfer,
-        CompanyRoleTransfer $companyRoleTransfer
-    ): CompanyUserTransfer {
-        $companyRoleCollection = new CompanyRoleCollectionTransfer();
-        $companyRoleCollection->addRole($companyRoleTransfer);
-
-        $companyUserTransfer->setCompanyRoleCollection($companyRoleCollection);
-
-        return $companyUserTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected function assignCustomer(CompanyUserTransfer $companyUserTransfer): CompanyUserTransfer
-    {
-        $companyUserTransfer->setCustomer(
-            $this->customerClient->getCustomerById($companyUserTransfer->getFkCustomer())
-        );
-
-        return $companyUserTransfer;
     }
 }

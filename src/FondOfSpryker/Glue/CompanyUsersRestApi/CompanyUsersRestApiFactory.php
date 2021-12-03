@@ -8,6 +8,8 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisabler;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleter;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
@@ -81,6 +83,20 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getCompanyRoleClient(),
             $this->getCustomerClient(),
             $this->createCompanyUsersMapper()
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface
+     */
+    public function createCompanyUsersDisabler(): CompanyUserDisablerInterface
+    {
+        return new CompanyUserDisabler(
+            $this->getResourceBuilder(),
+            $this->getCompanyUserClient(),
+            $this->getCompanyUserReferenceClient(),
+            $this->createCompanyUsersMapper(),
+            $this->createRestApiError()
         );
     }
 
