@@ -47,6 +47,8 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     }
 
     /**
+     * @deprecated it will be removed in the next updates. Do not use it
+     *
      * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
@@ -69,7 +71,7 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
             }
 
             $this->companyUsersRestApiEntityManager->deleteCompanyUserById($companyUserTransfer->getIdCompanyUser());
-            $companyUserTransfer->setIsDeleted(true);
+            $companyUserTransfer->setIsActive(false);
 
             $this->triggerEvent(
                 CompanyUsersRestApiEvents::COMPANY_USER_AFTER_DELETE,

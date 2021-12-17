@@ -12,6 +12,8 @@ use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
  */
 class CompanyUsersRestApiEntityManager extends AbstractEntityManager implements CompanyUsersRestApiEntityManagerInterface
 {
+    protected const COLUMN_COMPANY_USER_IS_ACTIVE = 'IsActive';
+
     /**
      * @param int $idCompanyUser
      *
@@ -22,6 +24,8 @@ class CompanyUsersRestApiEntityManager extends AbstractEntityManager implements 
         $this->getFactory()
             ->getCompanyUserPropelQuery()
             ->filterByIdCompanyUser($idCompanyUser)
-            ->delete();
+            ->update([
+                static::COLUMN_COMPANY_USER_IS_ACTIVE => false,
+            ]);
     }
 }
