@@ -258,7 +258,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         if ($companyUserResponseTransfer->getIsSuccessful()) {
             $this->eventFacade->trigger(
                 CompanyUsersRestApiEvents::ENTITY_SPY_COMPANY_USER_UPDATE,
-                $companyUserTransfer
+                $companyUserResponseTransfer->getCompanyUser()
             );
         }
 
