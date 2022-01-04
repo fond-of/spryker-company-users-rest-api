@@ -19,7 +19,7 @@ interface CompanyUserReaderInterface
      * @param int $idCustomer
      * @param int $idCompany
      *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
      */
     public function getByIdCustomerAndIdCompany(int $idCustomer, int $idCompany): ?CompanyUserTransfer;
 }
