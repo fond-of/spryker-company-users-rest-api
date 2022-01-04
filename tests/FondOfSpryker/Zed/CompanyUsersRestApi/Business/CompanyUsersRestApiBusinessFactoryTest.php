@@ -61,6 +61,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyUserFacadeInterfaceMock;
 
     /**
+     *  @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface
+     */
+    protected $eventFacadeMock;
+
+    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Service\UtilText\UtilTextServiceInterface
      */
     protected $utilTextServiceInterfaceMock;
@@ -126,6 +131,10 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->getMock();
 
         $this->companyUserFacadeInterfaceMock = $this->getMockBuilder(CompanyUserFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->eventFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToEventInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -199,7 +208,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_MAIL],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE],
-                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION]
+                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
+                [CompanyUsersRestApiDependencyProvider::FACADE_EVENT]
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeInterfaceMock,
                 $this->customerFacadeInterfaceMock,
@@ -209,7 +219,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 $this->utilTextServiceInterfaceMock,
                 $this->mailFacadeInterfaceMock,
                 $this->companyRoleFacadeInterfaceMock,
-                $this->permissionFacadeMock
+                $this->permissionFacadeMock,
+                $this->eventFacadeMock
             );
 
         $this->assertInstanceOf(

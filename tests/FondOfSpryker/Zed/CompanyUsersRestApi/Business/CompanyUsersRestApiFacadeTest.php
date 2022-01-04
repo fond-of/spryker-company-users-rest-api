@@ -164,6 +164,27 @@ class CompanyUsersRestApiFacadeTest extends Unit
     /**
      * @return void
      */
+    public function testDisableCompanyUser(): void
+    {
+        $this->companyUsersRestApiBusinessFactoryMock->expects($this->atLeastOnce())
+            ->method('createCompanyUserWriter')
+            ->willReturn($this->companyUserWriterInterfaceMock);
+
+        $this->companyUserWriterInterfaceMock->expects($this->atLeastOnce())
+            ->method('disableCompanyUser')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->assertInstanceOf(
+            CompanyUserResponseTransfer::class,
+            $this->companyUsersRestApiFacade->disableCompanyUser(
+                $this->companyUserTransferMock
+            )
+        );
+    }
+
+    /**
+     * @return void
+     */
     public function testMapCompanyUserUnitAddressToQuote(): void
     {
         $this->companyUsersRestApiBusinessFactoryMock->expects($this->atLeastOnce())
