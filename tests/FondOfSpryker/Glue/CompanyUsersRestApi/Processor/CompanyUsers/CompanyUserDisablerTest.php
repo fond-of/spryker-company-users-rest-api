@@ -4,20 +4,12 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
-use Generated\Shared\Transfer\CompanyRoleResponseTransfer;
-use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
-use Generated\Shared\Transfer\CustomerTransfer;
-use Generated\Shared\Transfer\RestCompanyRoleTransfer;
-use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
-use Spryker\Client\CompanyRole\CompanyRoleClientInterface;
-use Spryker\Client\Customer\CustomerClientInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
@@ -36,11 +28,6 @@ class CompanyUserDisablerTest extends Unit
     protected $restResourceBuilderInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
-     */
-    protected $companyUsersRestApiClientInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface
      */
     protected $restApiErrorInterfaceMock;
@@ -48,7 +35,7 @@ class CompanyUserDisablerTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
      */
-    protected $companyUsersRestApiToCompanyUserClientMock;
+    protected $companyUsersRestApiClientMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
@@ -56,30 +43,14 @@ class CompanyUserDisablerTest extends Unit
     protected $companyUsersRestApiToCompanyUserReferenceClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\CompanyRole\CompanyRoleClientInterface
-     */
-    protected $companyRoleClientInterfaceMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\Customer\CustomerClientInterface
-     */
-    protected $customerClientInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface
      */
     protected $companyUsersMapperMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
-     */
-    protected $restRequestInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer
      */
     protected $restDisableCompanyUserRequestAttributesTransferMock;
-
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserResponseTransfer
@@ -118,10 +89,6 @@ class CompanyUserDisablerTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToCompanyUserClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserClientInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->companyUsersRestApiToCompanyUserReferenceClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -157,7 +124,7 @@ class CompanyUserDisablerTest extends Unit
 
         $this->companyUserDisabler = new CompanyUserDisabler(
             $this->restResourceBuilderMock,
-            $this->companyUsersRestApiToCompanyUserClientMock,
+            $this->companyUsersRestApiClientMock,
             $this->companyUsersRestApiToCompanyUserReferenceClientMock,
             $this->companyUsersMapperMock,
             $this->restApiErrorMock
@@ -185,7 +152,7 @@ class CompanyUserDisablerTest extends Unit
             ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyUsersRestApiToCompanyUserClientMock->expects($this->atLeastOnce())
+        $this->companyUsersRestApiClientMock->expects($this->atLeastOnce())
             ->method('disableCompanyUser')
             ->with($this->companyUserTransferMock)
             ->willReturn($this->companyUserResponseTransferMock);
