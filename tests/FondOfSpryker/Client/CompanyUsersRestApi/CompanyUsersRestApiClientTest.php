@@ -120,4 +120,25 @@ class CompanyUsersRestApiClientTest extends Unit
             )
         );
     }
+
+    /**
+     * @return void
+     */
+    public function testDisableCompanyUser(): void
+    {
+        $this->companyUsersRestApiFactoryMock->expects($this->atLeastOnce())
+            ->method('createZedCompanyUsersRestApiStub')
+            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
+
+        $this->companyUsersRestApiStubInterfaceMock->expects($this->atLeastOnce())
+            ->method('disableCompanyUser')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->assertInstanceOf(
+            CompanyUserResponseTransfer::class,
+            $this->companyUsersRestApiClient->disableCompanyUser(
+                $this->companyUserTransferMock
+            )
+        );
+    }
 }
