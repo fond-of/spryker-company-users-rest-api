@@ -44,6 +44,18 @@ class GatewayController extends AbstractGatewayController
     }
 
     /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function disableCompanyUserAction(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        return $this->getFacade()
+            ->disableCompanyUser($companyUserTransfer);
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer

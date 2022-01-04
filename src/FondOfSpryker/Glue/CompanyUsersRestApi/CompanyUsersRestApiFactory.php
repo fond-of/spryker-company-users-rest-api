@@ -93,7 +93,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     {
         return new CompanyUserDisabler(
             $this->getResourceBuilder(),
-            $this->getCompanyUserClient(),
+            $this->getClient(),
             $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
             $this->createRestApiError()

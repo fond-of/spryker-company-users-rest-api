@@ -34,7 +34,7 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
     protected $restApiError;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
      */
     protected $companyUserClient;
 
@@ -49,17 +49,15 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
     protected $companyUsersMapper;
 
     /**
-     * CompanyUserDisabler constructor.
-     *
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
-     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient
+     * @param \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface $companyUserClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface $companyUsersMapper
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
-        CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient,
+        CompanyUsersRestApiClientInterface $companyUserClient,
         CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient,
         CompanyUsersMapperInterface $companyUsersMapper,
         RestApiErrorInterface $restApiError

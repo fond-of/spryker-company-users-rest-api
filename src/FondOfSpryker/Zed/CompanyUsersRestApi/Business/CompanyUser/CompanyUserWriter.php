@@ -11,6 +11,8 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterf
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\Mail\CompanyUserInviteMailTypePlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\CompanyUsersRestApiEvents;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
@@ -18,6 +20,7 @@ use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
 use Generated\Shared\Transfer\CompanyRoleResponseTransfer;
 use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\MailTransfer;
@@ -78,6 +81,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUserReader;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface
+     */
+    protected $eventFacade;
+
+    /**
      * @var \Spryker\Service\UtilText\UtilTextServiceInterface
      */
     protected $utilTextService;
@@ -116,6 +124,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \Spryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
      * @param \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface $companyRoleFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface $eventFacade
      */
     public function __construct(
         CustomerFacadeInterface $customerFacade,
@@ -130,7 +139,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyUsersRestApiConfig $companyUsersRestApiConfig,
         MailFacadeInterface $mailFacade,
         CompanyRoleFacadeInterface $companyRoleFacade,
-        CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
+        CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade,
+        CompanyUsersRestApiToEventInterface $eventFacade
     ) {
         $this->customerFacade = $customerFacade;
         $this->restCustomerToCustomerMapper = $restCustomerToCustomerMapper;
@@ -145,6 +155,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->mailFacade = $mailFacade;
         $this->companyRoleFacade = $companyRoleFacade;
         $this->permissionFacade = $permissionFacade;
+        $this->eventFacade = $eventFacade;
     }
 
     /**
@@ -232,6 +243,26 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         return $this->createCompanyUsersResponseTransfer(
             $companyUserResponseTransfer->getCompanyUser()
         );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function disableCompanyUser(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        $companyUserResponseTransfer = $this->companyUserFacade->disableCompanyUser($companyUserTransfer);
+
+        if ($companyUserResponseTransfer->getIsSuccessful()) {
+            $this->eventFacade->trigger(
+                CompanyUsersRestApiEvents::ENTITY_SPY_COMPANY_USER_UPDATE,
+                $companyUserTransfer
+            );
+        }
+
+        return $companyUserResponseTransfer;
     }
 
     /**

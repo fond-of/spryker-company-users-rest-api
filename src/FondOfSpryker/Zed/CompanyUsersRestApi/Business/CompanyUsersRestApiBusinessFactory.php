@@ -66,7 +66,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getConfig(),
             $this->getMailFacade(),
             $this->getCompanyRoleFacade(),
-            $this->getPermissionFacade()
+            $this->getPermissionFacade(),
+            $this->getEventFacade()
         );
     }
 

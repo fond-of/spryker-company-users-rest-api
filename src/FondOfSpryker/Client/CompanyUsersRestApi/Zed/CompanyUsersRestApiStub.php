@@ -61,6 +61,22 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
     }
 
     /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    {
+        /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
+        $companyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/disable-company-user',
+            $companyUserTransfer
+        );
+
+        return $companyUserResponseTransfer;
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
