@@ -28,6 +28,4 @@ interface CompanyUserWriterInterface
     public function disableCompanyUser(
         CompanyUserTransfer $companyUserTransfer
     ): CompanyUserResponseTransfer;
-
-
 }
