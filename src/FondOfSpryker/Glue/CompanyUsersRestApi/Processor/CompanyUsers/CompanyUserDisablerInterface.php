@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
-use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
 use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;

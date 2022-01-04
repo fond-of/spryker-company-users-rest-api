@@ -5,7 +5,6 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Controller;
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface;
-use Generated\Shared\Transfer\RestDisableCompanyUserAttributesTransfer;
 use Generated\Shared\Transfer\RestDisableCompanyUserRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
