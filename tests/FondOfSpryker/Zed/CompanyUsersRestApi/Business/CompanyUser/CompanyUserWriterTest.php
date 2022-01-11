@@ -1384,14 +1384,6 @@ class CompanyUserWriterTest extends Unit
             ->with($this->companyUserTransferMock)
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn($this->companyUserTransferMock);
-
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUserWriter->disableCompanyUser($this->companyUserTransferMock)
