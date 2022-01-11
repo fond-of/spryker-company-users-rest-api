@@ -8,7 +8,6 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomer
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
@@ -80,11 +79,6 @@ class CompanyUserWriterTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
      */
     protected $companyUserReaderInterfaceMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
-     */
-    protected $eventFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Service\UtilText\UtilTextServiceInterface
@@ -251,10 +245,6 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->eventFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToEventInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->restCompanyUserToCompanyUserMapperInterfaceMock = $this->getMockBuilder(RestCompanyUserToCompanyUserMapperInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -380,8 +370,7 @@ class CompanyUserWriterTest extends Unit
             $this->companyUsersRestApiConfigMock,
             $this->mailFacadeInterfaceMock,
             $this->companyRoleFacadeInterfaceMock,
-            $this->permissionFacadeMock,
-            $this->eventFacadeMock
+            $this->permissionFacadeMock
         );
     }
 
@@ -1402,10 +1391,6 @@ class CompanyUserWriterTest extends Unit
         $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUser')
             ->willReturn($this->companyUserTransferMock);
-
-        $this->eventFacadeMock->expects($this->atLeastOnce())
-            ->method('trigger')
-            ->with("Entity.spy_company_user.update", $this->companyUserTransferMock);
 
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,

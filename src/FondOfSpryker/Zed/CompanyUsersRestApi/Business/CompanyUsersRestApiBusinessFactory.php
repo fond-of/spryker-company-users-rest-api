@@ -20,7 +20,6 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Spryker\Service\UtilText\UtilTextServiceInterface;
 use Spryker\Zed\Company\Business\CompanyFacadeInterface;
@@ -67,7 +66,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getMailFacade(),
             $this->getCompanyRoleFacade(),
             $this->getPermissionFacade(),
-            $this->getEventFacade()
         );
     }
 
@@ -78,8 +76,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     {
         return new CompanyUserDeleter(
             $this->getCompanyUserReferenceFacade(),
-            $this->getEntityManager(),
-            $this->getEventFacade()
+            $this->getEntityManager()
         );
     }
 
@@ -179,14 +176,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyRoleFacade(): CompanyRoleFacadeInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToEventInterface
-     */
-    protected function getEventFacade(): CompanyUsersRestApiToEventInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_EVENT);
     }
 
     /**
