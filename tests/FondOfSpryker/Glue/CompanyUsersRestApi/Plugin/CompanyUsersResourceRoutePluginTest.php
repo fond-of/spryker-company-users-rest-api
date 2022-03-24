@@ -47,11 +47,6 @@ class CompanyUsersResourceRoutePluginTest extends Unit
             ->willReturn($this->resourceRouteCollectionInterfaceMock);
 
         $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
-            ->method('addDelete')
-            ->with('delete')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
-
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
             ->method('addGet')
             ->with('get')
             ->willReturn($this->resourceRouteCollectionInterfaceMock);
