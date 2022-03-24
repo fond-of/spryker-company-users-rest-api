@@ -4,7 +4,6 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
@@ -205,29 +204,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
         $this->assertInstanceOf(
             CompanyUserWriter::class,
             $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter()
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testCompanyUserDeleter(): void
-    {
-        $this->containerMock->expects($this->atLeastOnce())
-            ->method('has')
-            ->willReturn(true);
-
-        $this->containerMock->expects($this->atLeastOnce())
-            ->method('get')
-            ->withConsecutive(
-                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE]
-            )->willReturnOnConsecutiveCalls(
-                $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock
-            );
-
-        $this->assertInstanceOf(
-            CompanyUserDeleter::class,
-            $this->companyUsersRestApiBusinessFactory->createCompanyUserDeleter()
         );
     }
 

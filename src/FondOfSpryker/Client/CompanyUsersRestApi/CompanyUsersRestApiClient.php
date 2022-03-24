@@ -35,18 +35,6 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
-        return $this->getFactory()
-            ->createZedCompanyUsersRestApiStub()
-            ->delete($companyUserTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
     public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
         return $this->getFactory()

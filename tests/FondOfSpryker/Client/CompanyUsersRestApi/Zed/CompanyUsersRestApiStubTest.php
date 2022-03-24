@@ -37,11 +37,6 @@ class CompanyUsersRestApiStubTest extends Unit
     protected $createUrl;
 
     /**
-     * @var string
-     */
-    protected $deleteUrl;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
      */
     protected $companyUserTransferMock;
@@ -78,8 +73,6 @@ class CompanyUsersRestApiStubTest extends Unit
 
         $this->createUrl = '/company-users-rest-api/gateway/create';
 
-        $this->deleteUrl = '/company-users-rest-api/gateway/delete';
-
         $this->companyUsersRestApiStub = new CompanyUsersRestApiStub(
             $this->companyUsersRestApiToZedRequestClientInterfaceMock
         );
@@ -99,24 +92,6 @@ class CompanyUsersRestApiStubTest extends Unit
             RestCompanyUsersResponseTransfer::class,
             $this->companyUsersRestApiStub->create(
                 $this->restCompanyUsersRequestAttributesTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testDelete(): void
-    {
-        $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
-            ->method('call')
-            ->with($this->deleteUrl, $this->companyUserTransferMock)
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUsersRestApiStub->delete(
-                $this->companyUserTransferMock
             )
         );
     }

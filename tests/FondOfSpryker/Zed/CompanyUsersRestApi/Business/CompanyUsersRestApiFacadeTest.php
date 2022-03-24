@@ -4,7 +4,6 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriterInterface;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
@@ -44,11 +43,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
      */
     protected $companyUserTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface
-     */
-    protected $companyUserDeleterInterfaceMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserResponseTransfer
@@ -95,10 +89,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserDeleterInterfaceMock = $this->getMockBuilder(CompanyUserDeleterInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -136,27 +126,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
             RestCompanyUsersResponseTransfer::class,
             $this->companyUsersRestApiFacade->create(
                 $this->restCompanyUsersRequestAttributesTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testDelete(): void
-    {
-        $this->companyUsersRestApiBusinessFactoryMock->expects($this->atLeastOnce())
-            ->method('createCompanyUserDeleter')
-            ->willReturn($this->companyUserDeleterInterfaceMock);
-
-        $this->companyUserDeleterInterfaceMock->expects($this->atLeastOnce())
-            ->method('delete')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUsersRestApiFacade->delete(
-                $this->companyUserTransferMock
             )
         );
     }

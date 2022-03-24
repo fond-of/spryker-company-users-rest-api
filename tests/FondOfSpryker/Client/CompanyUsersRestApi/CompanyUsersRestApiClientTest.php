@@ -103,27 +103,6 @@ class CompanyUsersRestApiClientTest extends Unit
     /**
      * @return void
      */
-    public function testDelete(): void
-    {
-        $this->companyUsersRestApiFactoryMock->expects($this->atLeastOnce())
-            ->method('createZedCompanyUsersRestApiStub')
-            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
-
-        $this->companyUsersRestApiStubInterfaceMock->expects($this->atLeastOnce())
-            ->method('delete')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUsersRestApiClient->delete(
-                $this->companyUserTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function testDisableCompanyUser(): void
     {
         $this->companyUsersRestApiFactoryMock->expects($this->atLeastOnce())
