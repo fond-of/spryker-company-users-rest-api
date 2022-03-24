@@ -170,14 +170,19 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createAccessDeniedErrorResponse();
         }
 
-        $companyBusinessUnit = $this->findDefaultCompanyBusinessUnitOf($companyTransfer);
+        $companyBusinessUnit = $this->companyBusinessUnitFacade
+            ->findDefaultBusinessUnitByCompanyId($companyTransfer->getIdCompany());
 
         if ($companyBusinessUnit === null) {
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
         $filterCustomerTransfer = $this->createCustomerTransferFrom($restCompanyUsersRequestAttributesTransfer);
-        $customerTransfer = $this->findCustomerTransferFrom($filterCustomerTransfer);
+        $customerTransfer = $this->customerFacade->getCustomer($filterCustomerTransfer);
+
+        if ($customerTransfer->getIdCustomer() === null) {
+
+        }
 
         $sendPasswordRestoreMail = false;
         if ($customerTransfer === null) {
@@ -381,21 +386,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer|null
      */
-    protected function findCustomerTransferFrom(
-        CustomerTransfer $customerTransfer
-    ): ?CustomerTransfer {
-        try {
-            return $this->customerFacade->getCustomer($customerTransfer);
-        } catch (CustomerNotFoundException $ex) {
-            return null;
-        }
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
-     *
-     * @return \Generated\Shared\Transfer\CustomerTransfer|null
-     */
     protected function createCustomer(CustomerTransfer $customerTransfer): ?CustomerTransfer
     {
         $customerTransfer = $this->createCustomerRestorePasswordProperties($customerTransfer);
@@ -420,18 +410,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $companyTransfer->setUuid($companyUuid);
 
         return $this->companyFacade->findCompanyByUuid($companyTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyBusinessUnitTransfer|null
-     */
-    protected function findDefaultCompanyBusinessUnitOf(CompanyTransfer $companyTransfer): ?CompanyBusinessUnitTransfer
-    {
-        return $this->companyBusinessUnitFacade->findDefaultBusinessUnitByCompanyId(
-            $companyTransfer->getIdCompany()
-        );
     }
 
     /**

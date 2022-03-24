@@ -15,6 +15,21 @@ use Spryker\Glue\Kernel\Controller\AbstractController;
 class CompanyUsersResourceController extends AbstractController
 {
     /**
+     * @Glue({
+     *     "get": {
+     *          "summary": [
+     *              "Retrieve company user."
+     *          ],
+     *          "parameters": [
+     *              {
+     *                  "ref": "acceptLanguage"
+     *              }
+     *          ],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
@@ -33,6 +48,19 @@ class CompanyUsersResourceController extends AbstractController
     }
 
     /**
+     * @Glue({
+     *     "post": {
+     *          "summary": [
+     *              "Create a company user"
+     *          ],
+     *          "parameters": [{
+     *              "ref": "acceptLanguage"
+     *          }],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
@@ -48,6 +76,18 @@ class CompanyUsersResourceController extends AbstractController
     }
 
     /**
+     * @Glue({
+     *     "patch": {
+     *          "summary": [
+     *              "Updates company user."
+     *          ],
+     *          "parameters": [{
+     *              "ref": "acceptLanguage"
+     *          }],
+     *          "responses": {
+     *          }
+     *     }
+     * })
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
@@ -60,17 +100,5 @@ class CompanyUsersResourceController extends AbstractController
         return $this->getFactory()
             ->createCompanyUsersUpdater()
             ->update($restRequest, $restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
-     *
-     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
-     */
-    public function deleteAction(RestRequestInterface $restRequest): RestResponseInterface
-    {
-        return $this->getFactory()
-            ->createCompanyUsersDeleter()
-            ->delete($restRequest);
     }
 }

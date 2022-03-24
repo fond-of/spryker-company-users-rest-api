@@ -13,7 +13,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig getConfig()
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface getRepository()
- * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface getEntityManager()
  */
 class CompanyUsersRestApiPersistenceFactory extends AbstractPersistenceFactory
 {

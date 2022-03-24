@@ -6,8 +6,6 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleter;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
@@ -66,17 +64,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->getMailFacade(),
             $this->getCompanyRoleFacade(),
             $this->getPermissionFacade(),
-        );
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserDeleterInterface
-     */
-    public function createCompanyUserDeleter(): CompanyUserDeleterInterface
-    {
-        return new CompanyUserDeleter(
-            $this->getCompanyUserReferenceFacade(),
-            $this->getEntityManager()
         );
     }
 

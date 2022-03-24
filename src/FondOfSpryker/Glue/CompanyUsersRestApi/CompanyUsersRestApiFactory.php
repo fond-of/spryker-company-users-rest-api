@@ -10,8 +10,6 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApi
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisabler;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleter;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdater;
@@ -42,17 +40,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
             $this->createRestApiError()
-        );
-    }
-
-    /**
-     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface
-     */
-    public function createCompanyUsersDeleter(): CompanyUsersDeleterInterface
-    {
-        return new CompanyUsersDeleter(
-            $this->getResourceBuilder(),
-            $this->getClient()
         );
     }
 
