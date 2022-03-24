@@ -206,7 +206,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter()
         );
     }
-    
+
     /**
      * @return void
      */
