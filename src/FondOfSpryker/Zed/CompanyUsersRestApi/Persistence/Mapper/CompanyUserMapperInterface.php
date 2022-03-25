@@ -20,7 +20,7 @@ interface CompanyUserMapperInterface
     ): CompanyUserTransfer;
 
     /**
-     * @param \Generated\Shared\Transfer\SpyCompanyUserEntityTransfer[] $collection
+     * @param array<\Generated\Shared\Transfer\SpyCompanyUserEntityTransfer> $collection
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
      */

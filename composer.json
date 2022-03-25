@@ -12,6 +12,12 @@
       "email": "felix@pfister.de"
     }
   ],
+  "scripts": {
+    "ci": "make ci",
+    "codeception": "make codeception",
+    "phpcs": "make phpcs",
+    "phpstan": "make phpstan"
+  },
   "require": {
     "php": ">=7.3",
     "fond-of-spryker/companies-rest-api": "dev-spryker_upgrade",
@@ -21,11 +27,13 @@
     "spryker/company-role": "^1.0.0",
     "spryker/glue-application": "^1.0.0",
     "spryker/mail": "^4.0.0",
-    "spryker/permission": "^1.0.0"
+    "spryker/permission": "^1.0.0",
+    "spryker/uuid-behavior": "^1.0.0"
   },
   "require-dev": {
     "fond-of-codeception/spryker": "^1.0",
-    "spryker/code-sniffer": "^0.12"
+    "spryker/code-sniffer": "*",
+    "spryker-sdk/phpstan-spryker": "*"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -37,7 +45,13 @@
   "autoload-dev": {
     "psr-4": {
       "FondOfSpryker\\": "tests/FondOfSpryker/",
-      "Generated\\": "src/Generated/"
+      "Generated\\": "src/Generated/",
+      "Orm\\Zed\\": "src/Orm/Zed/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
     }
   }
 }

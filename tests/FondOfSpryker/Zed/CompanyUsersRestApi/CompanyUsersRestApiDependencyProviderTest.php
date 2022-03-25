@@ -37,8 +37,8 @@ class CompanyUsersRestApiDependencyProviderTest extends Unit
         $this->assertInstanceOf(
             Container::class,
             $this->companyUsersRestApiDependencyProvider->provideBusinessLayerDependencies(
-                $this->containerMock
-            )
+                $this->containerMock,
+            ),
         );
     }
 
@@ -50,8 +50,8 @@ class CompanyUsersRestApiDependencyProviderTest extends Unit
         $this->assertInstanceOf(
             Container::class,
             $this->companyUsersRestApiDependencyProvider->providePersistenceLayerDependencies(
-                $this->containerMock
-            )
+                $this->containerMock,
+            ),
         );
     }
 }

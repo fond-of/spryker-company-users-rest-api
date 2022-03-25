@@ -47,7 +47,7 @@ class CompanyUsersRestApiToCompanyUserReferenceFacadeBridgeTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToCompanyUserReferenceFacadeBridge = new CompanyUsersRestApiToCompanyUserReferenceFacadeBridge(
-            $this->companyUserReferenceFacadeInterfaceMock
+            $this->companyUserReferenceFacadeInterfaceMock,
         );
     }
 
@@ -63,8 +63,8 @@ class CompanyUsersRestApiToCompanyUserReferenceFacadeBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiToCompanyUserReferenceFacadeBridge->findCompanyUserByCompanyUserReference(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

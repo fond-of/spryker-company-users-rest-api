@@ -36,6 +36,9 @@ use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
+    /**
+     * @var int
+     */
     protected const PASSWORD_LENGTH = 20;
 
     /**
@@ -157,7 +160,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestCompanyUsersResponseTransfer {
         $companyResponseTransfer = $this->findCompanyByUuid(
-            $restCompanyUsersRequestAttributesTransfer->getCompany()->getIdCompany()
+            $restCompanyUsersRequestAttributesTransfer->getCompany()->getIdCompany(),
         );
 
         $companyTransfer = $companyResponseTransfer->getCompanyTransfer();
@@ -192,7 +195,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $companyRole = null;
         if ($restCompanyUsersRequestAttributesTransfer->getCompanyRole() !== null) {
             $companyRoleResponseTransfer = $this->findCompanyRoleBy(
-                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid()
+                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid(),
             );
 
             if (!$companyRoleResponseTransfer->getIsSuccessful()) {
@@ -231,7 +234,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         }
 
         return $this->createCompanyUsersResponseTransfer(
-            $companyUserResponseTransfer->getCompanyUser()
+            $companyUserResponseTransfer->getCompanyUser(),
         );
     }
 
@@ -260,8 +263,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $customerTransfer->setRestorePasswordKey($this->generateKey());
         $customerTransfer->setRestorePasswordLink(
             $this->companyUsersRestApiConfig->getCompanyUserPasswordRestoreTokenUrl(
-                $customerTransfer->getRestorePasswordKey()
-            )
+                $customerTransfer->getRestorePasswordKey(),
+            ),
         );
 
         return $customerTransfer;
@@ -310,7 +313,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     ): CompanyUserTransfer {
         return $this->restCompanyUserToCompanyUserMapper->mapRestCompanyUserToCompanyUser(
             $restCompanyUsersRequestAttributesTransfer,
-            new CompanyUserTransfer()
+            new CompanyUserTransfer(),
         );
     }
 
@@ -372,7 +375,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     ): CustomerTransfer {
         return $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
             $restCompanyUsersRequestAttributesTransfer->getCustomer(),
-            new CustomerTransfer()
+            new CustomerTransfer(),
         );
     }
 
@@ -430,7 +433,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected function findDefaultCompanyBusinessUnitOf(CompanyTransfer $companyTransfer): ?CompanyBusinessUnitTransfer
     {
         return $this->companyBusinessUnitFacade->findDefaultBusinessUnitByCompanyId(
-            $companyTransfer->getIdCompany()
+            $companyTransfer->getIdCompany(),
         );
     }
 
@@ -446,7 +449,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
 
         $restCompanyUsersResponseAttributesTransfer->fromArray(
             $companyUserTransfer->toArray(),
-            true
+            true,
         );
 
         $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
@@ -470,7 +473,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     ): CompanyUserTransfer {
         if ($companyRoleTransfer !== null) {
             $companyUserTransfer->setCompanyRoleCollection(
-                (new CompanyRoleCollectionTransfer())->addRole($companyRoleTransfer)
+                (new CompanyRoleCollectionTransfer())->addRole($companyRoleTransfer),
             );
         }
 
@@ -485,7 +488,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected function findCompanyRoleBy(string $companyRoleUuid): CompanyRoleResponseTransfer
     {
         return $this->companyRoleFacade->findCompanyRoleByUuid(
-            (new CompanyRoleTransfer())->setUuid($companyRoleUuid)
+            (new CompanyRoleTransfer())->setUuid($companyRoleUuid),
         );
     }
 
@@ -507,7 +510,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
 
         $companyUserTransfer = $this->companyUserReader->getByIdCustomerAndIdCompany(
             $restCustomerTransfer->getIdCustomer(),
-            $idCompany
+            $idCompany,
         );
 
         if ($companyUserTransfer === null || $companyUserTransfer->getIdCompanyUser() === null) {
@@ -516,7 +519,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
 
         return $this->permissionFacade->can(
             WriteCompanyUserPermissionPlugin::KEY,
-            $companyUserTransfer->getIdCompanyUser()
+            $companyUserTransfer->getIdCompanyUser(),
         );
     }
 }

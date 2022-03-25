@@ -26,7 +26,7 @@ class CompanyUserUnitAddressQuoteMapperPlugin extends AbstractPlugin implements 
     ): QuoteTransfer {
         return $this->getFacade()->mapCompanyUserUnitAddressesToQuote(
             $restCheckoutRequestAttributesTransfer,
-            $quoteTransfer
+            $quoteTransfer,
         );
     }
 }

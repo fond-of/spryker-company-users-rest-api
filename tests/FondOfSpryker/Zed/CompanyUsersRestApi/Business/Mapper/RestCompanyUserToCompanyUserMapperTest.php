@@ -64,8 +64,8 @@ class RestCompanyUserToCompanyUserMapperTest extends Unit
             CompanyUserTransfer::class,
             $this->restCompanyUserToCompanyUserMapper->mapRestCompanyUserToCompanyUser(
                 $this->restCompanyUsersRequestAttributesTransferMock,
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

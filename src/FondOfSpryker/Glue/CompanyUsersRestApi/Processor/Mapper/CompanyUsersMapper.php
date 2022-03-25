@@ -38,13 +38,13 @@ class CompanyUsersMapper implements CompanyUsersMapperInterface
 
         $restCompanyUsersResponseAttributesTransfer->fromArray(
             $companyUserTransfer->toArray(),
-            true
+            true,
         );
 
         $companyUsersResource = $this->restResourceBuilder->createRestResource(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
             $companyUserTransfer->getCompanyUserReference(),
-            $restCompanyUsersResponseAttributesTransfer
+            $restCompanyUsersResponseAttributesTransfer,
         );
 
         $companyUsersResource->setPayload($companyUserTransfer);

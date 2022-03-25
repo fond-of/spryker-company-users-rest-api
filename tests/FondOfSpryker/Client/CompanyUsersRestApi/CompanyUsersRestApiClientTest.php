@@ -95,8 +95,8 @@ class CompanyUsersRestApiClientTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUsersRestApiClient->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -116,8 +116,8 @@ class CompanyUsersRestApiClientTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiClient->disableCompanyUser(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

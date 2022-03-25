@@ -41,8 +41,8 @@ class RestApiErrorTest extends Unit
         $this->assertInstanceOf(
             RestResponseInterface::class,
             $this->restApiError->addAccessDeniedError(
-                $this->restResponseInterfaceMock
-            )
+                $this->restResponseInterfaceMock,
+            ),
         );
     }
 
@@ -58,8 +58,8 @@ class RestApiErrorTest extends Unit
         $this->assertInstanceOf(
             RestResponseInterface::class,
             $this->restApiError->addCompanyRoleNotFoundError(
-                $this->restResponseInterfaceMock
-            )
+                $this->restResponseInterfaceMock,
+            ),
         );
     }
 
@@ -75,8 +75,8 @@ class RestApiErrorTest extends Unit
         $this->assertInstanceOf(
             RestResponseInterface::class,
             $this->restApiError->addCompanyUserNotFoundError(
-                $this->restResponseInterfaceMock
-            )
+                $this->restResponseInterfaceMock,
+            ),
         );
     }
 }

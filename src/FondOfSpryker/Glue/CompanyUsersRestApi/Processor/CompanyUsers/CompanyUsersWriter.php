@@ -81,7 +81,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
         $restCompanyUsersRequestAttributesTransfer->setCurrentCustomer($restCustomerTransfer);
 
         $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->create(
-            $restCompanyUsersRequestAttributesTransfer
+            $restCompanyUsersRequestAttributesTransfer,
         );
 
         if (!$restCompanyUsersResponseTransfer->getIsSuccess()) {
@@ -124,7 +124,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
         $restResource = $this->restResourceBuilder->createRestResource(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
             $restCompanyUsersResponseAttributesTransfer->getCompanyUserReference(),
-            $restCompanyUsersResponseAttributesTransfer
+            $restCompanyUsersResponseAttributesTransfer,
         )->setPayload($restCompanyUsersResponseTransfer->getCompanyUser());
 
         return $this->restResourceBuilder

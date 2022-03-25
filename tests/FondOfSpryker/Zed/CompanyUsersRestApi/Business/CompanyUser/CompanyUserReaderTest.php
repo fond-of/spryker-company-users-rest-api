@@ -76,7 +76,7 @@ class CompanyUserReaderTest extends Unit
         $this->companyUsers = new ArrayObject([]);
 
         $this->companyUserReader = new CompanyUserReader(
-            $this->companyUsersRestApiRepositoryInterfaceMock
+            $this->companyUsersRestApiRepositoryInterfaceMock,
         );
     }
 
@@ -107,8 +107,8 @@ class CompanyUserReaderTest extends Unit
 
         $this->assertFalse(
             $this->companyUserReader->doesCompanyUserAlreadyExist(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 
@@ -123,8 +123,8 @@ class CompanyUserReaderTest extends Unit
 
         $this->assertFalse(
             $this->companyUserReader->doesCompanyUserAlreadyExist(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

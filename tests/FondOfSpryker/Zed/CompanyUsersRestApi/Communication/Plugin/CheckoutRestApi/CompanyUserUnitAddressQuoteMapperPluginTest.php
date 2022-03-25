@@ -63,8 +63,8 @@ class CompanyUserUnitAddressQuoteMapperPluginTest extends Unit
             QuoteTransfer::class,
             $this->companyUserUnitAddressQuoteMapperPlugin->map(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 }

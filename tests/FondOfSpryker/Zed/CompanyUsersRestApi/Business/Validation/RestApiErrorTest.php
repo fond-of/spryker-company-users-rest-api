@@ -27,7 +27,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createCompanyNotFoundErrorResponse()
+            $this->restApiError->createCompanyNotFoundErrorResponse(),
         );
     }
 
@@ -38,7 +38,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createCompanyUserAlreadyExistErrorResponse()
+            $this->restApiError->createCompanyUserAlreadyExistErrorResponse(),
         );
     }
 
@@ -49,7 +49,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse()
+            $this->restApiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse(),
         );
     }
 
@@ -60,7 +60,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createCompanyUsersDataInvalidErrorResponse()
+            $this->restApiError->createCompanyUsersDataInvalidErrorResponse(),
         );
     }
 
@@ -71,7 +71,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createCouldNotCreateCustomerErrorResponse()
+            $this->restApiError->createCouldNotCreateCustomerErrorResponse(),
         );
     }
 
@@ -82,7 +82,7 @@ class RestApiErrorTest extends Unit
     {
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
-            $this->restApiError->createDefaultCompanyRoleNotFoundErrorResponse()
+            $this->restApiError->createDefaultCompanyRoleNotFoundErrorResponse(),
         );
     }
 }

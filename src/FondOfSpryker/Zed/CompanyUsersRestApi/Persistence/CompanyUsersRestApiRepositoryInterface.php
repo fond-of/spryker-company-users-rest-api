@@ -12,7 +12,7 @@ interface CompanyUsersRestApiRepositoryInterface
     /**
      * @param string $customerReference
      *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer[]
+     * @return array<\Generated\Shared\Transfer\CompanyUserTransfer>
      */
     public function findActiveCompanyUsersByCustomerReference(string $customerReference): array;
 

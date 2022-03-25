@@ -108,7 +108,7 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
 
         $companyUserReference = $restRequest->getResource()->getId();
         $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
-            (new CompanyUserTransfer())->setCompanyUserReference($companyUserReference)
+            (new CompanyUserTransfer())->setCompanyUserReference($companyUserReference),
         );
 
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();

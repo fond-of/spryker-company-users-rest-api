@@ -77,7 +77,7 @@ class CompanyUserInviteMailTypePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUserInviteMailTypePlugin::MAIL_TYPE,
-            $this->companyUserInviteMailTypePlugin->getName()
+            $this->companyUserInviteMailTypePlugin->getName(),
         );
     }
 

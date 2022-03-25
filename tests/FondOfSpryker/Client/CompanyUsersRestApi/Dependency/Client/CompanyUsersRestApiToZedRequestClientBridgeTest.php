@@ -38,10 +38,10 @@ class CompanyUsersRestApiToZedRequestClientBridgeTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToZedRequestClientBridge = new CompanyUsersRestApiToZedRequestClientBridge(
-            $this->zedRequestClientInterfaceMock
+            $this->zedRequestClientInterfaceMock,
         );
 
-        $this->url = "url";
+        $this->url = 'url';
 
         $this->transferInterfaceMock = $this->getMockBuilder(TransferInterface::class)
             ->disableOriginalConstructor()
@@ -62,8 +62,8 @@ class CompanyUsersRestApiToZedRequestClientBridgeTest extends Unit
             TransferInterface::class,
             $this->companyUsersRestApiToZedRequestClientBridge->call(
                 $this->url,
-                $this->transferInterfaceMock
-            )
+                $this->transferInterfaceMock,
+            ),
         );
     }
 }

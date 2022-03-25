@@ -47,7 +47,7 @@ class RestCustomerToCustomerMapperTest extends Unit
             ->getMock();
 
         $this->restCustomerToCustomerMapper = new RestCustomerToCustomerMapper(
-            $this->customerFacadeInterfaceMock
+            $this->customerFacadeInterfaceMock,
         );
     }
 
@@ -68,8 +68,8 @@ class RestCustomerToCustomerMapperTest extends Unit
             CustomerTransfer::class,
             $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
                 $this->restCustomerTransferMock,
-                $this->customerTransferMock
-            )
+                $this->customerTransferMock,
+            ),
         );
     }
 }

@@ -79,17 +79,12 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyRoleFacadeInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManager
-     */
-    protected $companyUsersRestApiEntityManagerMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
     protected $companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock;
 
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $permissionFacadeMock;
 
@@ -138,10 +133,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiEntityManagerMock = $this->getMockBuilder(CompanyUsersRestApiEntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -151,7 +142,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiBusinessFactory = new CompanyUsersRestApiBusinessFactory();
-        $this->companyUsersRestApiBusinessFactory->setEntityManager($this->companyUsersRestApiEntityManagerMock);
         $this->companyUsersRestApiBusinessFactory->setRepository($this->companyUsersRestApiRepositoryMock);
         $this->companyUsersRestApiBusinessFactory->setConfig($this->companyUsersRestApiConfigMock);
         $this->companyUsersRestApiBusinessFactory->setContainer($this->containerMock);
@@ -164,7 +154,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     {
         $this->assertInstanceOf(
             CompanyUserReaderInterface::class,
-            $this->companyUsersRestApiBusinessFactory->createCompanyUserReader()
+            $this->companyUsersRestApiBusinessFactory->createCompanyUserReader(),
         );
     }
 
@@ -188,7 +178,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_MAIL],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE],
-                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION]
+                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeInterfaceMock,
                 $this->customerFacadeInterfaceMock,
@@ -198,12 +188,12 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 $this->utilTextServiceInterfaceMock,
                 $this->mailFacadeInterfaceMock,
                 $this->companyRoleFacadeInterfaceMock,
-                $this->permissionFacadeMock
+                $this->permissionFacadeMock,
             );
 
         $this->assertInstanceOf(
             CompanyUserWriter::class,
-            $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter()
+            $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter(),
         );
     }
 
@@ -223,7 +213,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
 
         $this->assertInstanceOf(
             CompanyUserUnitAddressQuoteMapperInterface::class,
-            $this->companyUsersRestApiBusinessFactory->createCompanyUserUnitAddressQuoteMapper()
+            $this->companyUsersRestApiBusinessFactory->createCompanyUserUnitAddressQuoteMapper(),
         );
     }
 }

@@ -39,7 +39,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getClient(),
             $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
-            $this->createRestApiError()
+            $this->createRestApiError(),
         );
     }
 
@@ -52,7 +52,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getResourceBuilder(),
             $this->getClient(),
             $this->getCompanyClient(),
-            $this->createRestApiError()
+            $this->createRestApiError(),
         );
     }
 
@@ -69,7 +69,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getCompanyUserReferenceClient(),
             $this->getCompanyRoleClient(),
             $this->getCustomerClient(),
-            $this->createCompanyUsersMapper()
+            $this->createCompanyUsersMapper(),
         );
     }
 
@@ -83,7 +83,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getClient(),
             $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
-            $this->createRestApiError()
+            $this->createRestApiError(),
         );
     }
 
@@ -101,7 +101,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     public function createCompanyUsersMapper(): CompanyUsersMapperInterface
     {
         return new CompanyUsersMapper(
-            $this->getResourceBuilder()
+            $this->getResourceBuilder(),
         );
     }
 

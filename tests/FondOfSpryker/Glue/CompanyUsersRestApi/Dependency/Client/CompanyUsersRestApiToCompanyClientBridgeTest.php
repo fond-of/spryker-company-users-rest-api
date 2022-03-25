@@ -47,7 +47,7 @@ class CompanyUsersRestApiToCompanyClientBridgeTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToCompanyClientBridge = new CompanyUsersRestApiToCompanyClientBridge(
-            $this->companyClientInterfaceMock
+            $this->companyClientInterfaceMock,
         );
     }
 
@@ -64,8 +64,8 @@ class CompanyUsersRestApiToCompanyClientBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyResponseTransfer::class,
             $this->companyUsersRestApiToCompanyClientBridge->findCompanyByUuid(
-                $this->companyTransferMock
-            )
+                $this->companyTransferMock,
+            ),
         );
     }
 }

@@ -21,13 +21,13 @@ class RestCompanyUserToCompanyUserMapper implements RestCompanyUserToCompanyUser
     ): CompanyUserTransfer {
         if ($restCompanyUsersRequestAttributesTransfer->getIsActive() !== null) {
             $companyUserTransfer->setIsActive(
-                $restCompanyUsersRequestAttributesTransfer->getIsActive()
+                $restCompanyUsersRequestAttributesTransfer->getIsActive(),
             );
         }
 
         if ($restCompanyUsersRequestAttributesTransfer->getIsDefault() !== null) {
             $companyUserTransfer->setIsDefault(
-                $restCompanyUsersRequestAttributesTransfer->getIsDefault()
+                $restCompanyUsersRequestAttributesTransfer->getIsDefault(),
             );
         }
 

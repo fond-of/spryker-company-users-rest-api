@@ -167,7 +167,7 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
         $this->name2 = 'Name2';
 
         $this->companyUserUnitAddressQuoteMapper = new CompanyUserUnitAddressQuoteMapper(
-            $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock
+            $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock,
         );
     }
 
@@ -244,8 +244,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 
@@ -270,8 +270,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 
@@ -316,8 +316,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 
@@ -366,8 +366,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 
@@ -424,8 +424,8 @@ class CompanyUserUnitAddressQuoteMapperTest extends Unit
             $this->quoteTransferMock,
             $this->companyUserUnitAddressQuoteMapper->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 }
