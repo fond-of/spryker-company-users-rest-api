@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapper;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
@@ -86,14 +84,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createRestCustomerToCustomerMapper(): RestCustomerToCustomerMapperInterface
     {
         return new RestCustomerToCustomerMapper($this->getCustomerFacade());
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface
-     */
-    public function createCompanyUserUnitAddressQuoteMapper(): CompanyUserUnitAddressQuoteMapperInterface
-    {
-        return new CompanyUserUnitAddressQuoteMapper($this->getCompanyUserReferenceFacade());
     }
 
     /**
