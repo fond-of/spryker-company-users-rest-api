@@ -125,8 +125,8 @@ class CompanyUsersRestApiFacadeTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUsersRestApiFacade->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -146,8 +146,8 @@ class CompanyUsersRestApiFacadeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiFacade->disableCompanyUser(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 
@@ -168,8 +168,8 @@ class CompanyUsersRestApiFacadeTest extends Unit
             QuoteTransfer::class,
             $this->companyUsersRestApiFacade->mapCompanyUserUnitAddressesToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock
-            )
+                $this->quoteTransferMock,
+            ),
         );
     }
 }

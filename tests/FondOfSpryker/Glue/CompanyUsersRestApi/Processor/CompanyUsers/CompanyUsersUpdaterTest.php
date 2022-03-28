@@ -218,7 +218,7 @@ class CompanyUsersUpdaterTest extends Unit
             $this->companyUsersRestApiToCompanyUserReferenceClientInterfaceMock,
             $this->companyRoleClientInterfaceMock,
             $this->customerClientInterfaceMock,
-            $this->companyUsersMapperInterfaceMock
+            $this->companyUsersMapperInterfaceMock,
         );
     }
 
@@ -303,8 +303,8 @@ class CompanyUsersUpdaterTest extends Unit
             RestResponseInterface::class,
             $this->companyUsersUpdater->update(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -337,8 +337,8 @@ class CompanyUsersUpdaterTest extends Unit
             RestResponseInterface::class,
             $this->companyUsersUpdater->update(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -383,8 +383,8 @@ class CompanyUsersUpdaterTest extends Unit
             RestResponseInterface::class,
             $this->companyUsersUpdater->update(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -454,8 +454,8 @@ class CompanyUsersUpdaterTest extends Unit
             RestResponseInterface::class,
             $this->companyUsersUpdater->update(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 }

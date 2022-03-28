@@ -12,17 +12,54 @@ use Spryker\Zed\Kernel\Container;
 
 class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const FACADE_COMPANY = 'FACADE_COMPANY';
+
+    /**
+     * @var string
+     */
     public const FACADE_COMPANY_BUSINESS_UNIT = 'FACADE_COMPANY_BUSINESS_UNIT';
+
+    /**
+     * @var string
+     */
     public const FACADE_COMPANY_ROLE = 'FACADE_COMPANY_ROLE';
+
+    /**
+     * @var string
+     */
     public const FACADE_COMPANY_USER = 'FACADE_COMPANY_USER';
+
+    /**
+     * @var string
+     */
     public const FACADE_COMPANY_USER_REFERENCE = 'FACADE_COMPANY_USER_REFERENCE';
+
+    /**
+     * @var string
+     */
     public const FACADE_CUSTOMER = 'FACADE_CUSTOMER';
+
+    /**
+     * @var string
+     */
     public const FACADE_MAIL = 'FACADE_MAIL';
+
+    /**
+     * @var string
+     */
     public const FACADE_PERMISSION = 'FACADE_PERMISSION';
 
+    /**
+     * @var string
+     */
     public const PROPEL_QUERY_COMPANY_USER = 'PROPEL_QUERY_COMPANY_USER';
 
+    /**
+     * @var string
+     */
     public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
 
     /**
@@ -179,7 +216,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     {
         $container[static::FACADE_COMPANY_USER_REFERENCE] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyUserReferenceFacadeBridge(
-                $container->getLocator()->companyUserReference()->facade()
+                $container->getLocator()->companyUserReference()->facade(),
             );
         };
 
@@ -195,7 +232,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     {
         $container[static::FACADE_PERMISSION] = static function (Container $container) {
             return new CompanyUsersRestApiToPermissionFacadeBridge(
-                $container->getLocator()->permission()->facade()
+                $container->getLocator()->permission()->facade(),
             );
         };
 

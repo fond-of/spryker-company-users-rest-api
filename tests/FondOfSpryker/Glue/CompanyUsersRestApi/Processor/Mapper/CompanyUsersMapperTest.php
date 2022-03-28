@@ -51,10 +51,10 @@ class CompanyUsersMapperTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserReference = "company-user-reference";
+        $this->companyUserReference = 'company-user-reference';
 
         $this->companyUsersMapper = new CompanyUsersMapper(
-            $this->restResourceBuilderInterfaceMock
+            $this->restResourceBuilderInterfaceMock,
         );
     }
 
@@ -82,8 +82,8 @@ class CompanyUsersMapperTest extends Unit
         $this->assertInstanceOf(
             RestResourceInterface::class,
             $this->companyUsersMapper->mapCompanyUsersResource(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

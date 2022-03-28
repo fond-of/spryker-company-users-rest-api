@@ -41,12 +41,11 @@ class DisableCompanyUserResourceRoutePluginTest extends Unit
             ->with('post')
             ->willReturn($this->resourceRouteCollectionInterfaceMock);
 
-
         $this->assertInstanceOf(
             ResourceRouteCollectionInterface::class,
             $this->disableCompanyUsersResourceRoutePlugin->configure(
-                $this->resourceRouteCollectionInterfaceMock
-            )
+                $this->resourceRouteCollectionInterfaceMock,
+            ),
         );
     }
 
@@ -57,7 +56,7 @@ class DisableCompanyUserResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::RESOURCE_DISABLE_COMPANY_USER,
-            $this->disableCompanyUsersResourceRoutePlugin->getResourceType()
+            $this->disableCompanyUsersResourceRoutePlugin->getResourceType(),
         );
     }
 
@@ -68,7 +67,7 @@ class DisableCompanyUserResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::CONTROLLER_DISABLE_COMPANY_USER,
-            $this->disableCompanyUsersResourceRoutePlugin->getController()
+            $this->disableCompanyUsersResourceRoutePlugin->getController(),
         );
     }
 
@@ -79,7 +78,7 @@ class DisableCompanyUserResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             RestDisableCompanyUserRequestAttributesTransfer::class,
-            $this->disableCompanyUsersResourceRoutePlugin->getResourceAttributesClassName()
+            $this->disableCompanyUsersResourceRoutePlugin->getResourceAttributesClassName(),
         );
     }
 }

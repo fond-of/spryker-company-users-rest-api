@@ -59,8 +59,8 @@ class GatewayController extends AbstractGatewayController
 
         return $companyUserCollectionTransfer->setCompanyUsers(
             new ArrayObject(
-                $this->getRepository()->findActiveCompanyUsersByCustomerReference($customerTransfer->getCustomerReference())
-            )
+                $this->getRepository()->findActiveCompanyUsersByCustomerReference($customerTransfer->getCustomerReference()),
+            ),
         );
     }
 }

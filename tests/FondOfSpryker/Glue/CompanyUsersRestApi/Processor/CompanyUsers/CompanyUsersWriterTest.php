@@ -175,7 +175,7 @@ class CompanyUsersWriterTest extends Unit
             $this->restResourceBuilderInterfaceMock,
             $this->companyUsersRestApiClientInterfaceMock,
             $this->companyUsersRestApiToCompanyClientInterfaceMock,
-            $this->restApiErrorInterfaceMock
+            $this->restApiErrorInterfaceMock,
         );
     }
 
@@ -196,8 +196,8 @@ class CompanyUsersWriterTest extends Unit
             $this->restResponseInterfaceMock,
             $this->companyUsersWriter->createCompanyUser(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -257,8 +257,8 @@ class CompanyUsersWriterTest extends Unit
             RestResponseInterface::class,
             $this->companyUsersWriter->createCompanyUser(
                 $this->restRequestInterfaceMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 }

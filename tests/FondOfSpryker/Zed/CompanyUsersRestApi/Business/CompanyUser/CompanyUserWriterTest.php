@@ -206,17 +206,17 @@ class CompanyUserWriterTest extends Unit
     protected $permissionFacadeMock;
 
     /**
-     * @var \Generated\Shared\Transfer\RestCustomerTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\RestCustomerTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $currentRestCustomerTransferMock;
 
     /**
-     * @var \Generated\Shared\Transfer\CompanyUserTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\CompanyUserTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $currentCompanyUserTransferMock;
 
     /**
-     * @var \Generated\Shared\Transfer\RestCompanyTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\RestCompanyTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $restCompanyTransferMock;
 
@@ -370,7 +370,7 @@ class CompanyUserWriterTest extends Unit
             $this->companyUsersRestApiConfigMock,
             $this->mailFacadeInterfaceMock,
             $this->companyRoleFacadeInterfaceMock,
-            $this->permissionFacadeMock
+            $this->permissionFacadeMock,
         );
     }
 
@@ -527,8 +527,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -560,8 +560,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -625,8 +625,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -763,8 +763,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -877,8 +877,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -971,8 +971,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -1077,8 +1077,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -1219,8 +1219,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -1369,8 +1369,8 @@ class CompanyUserWriterTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -1386,7 +1386,7 @@ class CompanyUserWriterTest extends Unit
 
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
-            $this->companyUserWriter->disableCompanyUser($this->companyUserTransferMock)
+            $this->companyUserWriter->disableCompanyUser($this->companyUserTransferMock),
         );
     }
 }

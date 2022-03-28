@@ -105,8 +105,8 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
 
         $companyRoleResponseTransfer = $this->companyRoleClient->findCompanyRoleByUuid(
             (new CompanyRoleTransfer())->setUuid(
-                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid()
-            )
+                $restCompanyUsersRequestAttributesTransfer->getCompanyRole()->getUuid(),
+            ),
         );
 
         if (!$companyRoleResponseTransfer->getIsSuccessful()) {
@@ -115,8 +115,8 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
 
         $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
             (new CompanyUserTransfer())->setCompanyUserReference(
-                $restRequest->getResource()->getId()
-            )
+                $restRequest->getResource()->getId(),
+            ),
         );
 
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
@@ -168,7 +168,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
     protected function assignCustomer(CompanyUserTransfer $companyUserTransfer): CompanyUserTransfer
     {
         $companyUserTransfer->setCustomer(
-            $this->customerClient->getCustomerById($companyUserTransfer->getFkCustomer())
+            $this->customerClient->getCustomerById($companyUserTransfer->getFkCustomer()),
         );
 
         return $companyUserTransfer;

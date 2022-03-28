@@ -88,6 +88,7 @@ class CompanyUsersResourceController extends AbstractController
      *          }
      *     }
      * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *

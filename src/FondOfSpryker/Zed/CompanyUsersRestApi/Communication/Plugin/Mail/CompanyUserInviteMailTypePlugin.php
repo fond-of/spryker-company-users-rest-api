@@ -15,6 +15,9 @@ use Spryker\Zed\Mail\Dependency\Plugin\MailTypePluginInterface;
  */
 class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailTypePluginInterface
 {
+    /**
+     * @var string
+     */
     public const MAIL_TYPE = 'company user invite';
 
     /**
@@ -87,7 +90,7 @@ class CompanyUserInviteMailTypePlugin extends AbstractPlugin implements MailType
 
         $mailBuilder->addRecipient(
             $customerTransfer->getEmail(),
-            $customerTransfer->getFirstName() . ' ' . $customerTransfer->getLastName()
+            $customerTransfer->getFirstName() . ' ' . $customerTransfer->getLastName(),
         );
 
         return $this;

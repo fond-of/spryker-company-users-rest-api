@@ -41,7 +41,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createCompanyUserReader(): CompanyUserReaderInterface
     {
         return new CompanyUserReader(
-            $this->getRepository()
+            $this->getRepository(),
         );
     }
 
@@ -97,7 +97,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createCompanyUserUnitAddressQuoteMapper(): CompanyUserUnitAddressQuoteMapperInterface
     {
         return new CompanyUserUnitAddressQuoteMapper(
-            $this->getCompanyUserReferenceFacade()
+            $this->getCompanyUserReferenceFacade(),
         );
     }
 

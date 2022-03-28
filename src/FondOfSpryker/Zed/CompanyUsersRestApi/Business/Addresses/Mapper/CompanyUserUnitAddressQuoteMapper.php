@@ -49,7 +49,7 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
         if ($restCheckoutRequestAttributesTransfer->getBillingAddress() !== null) {
             $billingAddress = $this->getAddressTransfer(
                 $restCheckoutRequestAttributesTransfer->getBillingAddress(),
-                $companyUserResponseTransfer->getCompanyUser()
+                $companyUserResponseTransfer->getCompanyUser(),
             );
             $quoteTransfer->setBillingAddress($billingAddress);
         }
@@ -57,7 +57,7 @@ class CompanyUserUnitAddressQuoteMapper implements CompanyUserUnitAddressQuoteMa
         if ($restCheckoutRequestAttributesTransfer->getShippingAddress() !== null) {
             $shippingAddress = $this->getAddressTransfer(
                 $restCheckoutRequestAttributesTransfer->getShippingAddress(),
-                $companyUserResponseTransfer->getCompanyUser()
+                $companyUserResponseTransfer->getCompanyUser(),
             );
             $quoteTransfer->setShippingAddress($shippingAddress);
         }

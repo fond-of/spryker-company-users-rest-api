@@ -107,15 +107,12 @@ class DisableCompanyUserResourceControllerTest extends Unit
             ->with($this->restRequestMock, $this->restDisableCompanyUserRequestAttributesTransferMock)
             ->willReturn($this->restResponseMock);
 
-
-
         $this->assertInstanceOf(
             RestResponseInterface::class,
             $this->disableCompanyUserResourceController->postAction(
                 $this->restRequestMock,
-                $this->restDisableCompanyUserRequestAttributesTransferMock
-            )
+                $this->restDisableCompanyUserRequestAttributesTransferMock,
+            ),
         );
     }
-
 }

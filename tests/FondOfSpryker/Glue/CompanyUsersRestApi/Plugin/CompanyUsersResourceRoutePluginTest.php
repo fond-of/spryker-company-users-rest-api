@@ -54,8 +54,8 @@ class CompanyUsersResourceRoutePluginTest extends Unit
         $this->assertInstanceOf(
             ResourceRouteCollectionInterface::class,
             $this->companyUsersResourceRoutePlugin->configure(
-                $this->resourceRouteCollectionInterfaceMock
-            )
+                $this->resourceRouteCollectionInterfaceMock,
+            ),
         );
     }
 
@@ -66,7 +66,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
-            $this->companyUsersResourceRoutePlugin->getResourceType()
+            $this->companyUsersResourceRoutePlugin->getResourceType(),
         );
     }
 
@@ -77,7 +77,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::CONTROLLER_COMPANY_USERS,
-            $this->companyUsersResourceRoutePlugin->getController()
+            $this->companyUsersResourceRoutePlugin->getController(),
         );
     }
 
@@ -88,7 +88,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             RestCompanyUsersRequestAttributesTransfer::class,
-            $this->companyUsersResourceRoutePlugin->getResourceAttributesClassName()
+            $this->companyUsersResourceRoutePlugin->getResourceAttributesClassName(),
         );
     }
 }

@@ -19,52 +19,52 @@ use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 class CompanyUsersReaderTest extends Unit
 {
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface|mixed
      */
     protected $restResourceBuilderMock;
 
     /**
-     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $clientMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $companyUserReferenceClientMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $companyUsersMapperMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $restApiErrorMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface|mixed
      */
     protected $restRequestMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface|mixed
      */
     protected $restResponseMock;
 
     /**
-     * @var \Generated\Shared\Transfer\RestUserTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\RestUserTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $restUserTransferMock;
 
     /**
-     * @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer|mixed|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $companyUserCollectionTransferMock;
 
     /**
-     * @var mixed|\PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface|mixed
      */
     protected $restResourceMock;
 
@@ -134,7 +134,7 @@ class CompanyUsersReaderTest extends Unit
             $this->clientMock,
             $this->companyUserReferenceClientMock,
             $this->companyUsersMapperMock,
-            $this->restApiErrorMock
+            $this->restApiErrorMock,
         );
     }
 
@@ -163,8 +163,8 @@ class CompanyUsersReaderTest extends Unit
                 static::callback(
                     static function (CustomerTransfer $customerTransfer) use ($customerReference) {
                         return $customerTransfer->getCustomerReference() === $customerReference;
-                    }
-                )
+                    },
+                ),
             )->willReturn($this->companyUserCollectionTransferMock);
 
         $this->companyUserCollectionTransferMock->expects(static::atLeastOnce())
@@ -187,8 +187,8 @@ class CompanyUsersReaderTest extends Unit
         static::assertEquals(
             $this->restResponseMock,
             $this->companyUsersReader->findCurrentCompanyUsers(
-                $this->restRequestMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 
@@ -213,8 +213,8 @@ class CompanyUsersReaderTest extends Unit
         static::assertEquals(
             $this->restResponseMock,
             $this->companyUsersReader->findCurrentCompanyUsers(
-                $this->restRequestMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 }

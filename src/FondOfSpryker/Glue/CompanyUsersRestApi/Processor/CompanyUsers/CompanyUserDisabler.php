@@ -76,8 +76,8 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
 
         $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
             (new CompanyUserTransfer())->setCompanyUserReference(
-                $restDisableCompanyUserRequestAttributesTransfer->getCompanyUserReference()
-            )
+                $restDisableCompanyUserRequestAttributesTransfer->getCompanyUserReference(),
+            ),
         );
 
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
@@ -86,7 +86,7 @@ class CompanyUserDisabler implements CompanyUserDisablerInterface
         }
 
         $companyUserResponseTransfer = $this->companyUserClient->disableCompanyUser(
-            $companyUserResponseTransfer->getCompanyUser()
+            $companyUserResponseTransfer->getCompanyUser(),
         );
 
         $resource = $this->companyUsersMapper

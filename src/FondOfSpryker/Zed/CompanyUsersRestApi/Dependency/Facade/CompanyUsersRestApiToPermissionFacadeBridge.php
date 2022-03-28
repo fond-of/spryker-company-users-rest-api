@@ -21,8 +21,8 @@ class CompanyUsersRestApiToPermissionFacadeBridge implements CompanyUsersRestApi
 
     /**
      * @param string $permissionKey
-     * @param int|string $identifier
-     * @param null $context
+     * @param string|int $identifier
+     * @param array|string|int|null $context
      *
      * @return bool
      */

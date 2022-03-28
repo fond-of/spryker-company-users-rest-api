@@ -67,7 +67,7 @@ class CompanyUsersRestApiToCompanyUserClientBridgeTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToCompanyUserClientBridge = new CompanyUsersRestApiToCompanyUserClientBridge(
-            $this->companyUserClientInterfaceMock
+            $this->companyUserClientInterfaceMock,
         );
     }
 
@@ -84,8 +84,8 @@ class CompanyUsersRestApiToCompanyUserClientBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserCollectionTransfer::class,
             $this->companyUsersRestApiToCompanyUserClientBridge->getActiveCompanyUsersByCustomerReference(
-                $this->customerTransferMock
-            )
+                $this->customerTransferMock,
+            ),
         );
     }
 
@@ -102,15 +102,16 @@ class CompanyUsersRestApiToCompanyUserClientBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiToCompanyUserClientBridge->updateCompanyUser(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 
     /**
      * @return void
      */
-    public function testDisableCompanyUser(): void {
+    public function testDisableCompanyUser(): void
+    {
         $this->companyUserClientInterfaceMock->expects($this->atLeastOnce())
             ->method('disableCompanyUser')
             ->with($this->companyUserTransferMock)
@@ -119,9 +120,8 @@ class CompanyUsersRestApiToCompanyUserClientBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiToCompanyUserClientBridge->disableCompanyUser(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
-
 }

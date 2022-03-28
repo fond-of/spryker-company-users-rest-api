@@ -27,11 +27,11 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
     /**
      * @param string $customerReference
      *
-     * @return \Generated\Shared\Transfer\CompanyUserTransfer[]
+     * @return array<\Generated\Shared\Transfer\CompanyUserTransfer>
      */
     public function findActiveCompanyUsersByCustomerReference(string $customerReference): array
     {
-        /** @var \Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser[] $companyUsers */
+        /** @var array<\Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser> $companyUsers */
         $companyUsers = $this->getFactory()
             ->getCompanyUserPropelQuery()
             ->useCustomerQuery()
@@ -68,7 +68,7 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 if ($company->getPriceList() !== null) {
                     $companyTransfer->setPriceList(
                         (new PriceListTransfer())
-                            ->fromArray($company->getPriceList()->toArray(), true)
+                            ->fromArray($company->getPriceList()->toArray(), true),
                     );
                 }
 
@@ -80,14 +80,14 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 }
 
                 $companyUserTransfer->setCompany(
-                    $companyTransfer->setBrandRelation((new CompanyBrandRelationTransfer())->setBrands(new ArrayObject($brandTransfers)))
+                    $companyTransfer->setBrandRelation((new CompanyBrandRelationTransfer())->setBrands(new ArrayObject($brandTransfers))),
                 );
             }
 
             if ($companyUser->getCompanyBusinessUnit() !== null) {
                 $companyUserTransfer->setCompanyBusinessUnit(
                     (new CompanyBusinessUnitTransfer())
-                        ->fromArray($companyUser->getCompanyBusinessUnit()->toArray(), true)
+                        ->fromArray($companyUser->getCompanyBusinessUnit()->toArray(), true),
                 );
             }
 

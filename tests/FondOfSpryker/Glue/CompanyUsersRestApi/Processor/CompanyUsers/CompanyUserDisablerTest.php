@@ -109,7 +109,6 @@ class CompanyUserDisablerTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -127,7 +126,7 @@ class CompanyUserDisablerTest extends Unit
             $this->companyUsersRestApiClientMock,
             $this->companyUsersRestApiToCompanyUserReferenceClientMock,
             $this->companyUsersMapperMock,
-            $this->restApiErrorMock
+            $this->restApiErrorMock,
         );
     }
 
@@ -176,8 +175,8 @@ class CompanyUserDisablerTest extends Unit
             RestResponseInterface::class,
             $this->companyUserDisabler->disableCompanyUser(
                 $this->restRequestMock,
-                $this->restDisableCompanyUserRequestAttributesTransferMock
-            )
+                $this->restDisableCompanyUserRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -206,9 +205,8 @@ class CompanyUserDisablerTest extends Unit
             RestResponseInterface::class,
             $this->companyUserDisabler->disableCompanyUser(
                 $this->restRequestMock,
-                $this->restDisableCompanyUserRequestAttributesTransferMock
-            )
+                $this->restDisableCompanyUserRequestAttributesTransferMock,
+            ),
         );
     }
-
 }

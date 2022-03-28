@@ -12,6 +12,9 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  */
 class WriteCompanyUserPermissionPlugin extends AbstractPlugin implements PermissionPluginInterface
 {
+    /**
+     * @var string
+     */
     public const KEY = 'WriteCompanyUserPermissionPlugin';
 
     /**

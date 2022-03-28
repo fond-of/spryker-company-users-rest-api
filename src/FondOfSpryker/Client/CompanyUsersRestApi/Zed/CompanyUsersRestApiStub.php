@@ -38,7 +38,7 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
         $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/create',
-            $restCompanyUsersRequestAttributesTransfer
+            $restCompanyUsersRequestAttributesTransfer,
         );
 
         return $restCompanyUsersResponseTransfer;
@@ -54,7 +54,7 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
         $companyUserResponseTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/disable-company-user',
-            $companyUserTransfer
+            $companyUserTransfer,
         );
 
         return $companyUserResponseTransfer;
@@ -71,7 +71,7 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         /** @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer $companyUserCollectionTransfer */
         $companyUserCollectionTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/find-active-company-users-by-customer-reference',
-            $customerTransfer
+            $customerTransfer,
         );
 
         return $companyUserCollectionTransfer;

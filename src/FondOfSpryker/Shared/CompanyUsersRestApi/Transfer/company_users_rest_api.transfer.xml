@@ -22,6 +22,7 @@
     </transfer>
 
     <transfer name="RestCustomer">
+        <property name="idCustomer" type="int" />
         <property name="firstName" type="string" />
         <property name="lastName" type="string" />
         <property name="salutation" type="string"/>
@@ -74,6 +75,8 @@
     <transfer name="CompanyUnitAddress">
         <property name="idCompanyUnitAddress" type="int"/>
         <property name="uuid" type="string"/>
+        <property name="name1" type="string" />
+        <property name="name2" type="string" />
     </transfer>
 
     <transfer name="CompanyUnitAddressCollection">
@@ -117,4 +120,17 @@
     <transfer name="Quote">
         <property name="companyUserReference" type="string"/>
     </transfer>
+
+    <transfer name="Company">
+        <property name="priceList" type="PriceList"/>
+        <property name="brandRelation" type="CompanyBrandRelation"/>
+    </transfer>
+
+    <transfer name="CompanyBrandRelation">
+        <property name="brands" type="Brand[]"/>
+    </transfer>
+
+    <transfer name="PriceList"/>
+    <transfer name="Brand"/>
+
 </transfers>

@@ -74,7 +74,7 @@ class CompanyUsersRestApiStubTest extends Unit
         $this->createUrl = '/company-users-rest-api/gateway/create';
 
         $this->companyUsersRestApiStub = new CompanyUsersRestApiStub(
-            $this->companyUsersRestApiToZedRequestClientInterfaceMock
+            $this->companyUsersRestApiToZedRequestClientInterfaceMock,
         );
     }
 
@@ -91,8 +91,8 @@ class CompanyUsersRestApiStubTest extends Unit
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
             $this->companyUsersRestApiStub->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
@@ -103,14 +103,14 @@ class CompanyUsersRestApiStubTest extends Unit
     {
         $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
             ->method('call')
-            ->with("/company-users-rest-api/gateway/disable-company-user", $this->companyUserTransferMock)
+            ->with('/company-users-rest-api/gateway/disable-company-user', $this->companyUserTransferMock)
             ->willReturn($this->companyUserResponseTransferMock);
 
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiStub->disableCompanyUser(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }
