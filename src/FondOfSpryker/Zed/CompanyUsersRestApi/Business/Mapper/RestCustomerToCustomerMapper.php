@@ -4,21 +4,21 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper;
 
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
-use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 
 class RestCustomerToCustomerMapper implements RestCustomerToCustomerMapperInterface
 {
     /**
-     * @var \Spryker\Zed\Customer\Business\CustomerFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
      */
     protected $customerFacade;
 
     /**
-     * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface $customerFacade
      */
-    public function __construct(CustomerFacadeInterface $customerFacade)
+    public function __construct(CompanyUsersRestApiToCustomerFacadeInterface $customerFacade)
     {
         $this->customerFacade = $customerFacade;
     }

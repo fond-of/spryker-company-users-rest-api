@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade;
 
-
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;

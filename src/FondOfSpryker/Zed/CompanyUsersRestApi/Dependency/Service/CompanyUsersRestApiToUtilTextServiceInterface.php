@@ -9,5 +9,5 @@ interface CompanyUsersRestApiToUtilTextServiceInterface
      *
      * @return string
      */
-    public function generateRandomString(int $length):string;
+    public function generateRandomString(int $length): string;
 }

@@ -3,9 +3,9 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
-use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 
 class RestCustomerToCustomerMapperTest extends Unit
 {
@@ -15,7 +15,7 @@ class RestCustomerToCustomerMapperTest extends Unit
     protected $restCustomerToCustomerMapper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Zed\Customer\Business\CustomerFacadeInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
      */
     protected $customerFacadeInterfaceMock;
 
@@ -34,7 +34,7 @@ class RestCustomerToCustomerMapperTest extends Unit
      */
     protected function _before(): void
     {
-        $this->customerFacadeInterfaceMock = $this->getMockBuilder(CustomerFacadeInterface::class)
+        $this->customerFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCustomerFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 

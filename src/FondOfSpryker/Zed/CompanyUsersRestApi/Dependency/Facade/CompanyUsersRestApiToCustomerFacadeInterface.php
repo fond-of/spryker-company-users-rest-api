@@ -12,7 +12,7 @@ interface CompanyUsersRestApiToCustomerFacadeInterface
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
-    public function getCustomer(CustomerTransfer $customerTransfer):CustomerTransfer;
+    public function getCustomer(CustomerTransfer $customerTransfer): CustomerTransfer;
 
     /**
      * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer

@@ -27,6 +27,6 @@ class CompanyUsersRestApiToMailFacadeBridge implements CompanyUsersRestApiToMail
      */
     public function handleMail(MailTransfer $mailTransfer)
     {
-        $this->mailFacade->handleMail($companyTransfer);
+        $this->mailFacade->handleMail($mailTransfer);
     }
 }

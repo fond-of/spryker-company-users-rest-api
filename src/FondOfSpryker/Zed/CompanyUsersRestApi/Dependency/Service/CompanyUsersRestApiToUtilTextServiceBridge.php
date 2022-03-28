@@ -24,8 +24,8 @@ class CompanyUsersRestApiToUtilTextServiceBridge implements CompanyUsersRestApiT
      *
      * @return string
      */
-    public function generateRandomString(int $length):string
+    public function generateRandomString(int $length): string
     {
-        return $this->utilTextService->generateRandomString();
+        return $this->utilTextService->generateRandomString($length);
     }
 }
