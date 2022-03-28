@@ -9,10 +9,5 @@ interface CompanyUsersRestApiConstants
     /**
      * @var string
      */
-    public const NAME_COMPANY_USER_REFERENCE = 'CompanyUserReference';
-
-    /**
-     * @var string
-     */
     public const BASE_URL_APP = 'COMPANY_USER_REST_API:BASE_URL_APP';
 }

@@ -11,7 +11,14 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterf
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\Mail\CompanyUserInviteMailTypePlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
@@ -25,14 +32,7 @@ use Generated\Shared\Transfer\MailTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
-use Spryker\Service\UtilText\UtilTextServiceInterface;
-use Spryker\Zed\Company\Business\CompanyFacadeInterface;
-use Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface;
-use Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface;
-use Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface;
-use Spryker\Zed\Customer\Business\CustomerFacadeInterface;
 use Spryker\Zed\Customer\Business\Exception\CustomerNotFoundException;
-use Spryker\Zed\Mail\Business\MailFacadeInterface;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
@@ -42,7 +42,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected const PASSWORD_LENGTH = 20;
 
     /**
-     * @var \Spryker\Zed\Customer\Business\CustomerFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
      */
     protected $customerFacade;
 
@@ -52,17 +52,17 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $restCustomerToCustomerMapper;
 
     /**
-     * @var \Spryker\Zed\Company\Business\CompanyFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface
      */
     protected $companyFacade;
 
     /**
-     * @var \Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface
      */
     protected $companyBusinessUnitFacade;
 
     /**
-     * @var \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface
      */
     protected $companyUserFacade;
 
@@ -82,7 +82,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUserReader;
 
     /**
-     * @var \Spryker\Service\UtilText\UtilTextServiceInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface
      */
     protected $utilTextService;
 
@@ -92,12 +92,12 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUsersRestApiConfig;
 
     /**
-     * @var \Spryker\Zed\Mail\Business\MailFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface
      */
     protected $mailFacade;
 
     /**
-     * @var \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
      */
     protected $companyRoleFacade;
 
@@ -107,33 +107,33 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $permissionFacade;
 
     /**
-     * @param \Spryker\Zed\Customer\Business\CustomerFacadeInterface $customerFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface $customerFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper
-     * @param \Spryker\Zed\Company\Business\CompanyFacadeInterface $companyFacade
-     * @param \Spryker\Zed\CompanyBusinessUnit\Business\CompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade
-     * @param \Spryker\Zed\CompanyUser\Business\CompanyUserFacadeInterface $companyUserFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface $companyFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface $apiError
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
-     * @param \Spryker\Service\UtilText\UtilTextServiceInterface $utilTextService
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface $utilTextService
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
-     * @param \Spryker\Zed\Mail\Business\MailFacadeInterface $mailFacade
-     * @param \Spryker\Zed\CompanyRole\Business\CompanyRoleFacadeInterface $companyRoleFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface $mailFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface $companyRoleFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
      */
     public function __construct(
-        CustomerFacadeInterface $customerFacade,
+        CompanyUsersRestApiToCustomerFacadeInterface $customerFacade,
         RestCustomerToCustomerMapperInterface $restCustomerToCustomerMapper,
-        CompanyFacadeInterface $companyFacade,
-        CompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade,
-        CompanyUserFacadeInterface $companyUserFacade,
+        CompanyUsersRestApiToCompanyFacadeInterface $companyFacade,
+        CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade,
+        CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade,
         RestCompanyUserToCompanyUserMapperInterface $restCompanyUserToCompanyUserMapper,
         RestApiErrorInterface $apiError,
         CompanyUserReaderInterface $companyUserReader,
-        UtilTextServiceInterface $utilTextService,
+        CompanyUsersRestApiToUtilTextServiceInterface $utilTextService,
         CompanyUsersRestApiConfig $companyUsersRestApiConfig,
-        MailFacadeInterface $mailFacade,
-        CompanyRoleFacadeInterface $companyRoleFacade,
+        CompanyUsersRestApiToMailFacadeInterface $mailFacade,
+        CompanyUsersRestApiToCompanyRoleFacadeInterface $companyRoleFacade,
         CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
     ) {
         $this->customerFacade = $customerFacade;

@@ -4,8 +4,15 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceBridge;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -79,34 +86,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCustomerFacade($container);
         $container = $this->addMailFacade($container);
         $container = $this->addUtilTextService($container);
-
-        return $this->addPermissionFacade($container);
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addCompanyRoleFacade(Container $container): Container
-    {
-        $container[static::FACADE_COMPANY_ROLE] = static function (Container $container) {
-            return $container->getLocator()->companyRole()->facade();
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addMailFacade(Container $container): Container
-    {
-        $container[static::FACADE_MAIL] = static function (Container $container) {
-            return $container->getLocator()->mail()->facade();
-        };
+        $container = $this->addPermissionFacade($container);
 
         return $container;
     }
@@ -128,10 +108,58 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      *
      * @return \Spryker\Zed\Kernel\Container
      */
+    protected function addCompanyUserPropelQuery(Container $container): Container
+    {
+        $container[static::PROPEL_QUERY_COMPANY_USER] = static function () {
+            return SpyCompanyUserQuery::create();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addCompanyRoleFacade(Container $container): Container
+    {
+        $container[static::FACADE_COMPANY_ROLE] = static function (Container $container) {
+            return new CompanyUsersRestApiToCompanyRoleFacadeBridge(
+                $container->getLocator()->companyRole()->facade(),
+            );
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addMailFacade(Container $container): Container
+    {
+        $container[static::FACADE_MAIL] = static function (Container $container) {
+            return new CompanyUsersRestApiToMailFacadeBridge(
+                $container->getLocator()->mail()->facade(),
+            );
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
     protected function addUtilTextService(Container $container): Container
     {
         $container[static::SERVICE_UTIL_TEXT] = static function (Container $container) {
-            return $container->getLocator()->utilText()->service();
+            return new CompanyUsersRestApiToUtilTextServiceBridge(
+                $container->getLocator()->utilText()->service(),
+            );
         };
 
         return $container;
@@ -145,7 +173,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     protected function addCustomerFacade(Container $container): Container
     {
         $container[static::FACADE_CUSTOMER] = static function (Container $container) {
-            return $container->getLocator()->customer()->facade();
+            return new CompanyUsersRestApiToCustomerFacadeBridge(
+                $container->getLocator()->customer()->facade(),
+            );
         };
 
         return $container;
@@ -159,7 +189,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     protected function addCompanyFacade(Container $container): Container
     {
         $container[static::FACADE_COMPANY] = static function (Container $container) {
-            return $container->getLocator()->company()->facade();
+            return new CompanyUsersRestApiToCompanyFacadeBridge(
+                $container->getLocator()->company()->facade(),
+            );
         };
 
         return $container;
@@ -173,7 +205,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     protected function addCompanyBusinessUnitFacade(Container $container): Container
     {
         $container[static::FACADE_COMPANY_BUSINESS_UNIT] = static function (Container $container) {
-            return $container->getLocator()->companyBusinessUnit()->facade();
+            return new CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge(
+                $container->getLocator()->companyBusinessUnit()->facade(),
+            );
         };
 
         return $container;
@@ -187,21 +221,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     protected function addCompanyUserFacade(Container $container): Container
     {
         $container[static::FACADE_COMPANY_USER] = static function (Container $container) {
-            return $container->getLocator()->companyUser()->facade();
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addCompanyUserPropelQuery(Container $container): Container
-    {
-        $container[static::PROPEL_QUERY_COMPANY_USER] = static function () {
-            return SpyCompanyUserQuery::create();
+            return new CompanyUsersRestApiToCompanyUserFacadeBridge(
+                $container->getLocator()->companyUser()->facade(),
+            );
         };
 
         return $container;
