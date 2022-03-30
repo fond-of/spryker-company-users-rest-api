@@ -7,7 +7,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
-interface RestCustomerToCustomerMapperInterface
+interface CustomerMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RestCustomerTransfer $restCustomerTransfer
@@ -15,7 +15,7 @@ interface RestCustomerToCustomerMapperInterface
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
-    public function mapRestCustomerToCustomer(
+    public function mapRestCustomerTransferToCustomerTransfer(
         RestCustomerTransfer $restCustomerTransfer,
         CustomerTransfer $customerTransfer
     ): CustomerTransfer;

@@ -7,12 +7,12 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
-class RestCustomerToCustomerMapperTest extends Unit
+class CustomerMapperTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapper
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapper
      */
-    protected $restCustomerToCustomerMapper;
+    protected $customerMapper;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
@@ -46,9 +46,7 @@ class RestCustomerToCustomerMapperTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restCustomerToCustomerMapper = new RestCustomerToCustomerMapper(
-            $this->customerFacadeInterfaceMock,
-        );
+        $this->customerMapper = new CustomerMapper($this->customerFacadeInterfaceMock);
     }
 
     /**
@@ -66,7 +64,7 @@ class RestCustomerToCustomerMapperTest extends Unit
 
         $this->assertInstanceOf(
             CustomerTransfer::class,
-            $this->restCustomerToCustomerMapper->mapRestCustomerToCustomer(
+            $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
                 $this->restCustomerTransferMock,
                 $this->customerTransferMock,
             ),

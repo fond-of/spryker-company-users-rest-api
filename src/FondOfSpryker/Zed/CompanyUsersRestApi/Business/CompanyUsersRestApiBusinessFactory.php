@@ -8,22 +8,18 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriterInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapper;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapper;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapper;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapper;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -47,17 +43,14 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     {
         return new CompanyUserWriter(
             $this->getCustomerFacade(),
-            $this->createRestCustomerToCustomerMapper(),
+            $this->createCustomerMapper(),
             $this->getCompanyFacade(),
             $this->getCompanyBusinessUnitFacade(),
             $this->getCompanyUserFacade(),
-            $this->createRestCompanyUserToCompanyUserMapper(),
+            $this->createCompanyUserMapper(),
             $this->createRestApiError(),
             $this->createCompanyUserReader(),
-            $this->getUtilTextService(),
             $this->getConfig(),
-            $this->getMailFacade(),
-            $this->getCompanyRoleFacade(),
             $this->getPermissionFacade(),
         );
     }
@@ -71,19 +64,19 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface
      */
-    public function createRestCompanyUserToCompanyUserMapper(): RestCompanyUserToCompanyUserMapperInterface
+    public function createCompanyUserMapper(): CompanyUserMapperInterface
     {
-        return new RestCompanyUserToCompanyUserMapper();
+        return new CompanyUserMapper();
     }
 
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface
      */
-    public function createRestCustomerToCustomerMapper(): RestCustomerToCustomerMapperInterface
+    public function createCustomerMapper(): CustomerMapperInterface
     {
-        return new RestCustomerToCustomerMapper($this->getCustomerFacade());
+        return new CustomerMapper($this->getCustomerFacade());
     }
 
     /**
@@ -116,38 +109,6 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyBusinessUnitFacade(): CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_BUSINESS_UNIT);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
-     */
-    protected function getCompanyUserReferenceFacade(): CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface
-     */
-    protected function getUtilTextService(): CompanyUsersRestApiToUtilTextServiceInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface
-     */
-    protected function getMailFacade(): CompanyUsersRestApiToMailFacadeInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_MAIL);
-    }
-
-    /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
-     */
-    protected function getCompanyRoleFacade(): CompanyUsersRestApiToCompanyRoleFacadeInterface
-    {
-        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE);
     }
 
     /**

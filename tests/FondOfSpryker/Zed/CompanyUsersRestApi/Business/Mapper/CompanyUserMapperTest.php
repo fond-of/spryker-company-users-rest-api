@@ -6,12 +6,12 @@ use Codeception\Test\Unit;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 
-class RestCompanyUserToCompanyUserMapperTest extends Unit
+class CompanyUserMapperTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapper
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapper
      */
-    protected $restCompanyUserToCompanyUserMapper;
+    protected $companyUserMapper;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer
@@ -36,13 +36,13 @@ class RestCompanyUserToCompanyUserMapperTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restCompanyUserToCompanyUserMapper = new RestCompanyUserToCompanyUserMapper();
+        $this->companyUserMapper = new CompanyUserMapper();
     }
 
     /**
      * @return void
      */
-    public function testMapRestCompanyUserToCompanyUser(): void
+    public function testMapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer(): void
     {
         $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
             ->method('getIsActive')
@@ -62,7 +62,7 @@ class RestCompanyUserToCompanyUserMapperTest extends Unit
 
         $this->assertInstanceOf(
             CompanyUserTransfer::class,
-            $this->restCompanyUserToCompanyUserMapper->mapRestCompanyUserToCompanyUser(
+            $this->companyUserMapper->mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer(
                 $this->restCompanyUsersRequestAttributesTransferMock,
                 $this->companyUserTransferMock,
             ),

@@ -3,20 +3,16 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepository;
 use Spryker\Zed\Kernel\Container;
 
@@ -58,24 +54,9 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $companyUserFacadeInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface
-     */
-    protected $utilTextServiceInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig
      */
     protected $companyUsersRestApiConfigMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface
-     */
-    protected $mailFacadeInterfaceMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
-     */
-    protected $companyRoleFacadeInterfaceMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
@@ -116,19 +97,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->utilTextServiceInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToUtilTextServiceInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->companyUsersRestApiConfigMock = $this->getMockBuilder(CompanyUsersRestApiConfig::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->mailFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToMailFacadeInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyRoleFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyRoleFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -174,9 +144,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_BUSINESS_UNIT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
-                [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
-                [CompanyUsersRestApiDependencyProvider::FACADE_MAIL],
-                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE],
                 [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeInterfaceMock,
@@ -184,35 +151,12 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 $this->companyFacadeInterfaceMock,
                 $this->companyBusinessUnitFacadeInterfaceMock,
                 $this->companyUserFacadeInterfaceMock,
-                $this->utilTextServiceInterfaceMock,
-                $this->mailFacadeInterfaceMock,
-                $this->companyRoleFacadeInterfaceMock,
                 $this->permissionFacadeMock,
             );
 
         $this->assertInstanceOf(
             CompanyUserWriter::class,
             $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter(),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testCreateCompanyUserUnitAddressQuoteMapper(): void
-    {
-        $this->containerMock->expects($this->atLeastOnce())
-            ->method('has')
-            ->willReturn(true);
-
-        $this->containerMock->expects($this->atLeastOnce())
-            ->method('get')
-            ->with(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE)
-            ->willReturn($this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock);
-
-        $this->assertInstanceOf(
-            CompanyUserUnitAddressQuoteMapperInterface::class,
-            $this->companyUsersRestApiBusinessFactory->createCompanyUserUnitAddressQuoteMapper(),
         );
     }
 }

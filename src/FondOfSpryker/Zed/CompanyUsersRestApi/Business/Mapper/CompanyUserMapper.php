@@ -7,7 +7,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 
-class RestCompanyUserToCompanyUserMapper implements RestCompanyUserToCompanyUserMapperInterface
+class CompanyUserMapper implements CompanyUserMapperInterface
 {
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
@@ -15,7 +15,7 @@ class RestCompanyUserToCompanyUserMapper implements RestCompanyUserToCompanyUser
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    public function mapRestCompanyUserToCompanyUser(
+    public function mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyUserTransfer $companyUserTransfer
     ): CompanyUserTransfer {

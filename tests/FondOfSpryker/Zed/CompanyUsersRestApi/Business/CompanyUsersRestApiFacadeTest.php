@@ -60,11 +60,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
     protected $quoteTransferMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Addresses\Mapper\CompanyUserUnitAddressQuoteMapperInterface
-     */
-    protected $companyUserUnitAddressQuoteMapperInterfaceMock;
-
-    /**
      * @return void
      */
     protected function _before(): void
@@ -98,10 +93,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
             ->getMock();
 
         $this->quoteTransferMock = $this->getMockBuilder(QuoteTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyUserUnitAddressQuoteMapperInterfaceMock = $this->getMockBuilder(CompanyUserUnitAddressQuoteMapperInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -151,25 +142,4 @@ class CompanyUsersRestApiFacadeTest extends Unit
         );
     }
 
-    /**
-     * @return void
-     */
-    public function testMapCompanyUserUnitAddressToQuote(): void
-    {
-        $this->companyUsersRestApiBusinessFactoryMock->expects($this->atLeastOnce())
-            ->method('createCompanyUserUnitAddressQuoteMapper')
-            ->willReturn($this->companyUserUnitAddressQuoteMapperInterfaceMock);
-
-        $this->companyUserUnitAddressQuoteMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapCompanyUserUnitAddressesToQuote')
-            ->willReturn($this->quoteTransferMock);
-
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
-            $this->companyUsersRestApiFacade->mapCompanyUserUnitAddressesToQuote(
-                $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteTransferMock,
-            ),
-        );
-    }
 }

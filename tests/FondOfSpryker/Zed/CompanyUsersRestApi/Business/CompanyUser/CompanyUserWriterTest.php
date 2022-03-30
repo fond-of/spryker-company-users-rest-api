@@ -3,14 +3,13 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeInterface;
@@ -18,15 +17,12 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
-use Generated\Shared\Transfer\CompanyRoleResponseTransfer;
-use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\CompanyTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerResponseTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\LocaleTransfer;
-use Generated\Shared\Transfer\RestCompanyRoleTransfer;
 use Generated\Shared\Transfer\RestCompanyTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -46,9 +42,9 @@ class CompanyUserWriterTest extends Unit
     protected $customerFacadeInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCustomerToCustomerMapperInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface
      */
-    protected $restCustomerToCustomerMapperInterfaceMock;
+    protected $customerMapperMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface
@@ -66,9 +62,9 @@ class CompanyUserWriterTest extends Unit
     protected $companyUserFacadeInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\RestCompanyUserToCompanyUserMapperInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface
      */
-    protected $restCompanyUserToCompanyUserMapperInterfaceMock;
+    protected $companyUserMapperMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface
@@ -96,11 +92,6 @@ class CompanyUserWriterTest extends Unit
     protected $mailFacadeInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
-     */
-    protected $companyRoleFacadeInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer
      */
     protected $restCompanyUsersRequestAttributesTransferMock;
@@ -126,6 +117,11 @@ class CompanyUserWriterTest extends Unit
     protected $companyBusinessUnitTransferMock;
 
     /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    protected $restCompanyUsersResponseTransferMock;
+
+    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCustomerTransfer
      */
     protected $restCustomerTransferMock;
@@ -134,11 +130,6 @@ class CompanyUserWriterTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CustomerTransfer
      */
     protected $customerTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyRoleTransfer
-     */
-    protected $restCompanyRoleTransferMock;
 
     /**
      * @var string
@@ -229,7 +220,7 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restCustomerToCustomerMapperInterfaceMock = $this->getMockBuilder(RestCustomerToCustomerMapperInterface::class)
+        $this->customerMapperMock = $this->getMockBuilder(CustomerMapperInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -245,7 +236,7 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restCompanyUserToCompanyUserMapperInterfaceMock = $this->getMockBuilder(RestCompanyUserToCompanyUserMapperInterface::class)
+        $this->companyUserMapperMock = $this->getMockBuilder(CompanyUserMapperInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -266,10 +257,6 @@ class CompanyUserWriterTest extends Unit
             ->getMock();
 
         $this->mailFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToMailFacadeInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyRoleFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyRoleFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -301,6 +288,10 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->restCompanyUsersResponseTransferMock = $this->getMockBuilder(RestCompanyUsersResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->currentRestCustomerTransferMock = $this->getMockBuilder(RestCustomerTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -309,19 +300,8 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restCompanyRoleTransferMock = $this->getMockBuilder(RestCompanyRoleTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->uuid = 'uuid';
-
-        $this->companyRoleResponseTransferMock = $this->getMockBuilder(CompanyRoleResponseTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyRoleTransferMock = $this->getMockBuilder(CompanyRoleTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->companyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
             ->disableOriginalConstructor()
@@ -332,10 +312,6 @@ class CompanyUserWriterTest extends Unit
             ->getMock();
 
         $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->customerNotFoundExceptionMock = $this->getMockBuilder(CustomerNotFoundException::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -359,17 +335,14 @@ class CompanyUserWriterTest extends Unit
 
         $this->companyUserWriter = new CompanyUserWriter(
             $this->customerFacadeInterfaceMock,
-            $this->restCustomerToCustomerMapperInterfaceMock,
+            $this->customerMapperMock,
             $this->companyFacadeInterfaceMock,
             $this->companyBusinessUnitFacadeInterfaceMock,
             $this->companyUserFacadeInterfaceMock,
-            $this->restCompanyUserToCompanyUserMapperInterfaceMock,
+            $this->companyUserMapperMock,
             $this->restApiErrorInterfaceMock,
             $this->companyUserReaderInterfaceMock,
-            $this->utilTextServiceInterfaceMock,
             $this->companyUsersRestApiConfigMock,
-            $this->mailFacadeInterfaceMock,
-            $this->companyRoleFacadeInterfaceMock,
             $this->permissionFacadeMock,
         );
     }
@@ -435,8 +408,8 @@ class CompanyUserWriterTest extends Unit
             ->method('getCustomer')
             ->willReturn($this->restCustomerTransferMock);
 
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
+        $this->customerMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCustomerTransferToCustomerTransfer')
             ->willReturn($this->customerTransferMock);
 
         $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
@@ -444,36 +417,25 @@ class CompanyUserWriterTest extends Unit
             ->with($this->customerTransferMock)
             ->willReturn($this->customerTransferMock);
 
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRole')
-            ->willReturn($this->restCompanyRoleTransferMock);
+        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
+            ->method('addCustomer')
+            ->with($this->customerTransferMock)
+            ->willReturn($this->customerResponseTransferMock);
 
-        $this->restCompanyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyRoleFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyRoleByUuid')
-            ->willReturn($this->companyRoleResponseTransferMock);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getIsSuccess')
             ->willReturn(true);
 
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRoleTransfer')
-            ->willReturn($this->companyRoleTransferMock);
-
-        $this->companyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getFkCompany')
-            ->willReturn($this->idCompany);
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getCustomerTransfer')
+            ->willReturn($this->customerTransferMock);
 
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
 
-        $this->restCompanyUserToCompanyUserMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCompanyUserToCompanyUser')
+        $this->companyUserMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
@@ -498,10 +460,6 @@ class CompanyUserWriterTest extends Unit
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
             ->method('setFkCustomer')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('setCompanyRoleCollection')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserReaderInterfaceMock->expects($this->atLeastOnce())
@@ -633,144 +591,6 @@ class CompanyUserWriterTest extends Unit
     /**
      * @return void
      */
-    public function testCreateCustomerNew(): void
-    {
-        $currentIdCustomer = 6;
-        $currentIdCompanyUser = 6;
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->restCompanyTransferMock);
-
-        $this->restCompanyTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompanyString);
-
-        $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyByUuid')
-            ->willReturn($this->companyResponseTransferMock);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyTransfer')
-            ->willReturn($this->companyTransferMock);
-
-        $this->companyTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompany);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
-            ->method('getCurrentCustomer')
-            ->willReturn($this->currentRestCustomerTransferMock);
-
-        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCustomer')
-            ->willReturn($currentIdCustomer);
-
-        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
-            ->method('getByIdCustomerAndIdCompany')
-            ->willReturn($this->currentCompanyUserTransferMock);
-
-        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompanyUser')
-            ->willReturn($currentIdCompanyUser);
-
-        $this->permissionFacadeMock->expects(static::atLeastOnce())
-            ->method('can')
-            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
-            ->willReturn(true);
-
-        $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findDefaultBusinessUnitByCompanyId')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->willReturn($this->restCustomerTransferMock);
-
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->with($this->customerTransferMock)
-            ->willThrowException($this->customerNotFoundExceptionMock);
-
-        $this->utilTextServiceInterfaceMock->expects($this->atLeastOnce())
-            ->method('generateRandomString')
-            ->willReturn($this->randomString);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setPassword')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordDate')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordKey')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('getRestorePasswordKey')
-            ->willReturn($this->restorePasswordKey);
-
-        $this->companyUsersRestApiConfigMock->expects($this->atLeastOnce())
-            ->method('getCompanyUserPasswordRestoreTokenUrl')
-            ->willReturn($this->companyUserPasswordRestoreTokenUrl);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordLink')
-            ->willReturn($this->customerTransferMock);
-
-        $this->companyUserFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('create')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('getLocale')
-            ->willReturn($this->localeTransferMock);
-
-        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('addCustomer')
-            ->willReturn($this->customerResponseTransferMock);
-
-        $this->customerResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccess')
-            ->willReturn(true);
-
-        $this->customerResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCustomerTransfer')
-            ->willReturn($this->customerTransferMock);
-
-        $this->companyUserResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->assertInstanceOf(
-            RestCompanyUsersResponseTransfer::class,
-            $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function testCreateCustomerCustomerTranfserNull(): void
     {
         $currentIdCustomer = 6;
@@ -829,250 +649,27 @@ class CompanyUserWriterTest extends Unit
             ->method('getCustomer')
             ->willReturn($this->restCustomerTransferMock);
 
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
+        $this->customerMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCustomerTransferToCustomerTransfer')
             ->willReturn($this->customerTransferMock);
 
         $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('getCustomer')
             ->with($this->customerTransferMock)
-            ->willThrowException($this->customerNotFoundExceptionMock);
-
-        $this->utilTextServiceInterfaceMock->expects($this->atLeastOnce())
-            ->method('generateRandomString')
-            ->willReturn($this->randomString);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setPassword')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordDate')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordKey')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('getRestorePasswordKey')
-            ->willReturn($this->restorePasswordKey);
-
-        $this->companyUsersRestApiConfigMock->expects($this->atLeastOnce())
-            ->method('getCompanyUserPasswordRestoreTokenUrl')
-            ->willReturn($this->companyUserPasswordRestoreTokenUrl);
-
-        $this->customerTransferMock->expects($this->atLeastOnce())
-            ->method('setRestorePasswordLink')
             ->willReturn($this->customerTransferMock);
 
         $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
             ->method('addCustomer')
+            ->with($this->customerTransferMock)
             ->willReturn($this->customerResponseTransferMock);
 
         $this->customerResponseTransferMock->expects($this->atLeastOnce())
             ->method('getIsSuccess')
-            ->willReturn(false);
-
-        $this->assertInstanceOf(
-            RestCompanyUsersResponseTransfer::class,
-            $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testCreateDefaultCompanyRoleNotFoundError(): void
-    {
-        $currentIdCustomer = 6;
-        $currentIdCompanyUser = 6;
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->restCompanyTransferMock);
-
-        $this->restCompanyTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompanyString);
-
-        $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyByUuid')
-            ->willReturn($this->companyResponseTransferMock);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
             ->willReturn(true);
 
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyTransfer')
-            ->willReturn($this->companyTransferMock);
-
-        $this->companyTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompany);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
-            ->method('getCurrentCustomer')
-            ->willReturn($this->currentRestCustomerTransferMock);
-
-        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCustomer')
-            ->willReturn($currentIdCustomer);
-
-        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
-            ->method('getByIdCustomerAndIdCompany')
-            ->willReturn($this->currentCompanyUserTransferMock);
-
-        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompanyUser')
-            ->willReturn($currentIdCompanyUser);
-
-        $this->permissionFacadeMock->expects(static::atLeastOnce())
-            ->method('can')
-            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
-            ->willReturn(true);
-
-        $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findDefaultBusinessUnitByCompanyId')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->willReturn($this->restCustomerTransferMock);
-
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->with($this->customerTransferMock)
-            ->willReturn($this->customerTransferMock);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRole')
-            ->willReturn($this->restCompanyRoleTransferMock);
-
-        $this->restCompanyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyRoleFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyRoleByUuid')
-            ->willReturn($this->companyRoleResponseTransferMock);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(false);
-
-        $this->assertInstanceOf(
-            RestCompanyUsersResponseTransfer::class,
-            $this->companyUserWriter->create(
-                $this->restCompanyUsersRequestAttributesTransferMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testCreateCompanyIdNotMatch(): void
-    {
-        $currentIdCustomer = 6;
-        $currentIdCompanyUser = 6;
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompany')
-            ->willReturn($this->restCompanyTransferMock);
-
-        $this->restCompanyTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompanyString);
-
-        $this->companyFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyByUuid')
-            ->willReturn($this->companyResponseTransferMock);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyTransfer')
-            ->willReturn($this->companyTransferMock);
-
-        $this->companyTransferMock->expects($this->atLeastOnce())
-            ->method('getIdCompany')
-            ->willReturn($this->idCompany);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
-            ->method('getCurrentCustomer')
-            ->willReturn($this->currentRestCustomerTransferMock);
-
-        $this->currentRestCustomerTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCustomer')
-            ->willReturn($currentIdCustomer);
-
-        $this->companyUserReaderInterfaceMock->expects(static::atLeastOnce())
-            ->method('getByIdCustomerAndIdCompany')
-            ->willReturn($this->currentCompanyUserTransferMock);
-
-        $this->currentCompanyUserTransferMock->expects(static::atLeastOnce())
-            ->method('getIdCompanyUser')
-            ->willReturn($currentIdCompanyUser);
-
-        $this->permissionFacadeMock->expects(static::atLeastOnce())
-            ->method('can')
-            ->with(WriteCompanyUserPermissionPlugin::KEY, $currentIdCompanyUser)
-            ->willReturn(true);
-
-        $this->companyBusinessUnitFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findDefaultBusinessUnitByCompanyId')
-            ->willReturn($this->companyBusinessUnitTransferMock);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->willReturn($this->restCustomerTransferMock);
-
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
-            ->willReturn($this->customerTransferMock);
-
-        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('getCustomer')
-            ->with($this->customerTransferMock)
-            ->willReturn($this->customerTransferMock);
-
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRole')
-            ->willReturn($this->restCompanyRoleTransferMock);
-
-        $this->restCompanyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyRoleFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyRoleByUuid')
-            ->willReturn($this->companyRoleResponseTransferMock);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
-            ->willReturn(true);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRoleTransfer')
-            ->willReturn($this->companyRoleTransferMock);
-
-        $this->companyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getFkCompany')
-            ->willReturn($this->idCompany);
-
-        $this->companyResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyTransfer')
-            ->willReturn($this->companyTransferMock);
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getCustomerTransfer')
+            ->willReturn(null);
 
         $this->assertInstanceOf(
             RestCompanyUsersResponseTransfer::class,
@@ -1143,8 +740,8 @@ class CompanyUserWriterTest extends Unit
             ->method('getCustomer')
             ->willReturn($this->restCustomerTransferMock);
 
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
+        $this->customerMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCustomerTransferToCustomerTransfer')
             ->willReturn($this->customerTransferMock);
 
         $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
@@ -1152,36 +749,25 @@ class CompanyUserWriterTest extends Unit
             ->with($this->customerTransferMock)
             ->willReturn($this->customerTransferMock);
 
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRole')
-            ->willReturn($this->restCompanyRoleTransferMock);
+        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
+            ->method('addCustomer')
+            ->with($this->customerTransferMock)
+            ->willReturn($this->customerResponseTransferMock);
 
-        $this->restCompanyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyRoleFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyRoleByUuid')
-            ->willReturn($this->companyRoleResponseTransferMock);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getIsSuccess')
             ->willReturn(true);
 
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRoleTransfer')
-            ->willReturn($this->companyRoleTransferMock);
-
-        $this->companyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getFkCompany')
-            ->willReturn($this->idCompany);
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getCustomerTransfer')
+            ->willReturn($this->customerTransferMock);
 
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
 
-        $this->restCompanyUserToCompanyUserMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCompanyUserToCompanyUser')
+        $this->companyUserMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
@@ -1206,10 +792,6 @@ class CompanyUserWriterTest extends Unit
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
             ->method('setFkCustomer')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('setCompanyRoleCollection')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserReaderInterfaceMock->expects($this->atLeastOnce())
@@ -1285,8 +867,8 @@ class CompanyUserWriterTest extends Unit
             ->method('getCustomer')
             ->willReturn($this->restCustomerTransferMock);
 
-        $this->restCustomerToCustomerMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCustomerToCustomer')
+        $this->customerMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCustomerTransferToCustomerTransfer')
             ->willReturn($this->customerTransferMock);
 
         $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
@@ -1294,36 +876,25 @@ class CompanyUserWriterTest extends Unit
             ->with($this->customerTransferMock)
             ->willReturn($this->customerTransferMock);
 
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRole')
-            ->willReturn($this->restCompanyRoleTransferMock);
+        $this->customerFacadeInterfaceMock->expects($this->atLeastOnce())
+            ->method('addCustomer')
+            ->with($this->customerTransferMock)
+            ->willReturn($this->customerResponseTransferMock);
 
-        $this->restCompanyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getUuid')
-            ->willReturn($this->uuid);
-
-        $this->companyRoleFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findCompanyRoleByUuid')
-            ->willReturn($this->companyRoleResponseTransferMock);
-
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getIsSuccessful')
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getIsSuccess')
             ->willReturn(true);
 
-        $this->companyRoleResponseTransferMock->expects($this->atLeastOnce())
-            ->method('getCompanyRoleTransfer')
-            ->willReturn($this->companyRoleTransferMock);
-
-        $this->companyRoleTransferMock->expects($this->atLeastOnce())
-            ->method('getFkCompany')
-            ->willReturn($this->idCompany);
+        $this->customerResponseTransferMock->expects($this->atLeastOnce())
+            ->method('getCustomerTransfer')
+            ->willReturn($this->customerTransferMock);
 
         $this->companyResponseTransferMock->expects($this->atLeastOnce())
             ->method('getCompanyTransfer')
             ->willReturn($this->companyTransferMock);
 
-        $this->restCompanyUserToCompanyUserMapperInterfaceMock->expects($this->atLeastOnce())
-            ->method('mapRestCompanyUserToCompanyUser')
+        $this->companyUserMapperMock->expects($this->atLeastOnce())
+            ->method('mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
@@ -1348,10 +919,6 @@ class CompanyUserWriterTest extends Unit
 
         $this->companyUserTransferMock->expects($this->atLeastOnce())
             ->method('setFkCustomer')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
-            ->method('setCompanyRoleCollection')
             ->willReturn($this->companyUserTransferMock);
 
         $this->companyUserReaderInterfaceMock->expects($this->atLeastOnce())
