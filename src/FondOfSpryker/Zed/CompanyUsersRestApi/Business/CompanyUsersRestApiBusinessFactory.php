@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
+use FondOfOryx\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
+use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
@@ -52,6 +54,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->createCompanyUserReader(),
             $this->getConfig(),
             $this->getPermissionFacade(),
+            $this->createCompanyUserPluginExecutor()
         );
     }
 
@@ -117,5 +120,23 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getPermissionFacade(): CompanyUsersRestApiToPermissionFacadeInterface
     {
         return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION);
+    }
+
+    /**
+     * @return \FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface
+     */
+    protected function createCompanyUserPluginExecutor(): CompanyUserPostCreatePluginInterface
+    {
+        return new CompanyUserPluginExecutor($this->getCompanyUserPostCreatePlugins());
+    }
+
+    /**
+     * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface>
+     *
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
+     */
+    protected function getCompanyUserPostCreatePlugins(): array
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE);
     }
 }

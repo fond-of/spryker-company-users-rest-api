@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
+use FondOfOryx\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
@@ -21,7 +22,6 @@ use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
-use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
@@ -57,6 +57,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $companyUserMapper;
 
     /**
+     * @var \FondOfOryx\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface
+     */
+    protected $companyUserPluginExecutor;
+
+    /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface
      */
     protected $apiError;
@@ -87,6 +92,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig $companyUsersRestApiConfig
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
+     * @param \FondOfOryx\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface $companyUserPluginExecutor
      */
     public function __construct(
         CompanyUsersRestApiToCustomerFacadeInterface $customerFacade,
@@ -98,7 +104,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         RestApiErrorInterface $apiError,
         CompanyUserReaderInterface $companyUserReader,
         CompanyUsersRestApiConfig $companyUsersRestApiConfig,
-        CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
+        CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade,
+        CompanyUserPluginExecutorInterface $companyUserPluginExecutor
     ) {
         $this->customerFacade = $customerFacade;
         $this->customerMapper = $customerMapper;
@@ -110,6 +117,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         $this->companyUserReader = $companyUserReader;
         $this->companyUsersRestApiConfig = $companyUsersRestApiConfig;
         $this->permissionFacade = $permissionFacade;
+        $this->companyUserPluginExecutor = $companyUserPluginExecutor;
     }
 
     /**
@@ -164,8 +172,9 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyUsersDataInvalidErrorResponse();
         }
 
-        return $this->createCompanyUsersResponseTransfer(
+        return $this->companyUserPluginExecutor->executePostCreatePlugins(
             $companyUserResponseTransfer->getCompanyUser(),
+            $restCompanyUsersRequestAttributesTransfer
         );
     }
 
@@ -183,6 +192,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         );
 
         $customerTransfer = $this->customerFacade->getCustomer($customerTransfer);
+
+        if ($customerTransfer !== null) {
+            return $customerTransfer;
+        }
+
         $customerResponseTransfer = $this->customerFacade->addCustomer($customerTransfer);
         if (!$customerResponseTransfer->getIsSuccess()) {
             return null;
@@ -256,30 +270,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
-     */
-    protected function createCompanyUsersResponseTransfer(
-        CompanyUserTransfer $companyUserTransfer
-    ): RestCompanyUsersResponseTransfer {
-        $restCompanyUsersResponseAttributesTransfer = new RestCompanyUsersResponseAttributesTransfer();
-
-        $restCompanyUsersResponseAttributesTransfer->fromArray(
-            $companyUserTransfer->toArray(),
-            true,
-        );
-
-        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
-
-        $restCompanyUsersResponseTransfer->setIsSuccess(true)
-            ->setRestCompanyUsersResponseAttributes($restCompanyUsersResponseAttributesTransfer)
-            ->setCompanyUser($companyUserTransfer);
-
-        return $restCompanyUsersResponseTransfer;
-    }
-
-    /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
      *
@@ -289,6 +279,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyTransfer $companyTransfer
     ): bool {
+        return true;
         $idCompany = $companyTransfer->getIdCompany();
 
         $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCurrentCustomer();

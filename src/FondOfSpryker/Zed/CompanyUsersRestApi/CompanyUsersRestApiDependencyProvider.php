@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
+use \ArrayObject;
+use FondOfOryx\Zed\CompanyUsersRestApi\Exception\WrongInterfaceException;
+use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge;
@@ -70,6 +73,11 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const SERVICE_UTIL_TEXT = 'SERVICE_UTIL_TEXT';
 
     /**
+     * @var string
+     */
+    public const PLUGIN_COMPANY_USER_POST_CREATE = 'PLUGIN_COMPANY_USER_POST_CREATE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -87,6 +95,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addMailFacade($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addPermissionFacade($container);
+        $container = $this->addCompanyUserPostCreatePlugin($container);
 
         return $container;
     }
@@ -259,5 +268,52 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         };
 
         return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    public function addCompanyUserPostCreatePlugin(Container $container): Container
+    {
+        $container[static::PLUGIN_COMPANY_USER_POST_CREATE] = function (Container $container) {
+            $plugins = $this->getCompanyUserPostCreatePlugin();
+            $this->validatePlugin($plugins, CompanyUserPostCreatePluginInterface::class);
+
+            return new ArrayObject($plugins);
+        };
+
+        return $container;
+    }
+
+    /**
+     * @param array $plugins
+     * @param string $class
+     *
+     * @throws \FondOfOryx\Zed\CompanyUsersRestApi\Exception\WrongInterfaceException
+     *
+     * @return void
+     */
+    protected function validatePlugin(array $plugins, string $class): void
+    {
+        foreach ($plugins as $plugin) {
+            if (($plugin instanceof $class) === false) {
+                throw new WrongInterfaceException(sprintf(
+                    'Plugin %s has to implement interface from type %s',
+                    get_class($plugin),
+                    $class,
+                ));
+            }
+        }
+    }
+
+
+    /**
+     * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface>
+     */
+    protected function getCompanyUserPostCreatePlugin(): array
+    {
+        return [];
     }
 }
