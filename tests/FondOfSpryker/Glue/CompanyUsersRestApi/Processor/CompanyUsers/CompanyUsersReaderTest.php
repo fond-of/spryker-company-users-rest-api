@@ -69,7 +69,7 @@ class CompanyUsersReaderTest extends Unit
     protected $restResourceMock;
 
     /**
-     * @var \Generated\Shared\Transfer\CompanyUserTransfer[]|\PHPUnit\Framework\MockObject\MockObject
+     * @var array<\PHPUnit\Framework\MockObject\MockObject>|array<\Generated\Shared\Transfer\CompanyUserTransfer>
      */
     protected $companyUserTransferMocks;
 
