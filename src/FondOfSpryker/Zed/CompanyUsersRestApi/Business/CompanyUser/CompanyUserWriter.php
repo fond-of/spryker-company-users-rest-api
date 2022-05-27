@@ -161,7 +161,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             $restCompanyUsersRequestAttributesTransfer,
             $companyTransfer,
             $companyBusinessUnitTransfer,
-            $customerTransfer
+            $customerTransfer,
         );
 
         if ($this->companyUserReader->doesCompanyUserAlreadyExist($companyUserTransfer)) {
@@ -176,7 +176,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
 
         $companyUserTransfer = $this->companyUserPluginExecutor->executePostCreatePlugins(
             $companyUserResponseTransfer->getCompanyUser(),
-            $restCompanyUsersRequestAttributesTransfer
+            $restCompanyUsersRequestAttributesTransfer,
         );
 
         return $this->createCompanyUsersResponseTransfer($companyUserTransfer);
@@ -192,7 +192,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     ): ?CustomerTransfer {
         $mappedCustomerTransfer = $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
             $restCompanyUsersRequestAttributesTransfer->getCustomer(),
-            new CustomerTransfer()
+            new CustomerTransfer(),
         );
 
         $customerTransfer = $this->findCustomer($mappedCustomerTransfer);
@@ -252,7 +252,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CustomerTransfer $customerTransfer
     ): CompanyUserTransfer {
         $companyUserTransfer = $this->mapRestCompanyUsersRequestAttributesTransferToCompanyUserTransfer(
-            $restCompanyUsersRequestAttributesTransfer
+            $restCompanyUsersRequestAttributesTransfer,
         );
 
         return $companyUserTransfer->setCompany($companyTransfer)
@@ -311,8 +311,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyTransfer $companyTransfer
     ): bool {
-        return true;
-
         $idCompany = $companyTransfer->getIdCompany();
 
         $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCurrentCustomer();

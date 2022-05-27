@@ -54,7 +54,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
             $this->createCompanyUserReader(),
             $this->getConfig(),
             $this->getPermissionFacade(),
-            $this->createCompanyUserPluginExecutor()
+            $this->createCompanyUserPluginExecutor(),
         );
     }
 
