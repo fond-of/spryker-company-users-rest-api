@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
+use Exception;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
@@ -173,7 +174,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyUsersDataInvalidErrorResponse();
         }
 
-        $companyUserTransfer =  $this->companyUserPluginExecutor->executePostCreatePlugins(
+        $companyUserTransfer = $this->companyUserPluginExecutor->executePostCreatePlugins(
             $companyUserResponseTransfer->getCompanyUser(),
             $restCompanyUsersRequestAttributesTransfer
         );
@@ -231,10 +232,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     {
         try {
             return $this->customerFacade->getCustomer($customerTransfer);
-        }catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return null;
         }
     }
+
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
@@ -310,6 +312,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyTransfer $companyTransfer
     ): bool {
         return true;
+
         $idCompany = $companyTransfer->getIdCompany();
 
         $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCurrentCustomer();

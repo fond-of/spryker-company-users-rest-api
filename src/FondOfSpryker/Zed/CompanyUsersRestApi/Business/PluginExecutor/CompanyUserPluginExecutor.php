@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor;
 
-
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 

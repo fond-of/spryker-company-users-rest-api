@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
-use \ArrayObject;
+use ArrayObject;
 use FondOfOryx\Zed\CompanyUsersRestApi\Exception\WrongInterfaceException;
 use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge;
