@@ -13,7 +13,6 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeBridge;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToMailFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceBridge;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
@@ -51,12 +50,6 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      * @var string
      */
     public const FACADE_CUSTOMER = 'FACADE_CUSTOMER';
-
-    /**
-     * @var string
-     */
-    public const FACADE_MAIL = 'FACADE_MAIL';
-
     /**
      * @var string
      */
@@ -92,7 +85,6 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addCompanyUserFacade($container);
         $container = $this->addCompanyUserReferenceFacade($container);
         $container = $this->addCustomerFacade($container);
-        $container = $this->addMailFacade($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addPermissionFacade($container);
         $container = $this->addCompanyUserPostCreatePlugin($container);
@@ -136,22 +128,6 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container[static::FACADE_COMPANY_ROLE] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyRoleFacadeBridge(
                 $container->getLocator()->companyRole()->facade(),
-            );
-        };
-
-        return $container;
-    }
-
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
-    protected function addMailFacade(Container $container): Container
-    {
-        $container[static::FACADE_MAIL] = static function (Container $container) {
-            return new CompanyUsersRestApiToMailFacadeBridge(
-                $container->getLocator()->mail()->facade(),
             );
         };
 
@@ -307,7 +283,6 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
             }
         }
     }
-
 
     /**
      * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface>

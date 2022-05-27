@@ -22,6 +22,7 @@ use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
@@ -149,7 +150,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
-        $customerTransfer = $this->createCustomer($restCompanyUsersRequestAttributesTransfer);
+        $customerTransfer = $this->getCustomer($restCompanyUsersRequestAttributesTransfer);
 
         if ($customerTransfer === null) {
             return $this->apiError->createCouldNotCreateCustomerErrorResponse();
@@ -172,10 +173,12 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyUsersDataInvalidErrorResponse();
         }
 
-        return $this->companyUserPluginExecutor->executePostCreatePlugins(
+        $companyUserTransfer =  $this->companyUserPluginExecutor->executePostCreatePlugins(
             $companyUserResponseTransfer->getCompanyUser(),
             $restCompanyUsersRequestAttributesTransfer
         );
+
+        return $this->createCompanyUsersResponseTransfer($companyUserTransfer);
     }
 
     /**
@@ -183,28 +186,55 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer|null
      */
-    protected function createCustomer(
+    protected function getCustomer(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): ?CustomerTransfer {
-        $customerTransfer = $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
+        $mappedCustomerTransfer = $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
             $restCompanyUsersRequestAttributesTransfer->getCustomer(),
             new CustomerTransfer()
         );
 
-        $customerTransfer = $this->customerFacade->getCustomer($customerTransfer);
+        $customerTransfer = $this->findCustomer($mappedCustomerTransfer);
 
-        if ($customerTransfer !== null) {
+        if ($customerTransfer != null) {
             return $customerTransfer;
         }
 
+        return $this->createCustomer($mappedCustomerTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    protected function createCustomer(
+        CustomerTransfer $customerTransfer
+    ): ?CustomerTransfer {
         $customerResponseTransfer = $this->customerFacade->addCustomer($customerTransfer);
+
         if (!$customerResponseTransfer->getIsSuccess()) {
             return null;
         }
 
-        return $customerResponseTransfer->getCustomerTransfer();
+        return $customerResponseTransfer
+            ->getCustomerTransfer()
+            ->setIsNew(true);
     }
 
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    protected function findCustomer(CustomerTransfer $customerTransfer): ?CustomerTransfer
+    {
+        try {
+            return $this->customerFacade->getCustomer($customerTransfer);
+        }catch (\Exception $exception) {
+            return null;
+        }
+    }
     /**
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\CompanyTransfer $companyTransfer
@@ -301,5 +331,25 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             WriteCompanyUserPermissionPlugin::KEY,
             $companyUserTransfer->getIdCompanyUser(),
         );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
+     */
+    protected function createCompanyUsersResponseTransfer(
+        CompanyUserTransfer $companyUserTransfer
+    ): RestCompanyUsersResponseTransfer {
+        $restCompanyUsersResponseAttributesTransfer = new RestCompanyUsersResponseAttributesTransfer();
+        $restCompanyUsersResponseAttributesTransfer->fromArray($companyUserTransfer->toArray(), true);
+
+        $restCompanyUsersResponseTransfer = new RestCompanyUsersResponseTransfer();
+
+        $restCompanyUsersResponseTransfer->setIsSuccess(true)
+            ->setRestCompanyUsersResponseAttributes($restCompanyUsersResponseAttributesTransfer)
+            ->setCompanyUser($companyUserTransfer);
+
+        return $restCompanyUsersResponseTransfer;
     }
 }
