@@ -157,7 +157,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCouldNotCreateCustomerErrorResponse();
         }
 
-        $companyUserTransfer = $this->buildCompanyUserTransfer(
+        $companyUserTransfer = $this->prepareCompanyUserTransfer(
             $restCompanyUsersRequestAttributesTransfer,
             $companyTransfer,
             $companyBusinessUnitTransfer,
@@ -245,7 +245,7 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer
      */
-    protected function buildCompanyUserTransfer(
+    protected function prepareCompanyUserTransfer(
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyTransfer $companyTransfer,
         CompanyBusinessUnitTransfer $companyBusinessUnitTransfer,
