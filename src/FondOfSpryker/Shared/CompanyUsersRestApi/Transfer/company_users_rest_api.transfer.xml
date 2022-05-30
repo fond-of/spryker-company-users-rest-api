@@ -130,6 +130,10 @@
         <property name="brands" type="Brand[]"/>
     </transfer>
 
+    <transfer name="Customer">
+        <property name="isNew" type="bool"/>
+    </transfer>
+
     <transfer name="PriceList"/>
     <transfer name="Brand"/>
 

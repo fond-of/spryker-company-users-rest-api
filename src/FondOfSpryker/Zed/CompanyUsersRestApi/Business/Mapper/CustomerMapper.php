@@ -8,7 +8,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
-class RestCustomerToCustomerMapper implements RestCustomerToCustomerMapperInterface
+class CustomerMapper implements CustomerMapperInterface
 {
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
@@ -29,7 +29,7 @@ class RestCustomerToCustomerMapper implements RestCustomerToCustomerMapperInterf
      *
      * @return \Generated\Shared\Transfer\CustomerTransfer
      */
-    public function mapRestCustomerToCustomer(
+    public function mapRestCustomerTransferToCustomerTransfer(
         RestCustomerTransfer $restCustomerTransfer,
         CustomerTransfer $customerTransfer
     ): CustomerTransfer {
