@@ -311,9 +311,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer,
         CompanyTransfer $companyTransfer
     ): bool {
-
-        return true;
-
         $idCompany = $companyTransfer->getIdCompany();
 
         $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCurrentCustomer();
