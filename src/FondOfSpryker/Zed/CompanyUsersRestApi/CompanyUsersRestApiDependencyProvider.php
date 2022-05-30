@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
 use ArrayObject;
-use FondOfOryx\Zed\CompanyUsersRestApi\Exception\WrongInterfaceException;
 use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Exception\WrongInterfaceException;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge;
@@ -268,7 +268,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      * @param array $plugins
      * @param string $class
      *
-     * @throws \FondOfOryx\Zed\CompanyUsersRestApi\Exception\WrongInterfaceException
+     * @throws \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Exception\WrongInterfaceException
      *
      * @return void
      */

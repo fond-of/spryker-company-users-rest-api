@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfOryx\Zed\CompanyUsersRestApi\Exception;
+namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Exception;
 
 use Exception;
 
