@@ -128,6 +128,7 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
             ->fromArray($restCompanyUsersRequestAttributesTransfer->modifiedToArray());
         $companyUserTransfer = $this->assignCustomer($companyUserTransfer);
         $companyUserTransfer = $this->assignCompanyRole($companyUserTransfer, $companyRoleResponseTransfer->getCompanyRoleTransfer());
+        
         $companyUserResponseTransfer = $this->companyUserClient->updateCompanyUser($companyUserTransfer);
 
         if (!$companyUserResponseTransfer->getIsSuccessful()) {
