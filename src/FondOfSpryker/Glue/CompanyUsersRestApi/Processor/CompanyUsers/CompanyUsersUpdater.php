@@ -124,8 +124,16 @@ class CompanyUsersUpdater implements CompanyUsersUpdaterInterface
             return $this->restApiError->addCompanyUserNotFoundError($restResponse);
         }
 
+        $companyUserTransfer = $companyUserTransfer
+            ->fromArray($restCompanyUsersRequestAttributesTransfer->modifiedToArray());
         $companyUserTransfer = $this->assignCustomer($companyUserTransfer);
         $companyUserTransfer = $this->assignCompanyRole($companyUserTransfer, $companyRoleResponseTransfer->getCompanyRoleTransfer());
+
+        if ($restCompanyUsersRequestAttributesTransfer->getIsActive() !== null) {
+            $companyUserTransfer->setIsActive(
+                $restCompanyUsersRequestAttributesTransfer->getIsActive()
+            );
+        }
 
         $companyUserResponseTransfer = $this->companyUserClient->updateCompanyUser($companyUserTransfer);
 
