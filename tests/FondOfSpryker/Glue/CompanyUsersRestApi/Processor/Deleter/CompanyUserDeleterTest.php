@@ -32,6 +32,7 @@ class CompanyUserDeleterTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
      */
     protected $restRequestMock;
+
     /**
      * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
@@ -90,7 +91,7 @@ class CompanyUserDeleterTest extends Unit
         $this->companyUserDeleter = new CompanyUserDeleter(
             $this->restDeleteCompanyUserRequestMapperMock,
             $this->restResponseBuilderMock,
-            $this->clientMock
+            $this->clientMock,
         );
     }
 
@@ -122,7 +123,7 @@ class CompanyUserDeleterTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->companyUserDeleter->delete($this->restRequestMock)
+            $this->companyUserDeleter->delete($this->restRequestMock),
         );
     }
 
@@ -154,7 +155,7 @@ class CompanyUserDeleterTest extends Unit
 
         static::assertEquals(
             $this->restResponseMock,
-            $this->companyUserDeleter->delete($this->restRequestMock)
+            $this->companyUserDeleter->delete($this->restRequestMock),
         );
     }
 }

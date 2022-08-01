@@ -18,7 +18,6 @@ interface CompanyUserMapperInterface
      */
     public function mapEntityToTransfer(SpyCompanyUser $entity): CompanyUserTransfer;
 
-
     /**
      * @param \Generated\Shared\Transfer\SpyCompanyUserEntityTransfer $companyUserEntityTransfer
      *
