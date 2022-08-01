@@ -2,8 +2,9 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
+use ArrayObject;
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
@@ -37,22 +38,22 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
      */
-    protected $customerFacadeInterfaceMock;
+    protected $customerFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface
      */
-    protected $companyFacadeInterfaceMock;
+    protected $companyFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface
      */
-    protected $companyBusinessUnitFacadeInterfaceMock;
+    protected $companyBusinessUnitFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface
      */
-    protected $companyUserFacadeInterfaceMock;
+    protected $companyUserFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig
@@ -67,7 +68,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
      */
-    protected $companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock;
+    protected $companyUserReferenceFacadeMock;
 
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
@@ -87,28 +88,27 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->customerFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCustomerFacadeInterface::class)
+        $this->customerFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCustomerFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyFacadeInterface::class)
+        $this->companyFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyBusinessUnitFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface::class)
+        $this->companyBusinessUnitFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserFacadeInterface::class)
+        $this->companyUserFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->companyUserReferenceFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->companyUsersRestApiConfigMock = $this->getMockBuilder(CompanyUsersRestApiConfig::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyUsersRestApiToCompanyUserReferenceFacadeInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -131,8 +131,20 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateCompanyUserReader(): void
     {
-        $this->assertInstanceOf(
-            CompanyUserReaderInterface::class,
+        $this->containerMock->expects($this->atLeastOnce())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->containerMock->expects($this->atLeastOnce())
+            ->method('get')
+            ->withConsecutive(
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
+            )->willReturnOnConsecutiveCalls(
+                $this->companyUserReferenceFacadeMock,
+            );
+
+        static::assertInstanceOf(
+            CompanyUserReader::class,
             $this->companyUsersRestApiBusinessFactory->createCompanyUserReader(),
         );
     }
@@ -142,7 +154,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateCompanyUserWriter(): void
     {
-        $plugins = new \ArrayObject();
+        $plugins = new ArrayObject();
 
         $this->containerMock->expects($this->atLeastOnce())
             ->method('has')
@@ -156,19 +168,21 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_BUSINESS_UNIT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
                 [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
                 [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE],
             )->willReturnOnConsecutiveCalls(
-                $this->customerFacadeInterfaceMock,
-                $this->customerFacadeInterfaceMock,
-                $this->companyFacadeInterfaceMock,
-                $this->companyBusinessUnitFacadeInterfaceMock,
-                $this->companyUserFacadeInterfaceMock,
+                $this->customerFacadeMock,
+                $this->customerFacadeMock,
+                $this->companyFacadeMock,
+                $this->companyBusinessUnitFacadeMock,
+                $this->companyUserFacadeMock,
+                $this->companyUserReferenceFacadeMock,
                 $this->permissionFacadeMock,
                 $plugins,
             );
 
-        $this->assertInstanceOf(
+        static::assertInstanceOf(
             CompanyUserWriter::class,
             $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter(),
         );

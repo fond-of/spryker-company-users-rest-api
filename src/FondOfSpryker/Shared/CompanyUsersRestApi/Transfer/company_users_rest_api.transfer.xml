@@ -137,4 +137,12 @@
     <transfer name="PriceList"/>
     <transfer name="Brand"/>
 
+    <transfer name="RestDeleteCompanyUserRequest">
+        <property name="companyUserReferenceToDelete" type="string" />
+        <property name="idCustomer" type="int" />
+    </transfer>
+
+    <transfer name="RestDeleteCompanyUserResponse">
+        <property name="isSuccess" type="bool" />
+    </transfer>
 </transfers>

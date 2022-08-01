@@ -6,6 +6,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 
 interface CompanyUsersRestApiRepositoryInterface
 {
@@ -24,4 +25,15 @@ interface CompanyUsersRestApiRepositoryInterface
     public function findCompanyUsersByFilter(
         CompanyUserCriteriaFilterTransfer $companyUserCriteriaFilterTransfer
     ): CompanyUserCollectionTransfer;
+
+    /**
+     * @param int $idCustomer
+     * @param string $foreignCompanyUserReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function findCompanyUserByIdCustomerAndForeignCompanyUserReference(
+        int $idCustomer,
+        string $foreignCompanyUserReference
+    ): ?CompanyUserTransfer;
 }

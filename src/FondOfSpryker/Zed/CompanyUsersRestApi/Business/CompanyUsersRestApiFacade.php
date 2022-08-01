@@ -8,6 +8,8 @@ use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -39,5 +41,18 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
         return $this->getFactory()
             ->createCompanyUserWriter()
             ->disableCompanyUser($companyUserTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequest
+     *
+     * @return \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer
+     */
+    public function deleteCompanyUserByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequest
+    ): RestDeleteCompanyUserResponseTransfer {
+        return $this->getFactory()
+            ->createCompanyUserDeleter()
+            ->deleteByRestDeleteCompanyUserRequest($restDeleteCompanyUserRequest);
     }
 }

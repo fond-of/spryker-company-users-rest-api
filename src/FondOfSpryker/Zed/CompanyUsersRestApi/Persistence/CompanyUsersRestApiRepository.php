@@ -15,6 +15,7 @@ use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\PriceListTransfer;
+use Orm\Zed\CompanyUser\Persistence\Map\SpyCompanyUserTableMap;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
@@ -144,5 +145,39 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
         if ($criteriaFilterTransfer->getIdCompanyBusinessUnit() !== null) {
             $queryCompanyUser->filterByFkCompanyBusinessUnit($criteriaFilterTransfer->getIdCompanyBusinessUnit());
         }
+    }
+
+    /**
+     * @param int $idCustomer
+     * @param string $foreignCompanyUserReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function findCompanyUserByIdCustomerAndForeignCompanyUserReference(
+        int $idCustomer,
+        string $foreignCompanyUserReference
+    ): ?CompanyUserTransfer {
+        $companyUser = $this->getFactory()
+            ->getCompanyUserPropelQuery()
+            ->clear()
+            ->where(
+                sprintf(
+                    '%s NOT IN (SELECT %s FROM %s WHERE %s = ?)',
+                    SpyCompanyUserTableMap::COL_FK_COMPANY,
+                    SpyCompanyUserTableMap::COL_FK_COMPANY,
+                    SpyCompanyUserTableMap::TABLE_NAME,
+                    SpyCompanyUserTableMap::COL_FK_CUSTOMER,
+                ),
+                $idCustomer,
+            )->filterByCompanyUserReference($foreignCompanyUserReference)
+            ->findOne();
+
+        if ($companyUser === null) {
+            return null;
+        }
+
+        return $this->getFactory()
+            ->createCompanyUserMapper()
+            ->mapEntityTransferToCompanyUserTransfer($companyUser);
     }
 }

@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use Codeception\Test\Unit;
+use Exception;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
@@ -285,7 +286,6 @@ class CompanyUserWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $this->uuid = 'uuid';
 
         $this->companyUserPluginExecutorMock = $this->getMockBuilder(CompanyUserPluginExecutor::class)
@@ -333,7 +333,7 @@ class CompanyUserWriterTest extends Unit
             $this->companyUserReaderMock,
             $this->companyUsersRestApiConfigMock,
             $this->permissionFacadeMock,
-            $this->companyUserPluginExecutorMock
+            $this->companyUserPluginExecutorMock,
         );
     }
 
@@ -409,7 +409,7 @@ class CompanyUserWriterTest extends Unit
 
         $this->customerFacadeMock->expects($this->atLeastOnce())
             ->method('getCustomer')
-            ->willThrowException(new \Exception());
+            ->willThrowException(new Exception());
 
         $this->customerFacadeMock->expects($this->atLeastOnce())
             ->method('addCustomer')
