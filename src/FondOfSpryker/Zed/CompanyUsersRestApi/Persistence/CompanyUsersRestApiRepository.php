@@ -148,6 +148,9 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
     }
 
     /**
+     * @param int $idCustomer
+     * @param string $foreignCompanyUserReference
+     *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
      */
     public function findCompanyUserByIdCustomerAndForeignCompanyUserReference(

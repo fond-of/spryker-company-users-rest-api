@@ -23,6 +23,7 @@ class CompanyUserReader implements CompanyUserReaderInterface
     protected $repository;
 
     /**
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $repository
      */
     public function __construct(
