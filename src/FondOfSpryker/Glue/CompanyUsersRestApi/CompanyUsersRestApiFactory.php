@@ -137,7 +137,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilderInterface
      */
     protected function createRestResponseBuilder(): RestResponseBuilderInterface
     {
