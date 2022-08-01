@@ -11,6 +11,8 @@ use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 
 class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
 {
@@ -75,5 +77,22 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         );
 
         return $companyUserCollectionTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer
+     */
+    public function deleteCompanyUserByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+    ): RestDeleteCompanyUserResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer $restDeleteCompanyUserResponseTransfer */
+        $restDeleteCompanyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/delete-company-user-by-rest-delete-company-user-request',
+            $restDeleteCompanyUserRequestTransfer,
+        );
+
+        return $restDeleteCompanyUserResponseTransfer;
     }
 }

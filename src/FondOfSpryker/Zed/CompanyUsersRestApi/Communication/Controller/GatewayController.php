@@ -11,6 +11,8 @@ use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
 
 /**
@@ -62,5 +64,17 @@ class GatewayController extends AbstractGatewayController
                 $this->getRepository()->findActiveCompanyUsersByCustomerReference($customerTransfer->getCustomerReference()),
             ),
         );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer
+     */
+    public function deleteCompanyUserByRestDeleteCompanyUserRequestAction(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+    ): RestDeleteCompanyUserResponseTransfer {
+        return $this->getFacade()
+            ->deleteCompanyUserByRestDeleteCompanyUserRequest($restDeleteCompanyUserRequestTransfer);
     }
 }
