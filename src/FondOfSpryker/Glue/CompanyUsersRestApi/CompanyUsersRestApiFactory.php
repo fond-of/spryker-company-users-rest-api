@@ -8,6 +8,8 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilder;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisabler;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
@@ -16,8 +18,16 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUp
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriter;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapper;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapper;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiError;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Spryker\Client\CompanyRole\CompanyRoleClientInterface;
@@ -84,6 +94,55 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
             $this->createRestApiError(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface
+     */
+    public function createCompanyUserDeleter(): CompanyUserDeleterInterface
+    {
+        return new CompanyUserDeleter(
+            $this->createRestDeleteCompanyUserRequestMapper(),
+            $this->createRestResponseBuilder(),
+            $this->getClient(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapperInterface
+     */
+    protected function createRestDeleteCompanyUserRequestMapper(): RestDeleteCompanyUserRequestMapperInterface
+    {
+        return new RestDeleteCompanyUserRequestMapper(
+            $this->createIdCustomerFilter(),
+            $this->createCompanyUserReferenceFilter(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilterInterface
+     */
+    protected function createIdCustomerFilter(): IdCustomerFilterInterface
+    {
+        return new IdCustomerFilter();
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface
+     */
+    protected function createCompanyUserReferenceFilter(): CompanyUserReferenceFilterInterface
+    {
+        return new CompanyUserReferenceFilter();
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface
+     */
+    protected function createRestResponseBuilder(): RestResponseBuilderInterface
+    {
+        return new RestResponseBuilder(
+            $this->getResourceBuilder(),
         );
     }
 
