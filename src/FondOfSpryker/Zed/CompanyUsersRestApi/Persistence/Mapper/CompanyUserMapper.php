@@ -10,9 +10,20 @@ use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\SpyCompanyUserEntityTransfer;
+use Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser;
 
 class CompanyUserMapper implements CompanyUserMapperInterface
 {
+    /**
+     * @param \Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser $entity
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    public function mapEntityToTransfer(SpyCompanyUser $entity): CompanyUserTransfer
+    {
+        return (new CompanyUserTransfer())->fromArray($entity->toArray(), true);
+    }
+
     /**
      * @param \Generated\Shared\Transfer\SpyCompanyUserEntityTransfer $companyUserEntityTransfer
      *
