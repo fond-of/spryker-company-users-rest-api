@@ -5,6 +5,7 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Plugin;
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
+use Spryker\Glue\GlueApplication\Rest\Collection\ResourceRouteCollection;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRouteCollectionInterface;
 
 class CompanyUsersResourceRoutePluginTest extends Unit
@@ -17,14 +18,14 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRouteCollectionInterface
      */
-    protected $resourceRouteCollectionInterfaceMock;
+    protected $resourceRouteCollectionMock;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->resourceRouteCollectionInterfaceMock = $this->getMockBuilder(ResourceRouteCollectionInterface::class)
+        $this->resourceRouteCollectionMock = $this->getMockBuilder(ResourceRouteCollectionInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,25 +37,30 @@ class CompanyUsersResourceRoutePluginTest extends Unit
      */
     public function testConfigure(): void
     {
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addPost')
             ->with('post')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addPatch')
             ->with('patch')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addGet')
             ->with('get')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->assertInstanceOf(
-            ResourceRouteCollectionInterface::class,
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
+            ->method('addDelete')
+            ->with('delete')
+            ->willReturn($this->resourceRouteCollectionMock);
+
+        static::assertEquals(
+            $this->resourceRouteCollectionMock,
             $this->companyUsersResourceRoutePlugin->configure(
-                $this->resourceRouteCollectionInterfaceMock,
+                $this->resourceRouteCollectionMock,
             ),
         );
     }
