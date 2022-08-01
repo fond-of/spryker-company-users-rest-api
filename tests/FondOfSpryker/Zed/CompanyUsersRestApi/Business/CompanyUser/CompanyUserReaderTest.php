@@ -4,21 +4,24 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
 use ArrayObject;
 use Codeception\Test\Unit;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
 
 class CompanyUserReaderTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader
-     */
-    protected $companyUserReader;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface
      */
-    protected $companyUsersRestApiRepositoryInterfaceMock;
+    protected $repositoryMock;
+
+    /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyUserReferenceFacadeMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
@@ -26,36 +29,35 @@ class CompanyUserReaderTest extends Unit
     protected $companyUserTransferMock;
 
     /**
-     * @var int
-     */
-    protected $fkCompanyBusinessUnit;
-
-    /**
-     * @var int
-     */
-    protected $fkCustomer;
-
-    /**
-     * @var int
-     */
-    protected $fkCompany;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserCollectionTransfer
      */
     protected $companyUserCollectionTransferMock;
 
     /**
-     * @var \ArrayObject
+     * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $companyUsers;
+    protected $restDeleteCompanyUserRequestTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\CompanyUserResponseTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyUserResponseTransferMock;
+
+    /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader
+     */
+    protected $companyUserReader;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->companyUsersRestApiRepositoryInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiRepositoryInterface::class)
+        $this->repositoryMock = $this->getMockBuilder(CompanyUsersRestApiRepositoryInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUserReferenceFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -63,20 +65,21 @@ class CompanyUserReaderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->fkCompany = 1;
-
-        $this->fkCustomer = 2;
-
-        $this->fkCompanyBusinessUnit = 3;
-
         $this->companyUserCollectionTransferMock = $this->getMockBuilder(CompanyUserCollectionTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsers = new ArrayObject([]);
+        $this->restDeleteCompanyUserRequestTransferMock = $this->getMockBuilder(RestDeleteCompanyUserRequestTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->companyUserReader = new CompanyUserReader(
-            $this->companyUsersRestApiRepositoryInterfaceMock,
+            $this->companyUserReferenceFacadeMock,
+            $this->repositoryMock,
         );
     }
 
@@ -85,27 +88,31 @@ class CompanyUserReaderTest extends Unit
      */
     public function testDoesCompanyUserAlreadyExist(): void
     {
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $fkCompany = 1;
+        $fkCustomer = 2;
+        $fkCompanyBusinessUnit = 3;
+
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getFkCustomer')
-            ->willReturn($this->fkCustomer);
+            ->willReturn($fkCustomer);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getFkCompany')
-            ->willReturn($this->fkCompany);
+            ->willReturn($fkCompany);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getFkCompanyBusinessUnit')
-            ->willReturn($this->fkCompanyBusinessUnit);
+            ->willReturn($fkCompanyBusinessUnit);
 
-        $this->companyUsersRestApiRepositoryInterfaceMock->expects($this->atLeastOnce())
+        $this->repositoryMock->expects(static::atLeastOnce())
             ->method('findCompanyUsersByFilter')
             ->willReturn($this->companyUserCollectionTransferMock);
 
-        $this->companyUserCollectionTransferMock->expects($this->atLeastOnce())
+        $this->companyUserCollectionTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUsers')
-            ->willReturn($this->companyUsers);
+            ->willReturn(new ArrayObject([]));
 
-        $this->assertFalse(
+        static::assertFalse(
             $this->companyUserReader->doesCompanyUserAlreadyExist(
                 $this->companyUserTransferMock,
             ),
@@ -117,13 +124,164 @@ class CompanyUserReaderTest extends Unit
      */
     public function testDoesCompanyUserAlreadyExistNoCompanyUser(): void
     {
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('getFkCustomer')
             ->willReturn(null);
 
-        $this->assertFalse(
+        static::assertFalse(
             $this->companyUserReader->doesCompanyUserAlreadyExist(
                 $this->companyUserTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetCurrentByRestDeleteCompanyUserRequest(): void
+    {
+        $idCustomer = 1;
+        $companyUserReferenceToDelete = 'FOO--CU-1';
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($idCustomer);
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUserReferenceToDelete')
+            ->willReturn($companyUserReferenceToDelete);
+
+        $this->repositoryMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByIdCustomerAndForeignCompanyUserReference')
+            ->with($idCustomer, $companyUserReferenceToDelete)
+            ->willReturn($this->companyUserTransferMock);
+
+        static::assertEquals(
+            $this->companyUserTransferMock,
+            $this->companyUserReader->getCurrentByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetCurrentByRestDeleteCompanyUserRequestWithInvalidData(): void
+    {
+        $idCustomer = 1;
+        $companyUserReferenceToDelete = null;
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getIdCustomer')
+            ->willReturn($idCustomer);
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUserReferenceToDelete')
+            ->willReturn($companyUserReferenceToDelete);
+
+        $this->repositoryMock->expects(static::never())
+            ->method('findCompanyUserByIdCustomerAndForeignCompanyUserReference');
+
+        static::assertEquals(
+            null,
+            $this->companyUserReader->getCurrentByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetDeletableByRestDeleteCompanyUserRequest(): void
+    {
+        $companyUserReferenceToDelete = 'FOO--CU-1';
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUserReferenceToDelete')
+            ->willReturn($companyUserReferenceToDelete);
+
+        $this->companyUserReferenceFacadeMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->with(
+                static::callback(
+                    static function (CompanyUserTransfer $companyUserTransfer) use ($companyUserReferenceToDelete) {
+                        return $companyUserTransfer->getCompanyUserReference() === $companyUserReferenceToDelete;
+                    },
+                ),
+            )->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn($this->companyUserTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getIsSuccessful')
+            ->willReturn(true);
+
+        static::assertEquals(
+            $this->companyUserTransferMock,
+            $this->companyUserReader->getDeletableByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetDeletableByRestDeleteCompanyUserRequestWithInvalidData(): void
+    {
+        $companyUserReferenceToDelete = null;
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUserReferenceToDelete')
+            ->willReturn($companyUserReferenceToDelete);
+
+        $this->companyUserReferenceFacadeMock->expects(static::never())
+            ->method('findCompanyUserByCompanyUserReference');
+
+        static::assertEquals(
+            null,
+            $this->companyUserReader->getDeletableByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetDeletableByRestDeleteCompanyUserRequestWithoutResult(): void
+    {
+        $companyUserReferenceToDelete = 'FOO--CU-1';
+
+        $this->restDeleteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUserReferenceToDelete')
+            ->willReturn($companyUserReferenceToDelete);
+
+        $this->companyUserReferenceFacadeMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->with(
+                static::callback(
+                    static function (CompanyUserTransfer $companyUserTransfer) use ($companyUserReferenceToDelete) {
+                        return $companyUserTransfer->getCompanyUserReference() === $companyUserReferenceToDelete;
+                    },
+                ),
+            )->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn(null);
+
+        $this->companyUserResponseTransferMock->expects(static::never())
+            ->method('getIsSuccessful');
+
+        static::assertEquals(
+            null,
+            $this->companyUserReader->getDeletableByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
             ),
         );
     }
