@@ -5,7 +5,6 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Plugin;
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
-use Spryker\Glue\GlueApplication\Rest\Collection\ResourceRouteCollection;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRouteCollectionInterface;
 
 class CompanyUsersResourceRoutePluginTest extends Unit

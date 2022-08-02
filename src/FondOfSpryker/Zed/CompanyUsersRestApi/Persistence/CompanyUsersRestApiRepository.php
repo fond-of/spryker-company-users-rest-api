@@ -162,7 +162,7 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
             ->clear()
             ->where(
                 sprintf(
-                    '%s NOT IN (SELECT %s FROM %s WHERE %s = ?)',
+                    '%s IN (SELECT %s FROM %s WHERE %s = ?)',
                     SpyCompanyUserTableMap::COL_FK_COMPANY,
                     SpyCompanyUserTableMap::COL_FK_COMPANY,
                     SpyCompanyUserTableMap::TABLE_NAME,
@@ -178,6 +178,6 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
 
         return $this->getFactory()
             ->createCompanyUserMapper()
-            ->mapEntityTransferToCompanyUserTransfer($companyUser);
+            ->mapEntityToTransfer($companyUser);
     }
 }
