@@ -4,23 +4,33 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface;
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
 
 class CompanyUserReader implements CompanyUserReaderInterface
 {
+    /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface
+     */
+    protected $companyUserReferenceFacade;
+
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface
      */
     protected $repository;
 
     /**
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface $repository
      */
     public function __construct(
+        CompanyUsersRestApiToCompanyUserReferenceFacadeInterface $companyUserReferenceFacade,
         CompanyUsersRestApiRepositoryInterface $repository
     ) {
+        $this->companyUserReferenceFacade = $companyUserReferenceFacade;
         $this->repository = $repository;
     }
 
@@ -31,9 +41,11 @@ class CompanyUserReader implements CompanyUserReaderInterface
      */
     public function doesCompanyUserAlreadyExist(CompanyUserTransfer $companyUserTransfer): bool
     {
-        if ($companyUserTransfer->getFkCustomer() === null ||
+        if (
+            $companyUserTransfer->getFkCustomer() === null ||
             $companyUserTransfer->getFkCompany() === null ||
-            $companyUserTransfer->getFkCompanyBusinessUnit() === null) {
+            $companyUserTransfer->getFkCompanyBusinessUnit() === null
+        ) {
             return false;
         }
 
@@ -46,5 +58,79 @@ class CompanyUserReader implements CompanyUserReaderInterface
             ->findCompanyUsersByFilter($companyUserCriteriaFilterTransfer);
 
         return $companyUserCollection->getCompanyUsers()->count() > 0;
+    }
+
+    /**
+     * @param int $idCustomer
+     * @param int $idCompany
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getByIdCustomerAndIdCompany(int $idCustomer, int $idCompany): ?CompanyUserTransfer
+    {
+        $companyUserCriteriaFilterTransfer = (new CompanyUserCriteriaFilterTransfer())
+            ->setIdCustomer($idCustomer)
+            ->setIdCompany($idCompany);
+
+        $companyUserCollection = $this->repository
+            ->findCompanyUsersByFilter($companyUserCriteriaFilterTransfer);
+
+        if ($companyUserCollection->getCompanyUsers()->count() !== 1) {
+            return null;
+        }
+
+        return $companyUserCollection->getCompanyUsers()
+            ->offsetGet(0);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getCurrentByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+    ): ?CompanyUserTransfer {
+        $idCustomer = $restDeleteCompanyUserRequestTransfer->getIdCustomer();
+        $companyUserReferenceToDelete = $restDeleteCompanyUserRequestTransfer->getCompanyUserReferenceToDelete();
+
+        if ($idCustomer === null || $companyUserReferenceToDelete === null) {
+            return null;
+        }
+
+        return $this->repository->findCompanyUserByIdCustomerAndForeignCompanyUserReference(
+            $idCustomer,
+            $companyUserReferenceToDelete,
+        );
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getDeletableByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+    ): ?CompanyUserTransfer {
+        $companyUserReferenceToDelete = $restDeleteCompanyUserRequestTransfer->getCompanyUserReferenceToDelete();
+
+        if ($companyUserReferenceToDelete === null) {
+            return null;
+        }
+
+        $companyUserTransfer = (new CompanyUserTransfer())
+            ->setCompanyUserReference($companyUserReferenceToDelete);
+
+        $companyUserResponseTransfer = $this->companyUserReferenceFacade->findCompanyUserByCompanyUserReference(
+            $companyUserTransfer,
+        );
+
+        $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
+
+        if ($companyUserTransfer === null || !$companyUserResponseTransfer->getIsSuccessful()) {
+            return null;
+        }
+
+        return $companyUserTransfer;
     }
 }

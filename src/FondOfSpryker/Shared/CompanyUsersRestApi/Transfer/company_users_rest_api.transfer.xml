@@ -9,6 +9,7 @@
     </transfer>
 
     <transfer name="RestCompanyUsersRequestAttributes">
+        <property name="currentCustomer" type="RestCustomer" />
         <property name="customer" type="RestCustomer" />
         <property name="company" type="RestCompany" />
         <property name="companyRole" type="RestCompanyRole" />
@@ -21,6 +22,7 @@
     </transfer>
 
     <transfer name="RestCustomer">
+        <property name="idCustomer" type="int" />
         <property name="firstName" type="string" />
         <property name="lastName" type="string" />
         <property name="salutation" type="string"/>
@@ -51,6 +53,10 @@
         <property name="companyUser" type="CompanyUser" />
     </transfer>
 
+    <transfer name="RestDisableCompanyUserRequestAttributes">
+        <property name="companyUserReference" type="string" />
+    </transfer>
+
     <transfer name="CompanyUser">
         <property name="companyUserReference" type="string"/>
         <property name="isDefault" type="bool"/>
@@ -69,6 +75,8 @@
     <transfer name="CompanyUnitAddress">
         <property name="idCompanyUnitAddress" type="int"/>
         <property name="uuid" type="string"/>
+        <property name="name1" type="string" />
+        <property name="name2" type="string" />
     </transfer>
 
     <transfer name="CompanyUnitAddressCollection">
@@ -111,5 +119,30 @@
 
     <transfer name="Quote">
         <property name="companyUserReference" type="string"/>
+    </transfer>
+
+    <transfer name="Company">
+        <property name="priceList" type="PriceList"/>
+        <property name="brandRelation" type="CompanyBrandRelation"/>
+    </transfer>
+
+    <transfer name="CompanyBrandRelation">
+        <property name="brands" type="Brand[]"/>
+    </transfer>
+
+    <transfer name="Customer">
+        <property name="isNew" type="bool"/>
+    </transfer>
+
+    <transfer name="PriceList"/>
+    <transfer name="Brand"/>
+
+    <transfer name="RestDeleteCompanyUserRequest">
+        <property name="companyUserReferenceToDelete" type="string" />
+        <property name="idCustomer" type="int" />
+    </transfer>
+
+    <transfer name="RestDeleteCompanyUserResponse">
+        <property name="isSuccess" type="bool" />
     </transfer>
 </transfers>

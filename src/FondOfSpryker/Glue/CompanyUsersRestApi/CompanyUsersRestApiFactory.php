@@ -8,16 +8,26 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleter;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilder;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilderInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisabler;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdater;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriter;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapper;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapper;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiError;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Spryker\Client\CompanyRole\CompanyRoleClientInterface;
@@ -36,20 +46,10 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     {
         return new CompanyUsersReader(
             $this->getResourceBuilder(),
-            $this->getCompanyUserClient(),
+            $this->getClient(),
+            $this->getCompanyUserReferenceClient(),
             $this->createCompanyUsersMapper(),
-            $this->createRestApiError()
-        );
-    }
-
-    /**
-     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersDeleterInterface
-     */
-    public function createCompanyUsersDeleter(): CompanyUsersDeleterInterface
-    {
-        return new CompanyUsersDeleter(
-            $this->getResourceBuilder(),
-            $this->getClient()
+            $this->createRestApiError(),
         );
     }
 
@@ -62,7 +62,7 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getResourceBuilder(),
             $this->getClient(),
             $this->getCompanyClient(),
-            $this->createRestApiError()
+            $this->createRestApiError(),
         );
     }
 
@@ -79,7 +79,70 @@ class CompanyUsersRestApiFactory extends AbstractFactory
             $this->getCompanyUserReferenceClient(),
             $this->getCompanyRoleClient(),
             $this->getCustomerClient(),
-            $this->createCompanyUsersMapper()
+            $this->createCompanyUsersMapper(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUserDisablerInterface
+     */
+    public function createCompanyUsersDisabler(): CompanyUserDisablerInterface
+    {
+        return new CompanyUserDisabler(
+            $this->getResourceBuilder(),
+            $this->getClient(),
+            $this->getCompanyUserReferenceClient(),
+            $this->createCompanyUsersMapper(),
+            $this->createRestApiError(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface
+     */
+    public function createCompanyUserDeleter(): CompanyUserDeleterInterface
+    {
+        return new CompanyUserDeleter(
+            $this->createRestDeleteCompanyUserRequestMapper(),
+            $this->createRestResponseBuilder(),
+            $this->getClient(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapperInterface
+     */
+    protected function createRestDeleteCompanyUserRequestMapper(): RestDeleteCompanyUserRequestMapperInterface
+    {
+        return new RestDeleteCompanyUserRequestMapper(
+            $this->createIdCustomerFilter(),
+            $this->createCompanyUserReferenceFilter(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\IdCustomerFilterInterface
+     */
+    protected function createIdCustomerFilter(): IdCustomerFilterInterface
+    {
+        return new IdCustomerFilter();
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Filter\CompanyUserReferenceFilterInterface
+     */
+    protected function createCompanyUserReferenceFilter(): CompanyUserReferenceFilterInterface
+    {
+        return new CompanyUserReferenceFilter();
+    }
+
+    /**
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilderInterface
+     */
+    protected function createRestResponseBuilder(): RestResponseBuilderInterface
+    {
+        return new RestResponseBuilder(
+            $this->getResourceBuilder(),
         );
     }
 
@@ -97,13 +160,11 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     public function createCompanyUsersMapper(): CompanyUsersMapperInterface
     {
         return new CompanyUsersMapper(
-            $this->getResourceBuilder()
+            $this->getResourceBuilder(),
         );
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
      */
     public function getCompanyUserReferenceClient(): CompanyUsersRestApiToCompanyUserReferenceClientInterface
@@ -112,8 +173,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface
      */
     public function getCompanyClient(): CompanyUsersRestApiToCompanyClientInterface
@@ -122,8 +181,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
      */
     public function getCompanyUserClient(): CompanyUsersRestApiToCompanyUserClientInterface
@@ -132,8 +189,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Client\CompanyRole\CompanyRoleClientInterface
      */
     public function getCompanyRoleClient(): CompanyRoleClientInterface
@@ -142,8 +197,6 @@ class CompanyUsersRestApiFactory extends AbstractFactory
     }
 
     /**
-     * @throws
-     *
      * @return \Spryker\Client\Customer\CustomerClientInterface
      */
     public function getCustomerClient(): CustomerClientInterface

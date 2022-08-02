@@ -8,14 +8,11 @@ use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 
 class CompanyUsersRestApiStubTest extends Unit
 {
-    /**
-     * @var \FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStub
-     */
-    protected $companyUsersRestApiStub;
-
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface
      */
@@ -37,11 +34,6 @@ class CompanyUsersRestApiStubTest extends Unit
     protected $createUrl;
 
     /**
-     * @var string
-     */
-    protected $deleteUrl;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
      */
     protected $companyUserTransferMock;
@@ -50,6 +42,21 @@ class CompanyUsersRestApiStubTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
     protected $companyUserResponseTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restDeleteCompanyUserRequestTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restDeleteCompanyUserResponseTransferMock;
+
+    /**
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStub
+     */
+    protected $companyUsersRestApiStub;
 
     /**
      * @return void
@@ -76,12 +83,16 @@ class CompanyUsersRestApiStubTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->createUrl = '/company-users-rest-api/gateway/create';
+        $this->restDeleteCompanyUserRequestTransferMock = $this->getMockBuilder(RestDeleteCompanyUserRequestTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        $this->deleteUrl = '/company-users-rest-api/gateway/delete';
+        $this->restDeleteCompanyUserResponseTransferMock = $this->getMockBuilder(RestDeleteCompanyUserResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->companyUsersRestApiStub = new CompanyUsersRestApiStub(
-            $this->companyUsersRestApiToZedRequestClientInterfaceMock
+            $this->companyUsersRestApiToZedRequestClientInterfaceMock,
         );
     }
 
@@ -92,32 +103,50 @@ class CompanyUsersRestApiStubTest extends Unit
     {
         $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
             ->method('call')
-            ->with($this->createUrl, $this->restCompanyUsersRequestAttributesTransferMock)
+            ->with('/company-users-rest-api/gateway/create', $this->restCompanyUsersRequestAttributesTransferMock)
             ->willReturn($this->restCompanyUsersResponseTransferMock);
 
-        $this->assertInstanceOf(
-            RestCompanyUsersResponseTransfer::class,
+        static::assertEquals(
+            $this->restCompanyUsersResponseTransferMock,
             $this->companyUsersRestApiStub->create(
-                $this->restCompanyUsersRequestAttributesTransferMock
-            )
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 
     /**
      * @return void
      */
-    public function testDelete(): void
+    public function testDisableCompanyUser(): void
     {
         $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
             ->method('call')
-            ->with($this->deleteUrl, $this->companyUserTransferMock)
+            ->with('/company-users-rest-api/gateway/disable-company-user', $this->companyUserTransferMock)
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUsersRestApiStub->delete(
-                $this->companyUserTransferMock
-            )
+        static::assertEquals(
+            $this->companyUserResponseTransferMock,
+            $this->companyUsersRestApiStub->disableCompanyUser(
+                $this->companyUserTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testDeleteCompanyUserByRestDeleteCompanyUserRequest(): void
+    {
+        $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
+            ->method('call')
+            ->with('/company-users-rest-api/gateway/delete-company-user-by-rest-delete-company-user-request', $this->restDeleteCompanyUserRequestTransferMock)
+            ->willReturn($this->restDeleteCompanyUserResponseTransferMock);
+
+        static::assertEquals(
+            $this->restDeleteCompanyUserResponseTransferMock,
+            $this->companyUsersRestApiStub->deleteCompanyUserByRestDeleteCompanyUserRequest(
+                $this->restDeleteCompanyUserRequestTransferMock,
+            ),
         );
     }
 }

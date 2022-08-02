@@ -10,9 +10,20 @@ use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\SpyCompanyUserEntityTransfer;
+use Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser;
 
 class CompanyUserMapper implements CompanyUserMapperInterface
 {
+    /**
+     * @param \Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser $entity
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    public function mapEntityToTransfer(SpyCompanyUser $entity): CompanyUserTransfer
+    {
+        return (new CompanyUserTransfer())->fromArray($entity->toArray(), true);
+    }
+
     /**
      * @param \Generated\Shared\Transfer\SpyCompanyUserEntityTransfer $companyUserEntityTransfer
      *
@@ -23,13 +34,13 @@ class CompanyUserMapper implements CompanyUserMapperInterface
     ): CompanyUserTransfer {
         $companyUserTransfer = (new CompanyUserTransfer())->fromArray(
             $companyUserEntityTransfer->modifiedToArray(),
-            true
+            true,
         );
 
         if ($companyUserEntityTransfer->getCustomer()) {
             $customerTransfer = (new CustomerTransfer())->fromArray(
                 $companyUserEntityTransfer->getCustomer()->modifiedToArray(),
-                true
+                true,
             );
             $companyUserTransfer->setCustomer($customerTransfer);
         }
@@ -37,7 +48,7 @@ class CompanyUserMapper implements CompanyUserMapperInterface
         if ($companyUserEntityTransfer->getCompany()) {
             $companyTransfer = (new CompanyTransfer())->fromArray(
                 $companyUserEntityTransfer->getCompany()->modifiedToArray(),
-                true
+                true,
             );
             $companyUserTransfer->setCompany($companyTransfer);
         }
@@ -46,7 +57,7 @@ class CompanyUserMapper implements CompanyUserMapperInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\SpyCompanyUserEntityTransfer[] $collection
+     * @param array<\Generated\Shared\Transfer\SpyCompanyUserEntityTransfer> $collection
      *
      * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
      */

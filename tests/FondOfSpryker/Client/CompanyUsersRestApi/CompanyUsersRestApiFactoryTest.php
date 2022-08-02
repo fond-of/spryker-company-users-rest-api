@@ -57,7 +57,7 @@ class CompanyUsersRestApiFactoryTest extends Unit
 
         $this->assertInstanceOf(
             CompanyUsersRestApiStubInterface::class,
-            $this->companyUsersRestApiFactory->createZedCompanyUsersRestApiStub()
+            $this->companyUsersRestApiFactory->createZedCompanyUsersRestApiStub(),
         );
     }
 }

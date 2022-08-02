@@ -47,7 +47,7 @@ class CompanyUsersRestApiToCompanyUserReferenceClientBridgeTest extends Unit
             ->getMock();
 
         $this->companyUsersRestApiToCompanyUserReferenceClientBridge = new CompanyUsersRestApiToCompanyUserReferenceClientBridge(
-            $this->companyUserReferenceClientInterfaceMock
+            $this->companyUserReferenceClientInterfaceMock,
         );
     }
 
@@ -64,8 +64,8 @@ class CompanyUsersRestApiToCompanyUserReferenceClientBridgeTest extends Unit
         $this->assertInstanceOf(
             CompanyUserResponseTransfer::class,
             $this->companyUsersRestApiToCompanyUserReferenceClientBridge->findCompanyUserByCompanyUserReference(
-                $this->companyUserTransferMock
-            )
+                $this->companyUserTransferMock,
+            ),
         );
     }
 }

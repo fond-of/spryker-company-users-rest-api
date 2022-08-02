@@ -3,11 +3,13 @@
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestUserTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
@@ -17,96 +19,95 @@ use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 class CompanyUsersReaderTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface|mixed
      */
-    protected $companyUsersReader;
+    protected $restResourceBuilderMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
-    protected $restResourceBuilderInterfaceMock;
+    protected $clientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
-    protected $companyUsersRestApiToCompanyUserClientInterfaceMock;
+    protected $companyUserReferenceClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
-    protected $companyUsersMapperInterfaceMock;
+    protected $companyUsersMapperMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
-    protected $restApiErrorInterfaceMock;
+    protected $restApiErrorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface|mixed
      */
-    protected $restRequestInterfaceMock;
+    protected $restRequestMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface|mixed
      */
-    protected $restResponseInterfaceMock;
+    protected $restResponseMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     * @var \Generated\Shared\Transfer\RestUserTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $restUserTransferMock;
 
     /**
-     * @var string
-     */
-    protected $naturalIdentifier;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserCollectionTransfer
+     * @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     protected $companyUserCollectionTransferMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface|mixed
      */
-    protected $companyUserTransferMock;
+    protected $restResourceMock;
 
     /**
-     * @var array
+     * @var array<\PHPUnit\Framework\MockObject\MockObject>|array<\Generated\Shared\Transfer\CompanyUserTransfer>
      */
     protected $companyUserTransferMocks;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader
      */
-    protected $restResourceInterfaceMock;
+    protected $companyUsersReader;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->restResourceBuilderInterfaceMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
+        $this->restResourceBuilderMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToCompanyUserClientInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserClientInterface::class)
+        $this->clientMock = $this->getMockBuilder(CompanyUsersRestApiClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersMapperInterfaceMock = $this->getMockBuilder(CompanyUsersMapperInterface::class)
+        $this->companyUserReferenceClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restApiErrorInterfaceMock = $this->getMockBuilder(RestApiErrorInterface::class)
+        $this->companyUsersMapperMock = $this->getMockBuilder(CompanyUsersMapperInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restRequestInterfaceMock = $this->getMockBuilder(RestRequestInterface::class)
+        $this->restApiErrorMock = $this->getMockBuilder(RestApiErrorInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restResponseInterfaceMock = $this->getMockBuilder(RestResponseInterface::class)
+        $this->restRequestMock = $this->getMockBuilder(RestRequestInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restResponseMock = $this->getMockBuilder(RestResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -118,25 +119,22 @@ class CompanyUsersReaderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->restResourceInterfaceMock = $this->getMockBuilder(RestResourceInterface::class)
+        $this->restResourceMock = $this->getMockBuilder(RestResourceInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->companyUserTransferMocks = [
-            $this->companyUserTransferMock,
+            $this->getMockBuilder(CompanyUserTransfer::class)
+                ->disableOriginalConstructor()
+                ->getMock(),
         ];
 
-        $this->naturalIdentifier = "natural-identifier";
-
         $this->companyUsersReader = new CompanyUsersReader(
-            $this->restResourceBuilderInterfaceMock,
-            $this->companyUsersRestApiToCompanyUserClientInterfaceMock,
-            $this->companyUsersMapperInterfaceMock,
-            $this->restApiErrorInterfaceMock
+            $this->restResourceBuilderMock,
+            $this->clientMock,
+            $this->companyUserReferenceClientMock,
+            $this->companyUsersMapperMock,
+            $this->restApiErrorMock,
         );
     }
 
@@ -145,44 +143,52 @@ class CompanyUsersReaderTest extends Unit
      */
     public function testFindCurrentCompanyUsers(): void
     {
-        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
-            ->method('createRestResponse')
-            ->willReturn($this->restResponseInterfaceMock);
+        $customerReference = 'STORE--C-1';
 
-        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+        $this->restResourceBuilderMock->expects(static::atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseMock);
+
+        $this->restRequestMock->expects(static::atLeastOnce())
             ->method('getRestUser')
             ->willReturn($this->restUserTransferMock);
 
-        $this->restUserTransferMock->expects($this->atLeastOnce())
+        $this->restUserTransferMock->expects(static::atLeastOnce())
             ->method('getNaturalIdentifier')
-            ->willReturn($this->naturalIdentifier);
+            ->willReturn($customerReference);
 
-        $this->companyUsersRestApiToCompanyUserClientInterfaceMock->expects($this->atLeastOnce())
-            ->method('getActiveCompanyUsersByCustomerReference')
-            ->willReturn($this->companyUserCollectionTransferMock);
+        $this->clientMock->expects(static::atLeastOnce())
+            ->method('findActiveCompanyUsersByCustomerReference')
+            ->with(
+                static::callback(
+                    static function (CustomerTransfer $customerTransfer) use ($customerReference) {
+                        return $customerTransfer->getCustomerReference() === $customerReference;
+                    },
+                ),
+            )->willReturn($this->companyUserCollectionTransferMock);
 
-        $this->companyUserCollectionTransferMock->expects($this->atLeastOnce())
+        $this->companyUserCollectionTransferMock->expects(static::atLeastOnce())
             ->method('getCompanyUsers')
             ->willReturn($this->companyUserTransferMocks);
 
-        $this->companyUsersMapperInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUsersMapperMock->expects(static::atLeastOnce())
             ->method('mapCompanyUsersResource')
-            ->with($this->companyUserTransferMock)
-            ->willReturn($this->restResourceInterfaceMock);
+            ->with($this->companyUserTransferMocks[0])
+            ->willReturn($this->restResourceMock);
 
-        $this->restResourceInterfaceMock->expects($this->atLeastOnce())
+        $this->restResourceMock->expects(static::atLeastOnce())
             ->method('setPayload')
-            ->willReturn($this->restResourceInterfaceMock);
+            ->willReturn($this->restResourceMock);
 
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addResource')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        static::assertEquals(
+            $this->restResponseMock,
             $this->companyUsersReader->findCurrentCompanyUsers(
-                $this->restRequestInterfaceMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 
@@ -191,19 +197,24 @@ class CompanyUsersReaderTest extends Unit
      */
     public function testFindCurrentCompanyUsersAccessDeniedError(): void
     {
-        $this->restResourceBuilderInterfaceMock->expects($this->atLeastOnce())
+        $this->restResourceBuilderMock->expects(static::atLeastOnce())
             ->method('createRestResponse')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->restRequestInterfaceMock->expects($this->atLeastOnce())
+        $this->restRequestMock->expects(static::atLeastOnce())
             ->method('getRestUser')
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        $this->restApiErrorMock->expects(static::atLeastOnce())
+            ->method('addAccessDeniedError')
+            ->with($this->restResponseMock)
+            ->willReturn($this->restResponseMock);
+
+        static::assertEquals(
+            $this->restResponseMock,
             $this->companyUsersReader->findCurrentCompanyUsers(
-                $this->restRequestInterfaceMock
-            )
+                $this->restRequestMock,
+            ),
         );
     }
 }

@@ -6,16 +6,15 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
-use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiBusinessFactory getFactory()
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface getRepository()
- * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiEntityManagerInterface getEntityManager()
  */
 class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRestApiFacadeInterface
 {
@@ -37,25 +36,23 @@ class CompanyUsersRestApiFacade extends AbstractFacade implements CompanyUsersRe
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
         return $this->getFactory()
-            ->createCompanyUserDeleter()
-            ->delete($companyUserTransfer);
+            ->createCompanyUserWriter()
+            ->disableCompanyUser($companyUserTransfer);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequest
      *
-     * @return \Generated\Shared\Transfer\QuoteTransfer
+     * @return \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer
      */
-    public function mapCompanyUserUnitAddressesToQuote(
-        RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer,
-        QuoteTransfer $quoteTransfer
-    ): QuoteTransfer {
+    public function deleteCompanyUserByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequest
+    ): RestDeleteCompanyUserResponseTransfer {
         return $this->getFactory()
-            ->createCompanyUserUnitAddressQuoteMapper()
-            ->mapCompanyUserUnitAddressesToQuote($restCheckoutRequestAttributesTransfer, $quoteTransfer);
+            ->createCompanyUserDeleter()
+            ->deleteByRestDeleteCompanyUserRequest($restDeleteCompanyUserRequest);
     }
 }

@@ -17,14 +17,14 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\ResourceRouteCollectionInterface
      */
-    protected $resourceRouteCollectionInterfaceMock;
+    protected $resourceRouteCollectionMock;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->resourceRouteCollectionInterfaceMock = $this->getMockBuilder(ResourceRouteCollectionInterface::class)
+        $this->resourceRouteCollectionMock = $this->getMockBuilder(ResourceRouteCollectionInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -36,31 +36,31 @@ class CompanyUsersResourceRoutePluginTest extends Unit
      */
     public function testConfigure(): void
     {
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addPost')
             ->with('post')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addPatch')
             ->with('patch')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
-            ->method('addDelete')
-            ->with('delete')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
-
-        $this->resourceRouteCollectionInterfaceMock->expects($this->atLeastOnce())
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
             ->method('addGet')
             ->with('get')
-            ->willReturn($this->resourceRouteCollectionInterfaceMock);
+            ->willReturn($this->resourceRouteCollectionMock);
 
-        $this->assertInstanceOf(
-            ResourceRouteCollectionInterface::class,
+        $this->resourceRouteCollectionMock->expects(static::atLeastOnce())
+            ->method('addDelete')
+            ->with('delete')
+            ->willReturn($this->resourceRouteCollectionMock);
+
+        static::assertEquals(
+            $this->resourceRouteCollectionMock,
             $this->companyUsersResourceRoutePlugin->configure(
-                $this->resourceRouteCollectionInterfaceMock
-            )
+                $this->resourceRouteCollectionMock,
+            ),
         );
     }
 
@@ -71,7 +71,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::RESOURCE_COMPANY_USERS,
-            $this->companyUsersResourceRoutePlugin->getResourceType()
+            $this->companyUsersResourceRoutePlugin->getResourceType(),
         );
     }
 
@@ -82,7 +82,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             CompanyUsersRestApiConfig::CONTROLLER_COMPANY_USERS,
-            $this->companyUsersResourceRoutePlugin->getController()
+            $this->companyUsersResourceRoutePlugin->getController(),
         );
     }
 
@@ -93,7 +93,7 @@ class CompanyUsersResourceRoutePluginTest extends Unit
     {
         $this->assertSame(
             RestCompanyUsersRequestAttributesTransfer::class,
-            $this->companyUsersResourceRoutePlugin->getResourceAttributesClassName()
+            $this->companyUsersResourceRoutePlugin->getResourceAttributesClassName(),
         );
     }
 }

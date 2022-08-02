@@ -20,10 +20,10 @@ class CompanyUsersResourceRoutePlugin extends AbstractPlugin implements Resource
     public function configure(ResourceRouteCollectionInterface $resourceRouteCollection): ResourceRouteCollectionInterface
     {
         return $resourceRouteCollection
+            ->addGet('get')
             ->addPost('post')
             ->addPatch('patch')
-            ->addDelete('delete')
-            ->addGet('get');
+            ->addDelete('delete');
     }
 
     /**

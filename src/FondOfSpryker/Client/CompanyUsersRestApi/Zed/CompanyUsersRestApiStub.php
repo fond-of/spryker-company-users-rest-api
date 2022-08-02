@@ -5,10 +5,14 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
+use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 
 class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
 {
@@ -36,7 +40,7 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         /** @var \Generated\Shared\Transfer\RestCompanyUsersResponseTransfer $restCompanyUsersResponseTransfer */
         $restCompanyUsersResponseTransfer = $this->zedRequestClient->call(
             '/company-users-rest-api/gateway/create',
-            $restCompanyUsersRequestAttributesTransfer
+            $restCompanyUsersRequestAttributesTransfer,
         );
 
         return $restCompanyUsersResponseTransfer;
@@ -47,14 +51,48 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function delete(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
         /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
         $companyUserResponseTransfer = $this->zedRequestClient->call(
-            '/company-users-rest-api/gateway/delete',
-            $companyUserTransfer
+            '/company-users-rest-api/gateway/disable-company-user',
+            $companyUserTransfer,
         );
 
         return $companyUserResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserCollectionTransfer
+     */
+    public function findActiveCompanyUsersByCustomerReference(
+        CustomerTransfer $customerTransfer
+    ): CompanyUserCollectionTransfer {
+        /** @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer $companyUserCollectionTransfer */
+        $companyUserCollectionTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/find-active-company-users-by-customer-reference',
+            $customerTransfer,
+        );
+
+        return $companyUserCollectionTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer
+     */
+    public function deleteCompanyUserByRestDeleteCompanyUserRequest(
+        RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
+    ): RestDeleteCompanyUserResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer $restDeleteCompanyUserResponseTransfer */
+        $restDeleteCompanyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/delete-company-user-by-rest-delete-company-user-request',
+            $restDeleteCompanyUserRequestTransfer,
+        );
+
+        return $restDeleteCompanyUserResponseTransfer;
     }
 }

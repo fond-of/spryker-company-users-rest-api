@@ -4,9 +4,11 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
+use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
@@ -20,9 +22,9 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
     protected $restResourceBuilder;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
      */
-    protected $companyUserClient;
+    protected $client;
 
     /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface
@@ -35,21 +37,29 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
     protected $restApiError;
 
     /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface
+     */
+    protected $companyUserReferenceClient;
+
+    /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
-     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient
+     * @param \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface $client
+     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface $companyUserMapper
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
-        CompanyUsersRestApiToCompanyUserClientInterface $companyUserClient,
+        CompanyUsersRestApiClientInterface $client,
+        CompanyUsersRestApiToCompanyUserReferenceClientInterface $companyUserReferenceClient,
         CompanyUsersMapperInterface $companyUserMapper,
         RestApiErrorInterface $restApiError
     ) {
-        $this->companyUserClient = $companyUserClient;
+        $this->client = $client;
         $this->restResourceBuilder = $restResourceBuilder;
         $this->companyUserMapper = $companyUserMapper;
         $this->restApiError = $restApiError;
+        $this->companyUserReferenceClient = $companyUserReferenceClient;
     }
 
     /**
@@ -68,8 +78,8 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
 
         $customerTransfer = (new CustomerTransfer())->setCustomerReference($user->getNaturalIdentifier());
 
-        $companyUserCollectionTransfer = $this->companyUserClient
-            ->getActiveCompanyUsersByCustomerReference($customerTransfer);
+        $companyUserCollectionTransfer = $this->client
+            ->findActiveCompanyUsersByCustomerReference($customerTransfer);
 
         foreach ($companyUserCollectionTransfer->getCompanyUsers() as $companyUser) {
             $resource = $this->companyUserMapper
@@ -80,5 +90,41 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
         }
 
         return $restResponse;
+    }
+
+    /**
+     * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
+     *
+     * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
+     */
+    public function findCompanyUser(RestRequestInterface $restRequest): RestResponseInterface
+    {
+        $restResponse = $this->restResourceBuilder->createRestResponse();
+        $user = $restRequest->getRestUser();
+
+        if ($user === null) {
+            return $this->restApiError->addAccessDeniedError($restResponse);
+        }
+
+        $companyUserReference = $restRequest->getResource()->getId();
+        $companyUserResponseTransfer = $this->companyUserReferenceClient->findCompanyUserByCompanyUserReference(
+            (new CompanyUserTransfer())->setCompanyUserReference($companyUserReference),
+        );
+
+        $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
+
+        if (
+            !$companyUserResponseTransfer->getIsSuccessful()
+            || $companyUserTransfer === null
+            || $companyUserTransfer->getFkCustomer() !== $user->getSurrogateIdentifier()
+        ) {
+            return $this->restApiError->addCompanyUserNotFoundError($restResponse);
+        }
+
+        $resource = $this->companyUserMapper
+            ->mapCompanyUsersResource($companyUserTransfer)
+            ->setPayload($companyUserTransfer);
+
+        return $restResponse->addResource($resource);
     }
 }

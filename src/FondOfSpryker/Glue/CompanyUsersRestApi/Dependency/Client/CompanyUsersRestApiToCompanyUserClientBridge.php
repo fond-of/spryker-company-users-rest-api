@@ -46,4 +46,15 @@ class CompanyUsersRestApiToCompanyUserClientBridge implements CompanyUsersRestAp
     ): CompanyUserResponseTransfer {
         return $this->companyUserClient->updateCompanyUser($companyUserTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function disableCompanyUser(
+        CompanyUserTransfer $companyUserTransfer
+    ): CompanyUserResponseTransfer {
+        return $this->companyUserClient->disableCompanyUser($companyUserTransfer);
+    }
 }

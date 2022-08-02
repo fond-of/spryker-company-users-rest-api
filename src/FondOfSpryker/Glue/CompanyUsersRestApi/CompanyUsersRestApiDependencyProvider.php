@@ -12,10 +12,29 @@ use Spryker\Glue\Kernel\Container;
 
 class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
     public const CLIENT_COMPANY_ROLE = 'CLIENT_COMPANY_ROLE';
+
+    /**
+     * @var string
+     */
     public const CLIENT_COMPANY_USER = 'CLIENT_COMPANY_USER';
+
+    /**
+     * @var string
+     */
     public const CLIENT_COMPANY_USER_REFERENCE = 'CLIENT_COMPANY_USER_REFERENCE';
+
+    /**
+     * @var string
+     */
     public const CLIENT_CUSTOMER = 'CLIENT_CUSTOMER';
+
+    /**
+     * @var string
+     */
     public const CLIENT_COMPANY = 'CLIENT_COMPANY';
 
     /**
@@ -87,7 +106,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     {
         $container[static::CLIENT_COMPANY_USER_REFERENCE] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyUserReferenceClientBridge(
-                $container->getLocator()->companyUserReference()->client()
+                $container->getLocator()->companyUserReference()->client(),
             );
         };
 
@@ -103,7 +122,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     {
         $container[static::CLIENT_COMPANY] = static function (Container $container) {
             return new CompanyUsersRestApiToCompanyClientBridge(
-                $container->getLocator()->company()->client()
+                $container->getLocator()->company()->client(),
             );
         };
 

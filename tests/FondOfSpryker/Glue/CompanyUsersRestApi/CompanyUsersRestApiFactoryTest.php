@@ -53,7 +53,7 @@ class CompanyUsersRestApiFactoryTest extends Unit
     {
         $this->assertInstanceOf(
             RestApiErrorInterface::class,
-            $this->companyUsersRestApiFactory->createRestApiError()
+            $this->companyUsersRestApiFactory->createRestApiError(),
         );
     }
 }

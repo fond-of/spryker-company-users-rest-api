@@ -15,18 +15,52 @@ use Spryker\Glue\Kernel\Controller\AbstractController;
 class CompanyUsersResourceController extends AbstractController
 {
     /**
+     * @Glue({
+     *     "get": {
+     *          "summary": [
+     *              "Retrieve company user."
+     *          ],
+     *          "parameters": [
+     *              {
+     *                  "ref": "acceptLanguage"
+     *              }
+     *          ],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
     public function getAction(RestRequestInterface $restRequest): RestResponseInterface
     {
+        if ($restRequest->getResource()->getId()) {
+            return $this->getFactory()
+                ->createCompanyUsersReader()
+                ->findCompanyUser($restRequest);
+        }
+
         return $this->getFactory()
             ->createCompanyUsersReader()
             ->findCurrentCompanyUsers($restRequest);
     }
 
     /**
+     * @Glue({
+     *     "post": {
+     *          "summary": [
+     *              "Create a company user"
+     *          ],
+     *          "parameters": [{
+     *              "ref": "acceptLanguage"
+     *          }],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
@@ -42,6 +76,19 @@ class CompanyUsersResourceController extends AbstractController
     }
 
     /**
+     * @Glue({
+     *     "patch": {
+     *          "summary": [
+     *              "Updates company user."
+     *          ],
+     *          "parameters": [{
+     *              "ref": "acceptLanguage"
+     *          }],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
      *
@@ -57,6 +104,19 @@ class CompanyUsersResourceController extends AbstractController
     }
 
     /**
+     * @Glue({
+     *     "delete": {
+     *          "summary": [
+     *              "Deletes company user."
+     *          ],
+     *          "parameters": [{
+     *              "ref": "acceptLanguage"
+     *          }],
+     *          "responses": {
+     *          }
+     *     }
+     * })
+     *
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
@@ -64,7 +124,7 @@ class CompanyUsersResourceController extends AbstractController
     public function deleteAction(RestRequestInterface $restRequest): RestResponseInterface
     {
         return $this->getFactory()
-            ->createCompanyUsersDeleter()
+            ->createCompanyUserDeleter()
             ->delete($restRequest);
     }
 }
