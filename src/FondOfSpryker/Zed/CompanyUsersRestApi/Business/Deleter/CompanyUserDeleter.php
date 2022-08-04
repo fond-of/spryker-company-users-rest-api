@@ -72,10 +72,7 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
         }
 
         $companyUserResponseTransfer = $this->companyUserFacade->deleteCompanyUser($companyUserTransfer);
-        $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
 
-        return $restDeleteCompanyUserResponseTransfer->setIsSuccess(
-            $companyUserTransfer !== null && $companyUserResponseTransfer->getIsSuccessful(),
-        );
+        return $restDeleteCompanyUserResponseTransfer->setIsSuccess($companyUserResponseTransfer->getIsSuccessful());
     }
 }
