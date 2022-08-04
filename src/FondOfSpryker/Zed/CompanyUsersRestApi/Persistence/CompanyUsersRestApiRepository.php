@@ -166,10 +166,10 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                     SpyCompanyUserTableMap::COL_FK_COMPANY,
                     SpyCompanyUserTableMap::COL_FK_COMPANY,
                     SpyCompanyUserTableMap::TABLE_NAME,
-                    SpyCompanyUserTableMap::COL_FK_CUSTOMER,
+                    SpyCompanyUserTableMap::COL_COMPANY_USER_REFERENCE,
                 ),
-                $idCustomer,
-            )->filterByCompanyUserReference($foreignCompanyUserReference)
+                $foreignCompanyUserReference,
+            )->filterByFkCustomer($idCustomer)
             ->findOne();
 
         if ($companyUser === null) {

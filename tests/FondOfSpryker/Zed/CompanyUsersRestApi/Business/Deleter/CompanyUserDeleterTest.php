@@ -119,10 +119,6 @@ class CompanyUserDeleterTest extends Unit
             ->willReturn($this->companyUserResponseTransferMock);
 
         $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn($this->companyUserTransferMock);
-
-        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
             ->method('getIsSuccessful')
             ->willReturn(true);
 
@@ -238,11 +234,8 @@ class CompanyUserDeleterTest extends Unit
             ->willReturn($this->companyUserResponseTransferMock);
 
         $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
-            ->method('getCompanyUser')
-            ->willReturn(null);
-
-        $this->companyUserResponseTransferMock->expects(static::never())
-            ->method('getIsSuccessful');
+            ->method('getIsSuccessful')
+            ->willReturn(false);
 
         $restDeleteCompanyUserResponseTransfer = $this->companyUserDeleter->deleteByRestDeleteCompanyUserRequest(
             $this->restDeleteCompanyUserRequestTransferMock,
