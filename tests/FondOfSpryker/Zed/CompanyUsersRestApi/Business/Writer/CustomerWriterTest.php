@@ -148,6 +148,16 @@ class CustomerWriterTest extends Unit
             ->with($restorePasswordKey)
             ->willReturn($restorePasswordLink);
 
+        $this->customerTransferMock->expects(static::atLeastOnce())
+            ->method('setRestorePasswordLink')
+            ->with($restorePasswordLink)
+            ->willReturn($this->customerTransferMock);
+
+        $this->customerTransferMock->expects(static::atLeastOnce())
+            ->method('setIsNew')
+            ->with(true)
+            ->willReturn($this->customerTransferMock);
+
         $this->customerFacadeMock->expects(static::atLeastOnce())
             ->method('addCustomer')
             ->with($this->customerTransferMock)
@@ -207,6 +217,17 @@ class CustomerWriterTest extends Unit
             ->method('generate')
             ->with($restorePasswordKey)
             ->willReturn($restorePasswordLink);
+
+        $this->customerTransferMock->expects(static::atLeastOnce())
+            ->method('setRestorePasswordLink')
+            ->with($restorePasswordLink)
+            ->willReturn($this->customerTransferMock);
+
+        $this->customerTransferMock->expects(static::atLeastOnce())
+            ->method('setIsNew')
+            ->with(true)
+            ->willReturn($this->customerTransferMock);
+
 
         $this->customerFacadeMock->expects(static::atLeastOnce())
             ->method('addCustomer')
