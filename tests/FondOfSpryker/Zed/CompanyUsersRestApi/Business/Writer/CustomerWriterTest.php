@@ -228,7 +228,6 @@ class CustomerWriterTest extends Unit
             ->with(true)
             ->willReturn($this->customerTransferMock);
 
-
         $this->customerFacadeMock->expects(static::atLeastOnce())
             ->method('addCustomer')
             ->with($this->customerTransferMock)
