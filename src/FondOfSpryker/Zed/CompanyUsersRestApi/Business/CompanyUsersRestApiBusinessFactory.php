@@ -10,14 +10,24 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter\CompanyUserDeleter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RandomPasswordGenerator;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RandomPasswordGeneratorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordKeyGenerator;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordKeyGeneratorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordLinkGenerator;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordLinkGeneratorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReader;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriter;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
@@ -25,6 +35,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -62,8 +73,8 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     public function createCompanyUserWriter(): CompanyUserWriterInterface
     {
         return new CompanyUserWriter(
-            $this->getCustomerFacade(),
-            $this->createCustomerMapper(),
+            $this->createCustomerReader(),
+            $this->createCustomerWriter(),
             $this->getCompanyFacade(),
             $this->getCompanyBusinessUnitFacade(),
             $this->getCompanyUserFacade(),
@@ -79,7 +90,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface
      */
-    public function createRestApiError(): RestApiErrorInterface
+    protected function createRestApiError(): RestApiErrorInterface
     {
         return new RestApiError();
     }
@@ -87,7 +98,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface
      */
-    public function createCompanyUserMapper(): CompanyUserMapperInterface
+    protected function createCompanyUserMapper(): CompanyUserMapperInterface
     {
         return new CompanyUserMapper();
     }
@@ -95,9 +106,66 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     /**
      * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface
      */
-    public function createCustomerMapper(): CustomerMapperInterface
+    protected function createCustomerMapper(): CustomerMapperInterface
     {
-        return new CustomerMapper($this->getCustomerFacade());
+        return new CustomerMapper();
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface
+     */
+    protected function createCustomerReader(): CustomerReaderInterface
+    {
+        return new CustomerReader(
+            $this->createCustomerMapper(),
+            $this->getCustomerFacade(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface
+     */
+    protected function createCustomerWriter(): CustomerWriterInterface
+    {
+        return new CustomerWriter(
+            $this->createCustomerMapper(),
+            $this->createRandomPasswordGenerator(),
+            $this->createRestorePasswordKeyGenerator(),
+            $this->createRestorePasswordLinkGenerator(),
+            $this->getCustomerFacade(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RandomPasswordGeneratorInterface
+     */
+    protected function createRandomPasswordGenerator(): RandomPasswordGeneratorInterface
+    {
+        return new RandomPasswordGenerator($this->getUtilTextService());
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface
+     */
+    protected function getUtilTextService(): CompanyUsersRestApiToUtilTextServiceInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordKeyGeneratorInterface
+     */
+    protected function createRestorePasswordKeyGenerator(): RestorePasswordKeyGeneratorInterface
+    {
+        return new RestorePasswordKeyGenerator($this->getUtilTextService());
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordLinkGeneratorInterface
+     */
+    protected function createRestorePasswordLinkGenerator(): RestorePasswordLinkGeneratorInterface
+    {
+        return new RestorePasswordLinkGenerator($this->getConfig());
     }
 
     /**

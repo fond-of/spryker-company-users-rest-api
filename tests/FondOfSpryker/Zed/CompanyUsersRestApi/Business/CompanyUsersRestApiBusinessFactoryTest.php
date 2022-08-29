@@ -15,6 +15,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiT
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepository;
 use Spryker\Zed\Kernel\Container;
 
@@ -76,6 +77,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $permissionFacadeMock;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Service\CompanyUsersRestApiToUtilTextServiceInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $utilTextServiceMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -117,6 +123,10 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->getMock();
 
         $this->permissionFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToPermissionFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->utilTextServiceMock = $this->getMockBuilder(CompanyUsersRestApiToUtilTextServiceInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -164,6 +174,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->method('get')
             ->withConsecutive(
                 [CompanyUsersRestApiDependencyProvider::FACADE_CUSTOMER],
+                [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
+                [CompanyUsersRestApiDependencyProvider::SERVICE_UTIL_TEXT],
                 [CompanyUsersRestApiDependencyProvider::FACADE_CUSTOMER],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_BUSINESS_UNIT],
@@ -173,6 +185,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE],
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeMock,
+                $this->utilTextServiceMock,
+                $this->utilTextServiceMock,
                 $this->customerFacadeMock,
                 $this->companyFacadeMock,
                 $this->companyBusinessUnitFacadeMock,

@@ -4,17 +4,16 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 
-use Exception;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyResponseTransfer;
@@ -28,16 +27,6 @@ use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 
 class CompanyUserWriter implements CompanyUserWriterInterface
 {
-    /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface
-     */
-    protected $customerFacade;
-
-    /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface
-     */
-    protected $customerMapper;
-
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface
      */
@@ -84,8 +73,18 @@ class CompanyUserWriter implements CompanyUserWriterInterface
     protected $permissionFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface $customerFacade
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface $customerMapper
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface
+     */
+    protected $customerReader;
+
+    /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface
+     */
+    protected $customerWriter;
+
+    /**
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface $customerReader
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface $customerWriter
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface $companyFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade
@@ -97,8 +96,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface $companyUserPluginExecutor
      */
     public function __construct(
-        CompanyUsersRestApiToCustomerFacadeInterface $customerFacade,
-        CustomerMapperInterface $customerMapper,
+        CustomerReaderInterface $customerReader,
+        CustomerWriterInterface $customerWriter,
         CompanyUsersRestApiToCompanyFacadeInterface $companyFacade,
         CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface $companyBusinessUnitFacade,
         CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade,
@@ -109,8 +108,8 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade,
         CompanyUserPluginExecutorInterface $companyUserPluginExecutor
     ) {
-        $this->customerFacade = $customerFacade;
-        $this->customerMapper = $customerMapper;
+        $this->customerReader = $customerReader;
+        $this->customerWriter = $customerWriter;
         $this->companyFacade = $companyFacade;
         $this->companyBusinessUnitFacade = $companyBusinessUnitFacade;
         $this->companyUserFacade = $companyUserFacade;
@@ -151,7 +150,15 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createDefaultCompanyBusinessUnitNotFoundErrorResponse();
         }
 
-        $customerTransfer = $this->getCustomer($restCompanyUsersRequestAttributesTransfer);
+        $customerTransfer = $this->customerReader->getByRestCompanyUsersRequestAttributes(
+            $restCompanyUsersRequestAttributesTransfer,
+        );
+
+        if ($customerTransfer === null) {
+            $customerTransfer = $this->customerWriter->createByRestCompanyUsersRequestAttributes(
+                $restCompanyUsersRequestAttributesTransfer,
+            );
+        }
 
         if ($customerTransfer === null) {
             return $this->apiError->createCouldNotCreateCustomerErrorResponse();
@@ -180,61 +187,6 @@ class CompanyUserWriter implements CompanyUserWriterInterface
         );
 
         return $this->createCompanyUsersResponseTransfer($companyUserTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-     *
-     * @return \Generated\Shared\Transfer\CustomerTransfer|null
-     */
-    protected function getCustomer(
-        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
-    ): ?CustomerTransfer {
-        $mappedCustomerTransfer = $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
-            $restCompanyUsersRequestAttributesTransfer->getCustomer(),
-            new CustomerTransfer(),
-        );
-
-        $customerTransfer = $this->findCustomer($mappedCustomerTransfer);
-
-        if ($customerTransfer != null) {
-            return $customerTransfer;
-        }
-
-        return $this->createCustomer($mappedCustomerTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
-     *
-     * @return \Generated\Shared\Transfer\CustomerTransfer|null
-     */
-    protected function createCustomer(
-        CustomerTransfer $customerTransfer
-    ): ?CustomerTransfer {
-        $customerResponseTransfer = $this->customerFacade->addCustomer($customerTransfer);
-
-        if (!$customerResponseTransfer->getIsSuccess()) {
-            return null;
-        }
-
-        return $customerResponseTransfer
-            ->getCustomerTransfer()
-            ->setIsNew(true);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CustomerTransfer $customerTransfer
-     *
-     * @return \Generated\Shared\Transfer\CustomerTransfer|null
-     */
-    protected function findCustomer(CustomerTransfer $customerTransfer): ?CustomerTransfer
-    {
-        try {
-            return $this->customerFacade->getCustomer($customerTransfer);
-        } catch (Exception $exception) {
-            return null;
-        }
     }
 
     /**

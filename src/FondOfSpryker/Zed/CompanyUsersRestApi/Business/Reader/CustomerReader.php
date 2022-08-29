@@ -6,6 +6,7 @@ use Exception;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
 class CustomerReader implements CustomerReaderInterface
@@ -46,5 +47,22 @@ class CustomerReader implements CustomerReaderInterface
         } catch (Exception $exception) {
             return null;
         }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    public function getByRestCompanyUsersRequestAttributes(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): ?CustomerTransfer {
+        $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCustomer();
+
+        if ($restCustomerTransfer === null) {
+            return null;
+        }
+
+        return $this->getByRestCustomer($restCustomerTransfer);
     }
 }
