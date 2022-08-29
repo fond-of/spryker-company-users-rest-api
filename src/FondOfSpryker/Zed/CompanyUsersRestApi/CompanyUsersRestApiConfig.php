@@ -8,6 +8,9 @@ use FondOfSpryker\Shared\CompanyUsersRestApi\CompanyUsersRestApiConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 use function sprintf;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CompanyUsersRestApiConfig extends AbstractBundleConfig
 {
     /**
@@ -25,6 +28,22 @@ class CompanyUsersRestApiConfig extends AbstractBundleConfig
      */
     public function getHostApp(): string
     {
-        return $this->get(CompanyUsersRestApiConstants::BASE_URL_APP);
+        return $this->get(CompanyUsersRestApiConstants::BASE_URI);
+    }
+
+    /**
+     * @return string
+     */
+    public function getRestorePasswordLinkFormat(): string
+    {
+        return sprintf('%sinvite/%%s', $this->getBaseUri());
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUri(): string
+    {
+        return $this->get(CompanyUsersRestApiConstants::BASE_URI, 'http://127.0.0.1/');
     }
 }

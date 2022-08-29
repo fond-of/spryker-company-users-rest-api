@@ -35,4 +35,15 @@ class CustomerMapper implements CustomerMapperInterface
     ): CustomerTransfer {
         return $customerTransfer->fromArray($restCustomerTransfer->toArray(), true);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCustomerTransfer $restCustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer
+     */
+    public function fromRestCustomer(
+        RestCustomerTransfer $restCustomerTransfer
+    ): CustomerTransfer {
+        return (new CustomerTransfer())->fromArray($restCustomerTransfer->toArray(), true);
+    }
 }
