@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader;
 
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
 interface CustomerReaderInterface
@@ -13,4 +14,13 @@ interface CustomerReaderInterface
      * @return \Generated\Shared\Transfer\CustomerTransfer|null
      */
     public function getByRestCustomer(RestCustomerTransfer $restCustomerTransfer): ?CustomerTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    public function getByRestCompanyUsersRequestAttributes(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): ?CustomerTransfer;
 }

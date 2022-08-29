@@ -9,6 +9,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Generator\RestorePasswordLink
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
 use Generated\Shared\Transfer\CustomerTransfer;
+use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCustomerTransfer;
 
 class CustomerWriter implements CustomerWriterInterface
@@ -73,7 +74,8 @@ class CustomerWriter implements CustomerWriterInterface
         $customerTransfer->setPassword($this->randomPasswordGenerator->generate())
             ->setRestorePasswordKey($restorePasswordKey)
             ->setRestorePasswordDate(new DateTimeImmutable())
-            ->setRestorePasswordLink($this->restorePasswordLinkGenerator->generate($restorePasswordKey));
+            ->setRestorePasswordLink($this->restorePasswordLinkGenerator->generate($restorePasswordKey))
+            ->setIsNew(true);
 
         $customerResponseTransfer = $this->customerFacade->addCustomer($customerTransfer);
         $customerTransfer = $customerResponseTransfer->getCustomerTransfer();
@@ -83,5 +85,22 @@ class CustomerWriter implements CustomerWriterInterface
         }
 
         return $customerTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer|null
+     */
+    public function createByRestCompanyUsersRequestAttributes(
+        RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
+    ): ?CustomerTransfer {
+        $restCustomerTransfer = $restCompanyUsersRequestAttributesTransfer->getCustomer();
+
+        if ($restCustomerTransfer === null) {
+            return null;
+        }
+
+        return $this->createByRestCustomer($restCustomerTransfer);
     }
 }
