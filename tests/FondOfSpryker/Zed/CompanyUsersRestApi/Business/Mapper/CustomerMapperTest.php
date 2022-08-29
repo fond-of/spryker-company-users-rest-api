@@ -54,20 +54,41 @@ class CustomerMapperTest extends Unit
      */
     public function testMapRestCustomerToCustomer(): void
     {
-        $this->restCustomerTransferMock->expects($this->atLeastOnce())
+        $this->restCustomerTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->customerTransferMock->expects($this->atLeastOnce())
+        $this->customerTransferMock->expects(static::atLeastOnce())
             ->method('fromArray')
             ->willReturn($this->customerTransferMock);
 
-        $this->assertInstanceOf(
-            CustomerTransfer::class,
+        static::assertEquals(
+            $this->customerTransferMock,
             $this->customerMapper->mapRestCustomerTransferToCustomerTransfer(
                 $this->restCustomerTransferMock,
                 $this->customerTransferMock,
             ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testFromRestCustomer(): void
+    {
+        $data = [
+            'firstName' => 'Foo',
+        ];
+
+        $this->restCustomerTransferMock->expects(static::atLeastOnce())
+            ->method('toArray')
+            ->willReturn($data);
+
+        $customerTransfer = $this->customerMapper->fromRestCustomer($this->restCustomerTransferMock);
+
+        static::assertEquals(
+            $data['firstName'],
+            $customerTransfer->getFirstName(),
         );
     }
 }

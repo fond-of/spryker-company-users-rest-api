@@ -19,4 +19,13 @@ interface CustomerMapperInterface
         RestCustomerTransfer $restCustomerTransfer,
         CustomerTransfer $customerTransfer
     ): CustomerTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\RestCustomerTransfer $restCustomerTransfer
+     *
+     * @return \Generated\Shared\Transfer\CustomerTransfer
+     */
+    public function fromRestCustomer(
+        RestCustomerTransfer $restCustomerTransfer
+    ): CustomerTransfer;
 }
