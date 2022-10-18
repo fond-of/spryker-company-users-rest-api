@@ -5,8 +5,6 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Persistence;
 
 use ArrayObject;
-use Generated\Shared\Transfer\BrandTransfer;
-use Generated\Shared\Transfer\CompanyBrandRelationTransfer;
 use Generated\Shared\Transfer\CompanyBusinessUnitTransfer;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
 use Generated\Shared\Transfer\CompanyRoleTransfer;
@@ -18,7 +16,6 @@ use Generated\Shared\Transfer\PriceListTransfer;
 use Orm\Zed\CompanyUser\Persistence\Map\SpyCompanyUserTableMap;
 use Orm\Zed\CompanyUser\Persistence\SpyCompanyUserQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
-use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;
 
 /**
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiPersistenceFactory getFactory()
@@ -39,10 +36,6 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                 ->filterByCustomerReference($customerReference)
             ->endUse()
             ->useCompanyQuery()
-                ->useFosBrandCompanyQuery(null, Criteria::LEFT_JOIN)
-                    ->useFosBrandQuery(null, Criteria::LEFT_JOIN)
-                    ->endUse()
-                ->endUse()
                 ->usePriceListQuery()
                 ->endUse()
             ->endUse()
@@ -73,16 +66,7 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
                     );
                 }
 
-                $brandTransfers = [];
-
-                foreach ($company->getFosBrandCompanies() as $brand) {
-                    $brandTransfers[] = (new BrandTransfer())
-                        ->fromArray($brand->getFosBrand()->toArray());
-                }
-
-                $companyUserTransfer->setCompany(
-                    $companyTransfer->setBrandRelation((new CompanyBrandRelationTransfer())->setBrands(new ArrayObject($brandTransfers))),
-                );
+                $companyUserTransfer->setCompany($companyTransfer);
             }
 
             if ($companyUser->getCompanyBusinessUnit() !== null) {

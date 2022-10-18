@@ -123,11 +123,6 @@
 
     <transfer name="Company">
         <property name="priceList" type="PriceList"/>
-        <property name="brandRelation" type="CompanyBrandRelation"/>
-    </transfer>
-
-    <transfer name="CompanyBrandRelation">
-        <property name="brands" type="Brand[]"/>
     </transfer>
 
     <transfer name="Customer">
@@ -135,7 +130,6 @@
     </transfer>
 
     <transfer name="PriceList"/>
-    <transfer name="Brand"/>
 
     <transfer name="RestDeleteCompanyUserRequest">
         <property name="companyUserReferenceToDelete" type="string" />
