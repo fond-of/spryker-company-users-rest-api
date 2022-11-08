@@ -175,6 +175,11 @@ class CompanyUserWriter implements CompanyUserWriterInterface
             return $this->apiError->createCompanyUserAlreadyExistErrorResponse();
         }
 
+        $companyUserTransfer = $this->companyUserPluginExecutor->executePreCreatePlugins(
+            $companyUserTransfer,
+            $restCompanyUsersRequestAttributesTransfer,
+        );
+
         $companyUserResponseTransfer = $this->companyUserFacade->create($companyUserTransfer);
 
         if (!$companyUserResponseTransfer->getIsSuccessful()) {

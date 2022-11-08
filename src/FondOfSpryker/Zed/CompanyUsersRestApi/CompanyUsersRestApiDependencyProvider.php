@@ -72,6 +72,11 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     public const PLUGIN_COMPANY_USER_POST_CREATE = 'PLUGIN_COMPANY_USER_POST_CREATE';
 
     /**
+     * @var string
+     */
+    public const PLUGIN_COMPANY_USER_PRE_CREATE = 'PLUGIN_COMPANY_USER_PRE_CREATE';
+
+    /**
      * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
@@ -90,7 +95,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addPermissionFacade($container);
         $container = $this->addCompanyUserPostCreatePlugin($container);
 
-        return $container;
+        return $this->addCompanyUserPreCreatePlugin($container);
     }
 
     /**
@@ -289,6 +294,28 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface>
      */
     protected function getCompanyUserPostCreatePlugin(): array
+    {
+        return [];
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    public function addCompanyUserPreCreatePlugin(Container $container): Container
+    {
+        $container[static::PLUGIN_COMPANY_USER_PRE_CREATE] = function () {
+            return $this->getCompanyUserPreCreatePlugin();
+        };
+
+        return $container;
+    }
+
+    /**
+     * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPreCreatePluginInterface>
+     */
+    protected function getCompanyUserPreCreatePlugin(): array
     {
         return [];
     }
