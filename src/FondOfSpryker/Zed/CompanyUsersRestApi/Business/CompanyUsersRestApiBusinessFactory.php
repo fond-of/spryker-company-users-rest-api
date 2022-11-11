@@ -233,8 +233,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyUserPostCreatePlugins(): array
     {
         return $this
-            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE)
-            ->getArrayCopy();
+            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE);
     }
 
     /**

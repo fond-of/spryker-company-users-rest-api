@@ -402,6 +402,11 @@ class CompanyUserWriterTest extends Unit
             ->method('doesCompanyUserAlreadyExist')
             ->willReturn(false);
 
+        $this->companyUserPluginExecutorMock->expects(static::atLeastOnce())
+            ->method('executePreCreatePlugins')
+            ->with($this->companyUserTransferMock, $this->restCompanyUsersRequestAttributesTransferMock)
+            ->willReturn($this->companyUserTransferMock);
+
         $this->companyUserFacadeMock->expects(static::atLeastOnce())
             ->method('create')
             ->with($this->companyUserTransferMock)
@@ -543,6 +548,11 @@ class CompanyUserWriterTest extends Unit
             ->method('doesCompanyUserAlreadyExist')
             ->willReturn(false);
 
+        $this->companyUserPluginExecutorMock->expects(static::atLeastOnce())
+            ->method('executePreCreatePlugins')
+            ->with($this->companyUserTransferMock, $this->restCompanyUsersRequestAttributesTransferMock)
+            ->willReturn($this->companyUserTransferMock);
+        
         $this->companyUserFacadeMock->expects(static::atLeastOnce())
             ->method('create')
             ->willReturn($this->companyUserResponseTransferMock);

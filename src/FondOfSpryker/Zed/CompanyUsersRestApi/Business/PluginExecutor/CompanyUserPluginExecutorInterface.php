@@ -17,4 +17,15 @@ interface CompanyUserPluginExecutorInterface
         CompanyUserTransfer $companyUserTransfer,
         RestCompanyUsersRequestAttributesTransfer $companyUsersRequestAttributesTransfer
     ): CompanyUserTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     * @param \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer $companyUsersRequestAttributesTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer
+     */
+    public function executePreCreatePlugins(
+        CompanyUserTransfer $companyUserTransfer,
+        RestCompanyUsersRequestAttributesTransfer $companyUsersRequestAttributesTransfer
+    ): CompanyUserTransfer;
 }
