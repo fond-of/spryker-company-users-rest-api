@@ -136,7 +136,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $this->companyRoleFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyRoleFacadeInterface::class)
             ->disableOriginalConstructor()
             ->getMock();

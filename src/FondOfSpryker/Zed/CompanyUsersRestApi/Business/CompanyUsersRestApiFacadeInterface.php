@@ -42,6 +42,7 @@ interface CompanyUsersRestApiFacadeInterface
 
     /**
      * @param \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+     *
      * @return \Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer
      */
     public function updateCompanyUserByRestWriteCompanyUserRequest(

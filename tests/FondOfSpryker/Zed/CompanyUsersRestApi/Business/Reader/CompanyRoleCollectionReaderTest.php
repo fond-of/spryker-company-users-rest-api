@@ -171,7 +171,6 @@ class CompanyRoleCollectionReaderTest extends Unit
         $this->companyRoleFacadeMock->expects(static::never())
             ->method('findCompanyRoleByUuid');
 
-
         $companyRoleCollectionTransfer = $this->companyRoleCollectionReader->getByRestWriteCompanyUserRequest(
             $this->restWriteCompanyUserRequestTransferMock,
         );
