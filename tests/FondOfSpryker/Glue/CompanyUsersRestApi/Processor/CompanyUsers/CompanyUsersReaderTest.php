@@ -8,6 +8,7 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApi
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
+use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestUserTransfer;
@@ -69,9 +70,19 @@ class CompanyUsersReaderTest extends Unit
     protected $restResourceMock;
 
     /**
+     * @var \Generated\Shared\Transfer\CompanyUserTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
+     */
+    protected $companyUserTransferMock;
+
+    /**
      * @var array<\PHPUnit\Framework\MockObject\MockObject>|array<\Generated\Shared\Transfer\CompanyUserTransfer>
      */
     protected $companyUserTransferMocks;
+
+    /**
+     * @var \Generated\Shared\Transfer\CompanyUserResponseTransfer|\PHPUnit\Framework\MockObject\MockObject|mixed
+     */
+    protected $companyUserResponseTransferMock;
 
     /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader
@@ -123,11 +134,15 @@ class CompanyUsersReaderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserTransferMocks = [
-            $this->getMockBuilder(CompanyUserTransfer::class)
-                ->disableOriginalConstructor()
-                ->getMock(),
-        ];
+        $this->companyUserTransferMock =  $this->getMockBuilder(CompanyUserTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUserTransferMocks = [$this->companyUserTransferMock];
+
+        $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->companyUsersReader = new CompanyUsersReader(
             $this->restResourceBuilderMock,
@@ -213,6 +228,72 @@ class CompanyUsersReaderTest extends Unit
         static::assertEquals(
             $this->restResponseMock,
             $this->companyUsersReader->findCurrentCompanyUsers(
+                $this->restRequestMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testFindCompanyUser(): void
+    {
+        $restUserId = '1';
+        $companyUserReference = 'company-user-reference';
+
+        $this->restResourceBuilderMock->expects(static::atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseMock);
+
+        $this->restRequestMock->expects(static::atLeastOnce())
+            ->method('getResource')
+            ->willReturn($this->restResourceMock);
+
+        $this->restRequestMock->expects(static::atLeastOnce())
+            ->method('getRestUser')
+            ->willReturn($this->restUserTransferMock);
+
+        $this->restResourceMock->expects(static::atLeastOnce())
+            ->method('getId')
+            ->willReturn($restUserId);
+
+        $this->companyUserReferenceClientMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn($this->companyUserTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getIsSuccessful')
+            ->willReturn(true);
+
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getFkCustomer')
+            ->willReturn(1);
+
+        $this->restUserTransferMock->expects(static::atLeastOnce())
+            ->method('getSurrogateIdentifier')
+            ->willReturn(1);
+
+        $this->companyUsersMapperMock->expects(static::atLeastOnce())
+            ->method('mapCompanyUsersResource')
+            ->with($this->companyUserTransferMock)
+            ->willReturn($this->restResourceMock);
+
+        $this->restResourceMock->expects(static::atLeastOnce())
+            ->method('setPayload')
+            ->with($this->companyUserTransferMock)
+            ->willReturn($this->restResourceMock);
+
+        $this->restResponseMock->expects(static::atLeastOnce())
+            ->method('addResource')
+            ->willReturn($this->restResponseMock);
+
+        static::assertInstanceOf(
+            RestResponseInterface::class,
+            $this->companyUsersReader->findCompanyUser(
                 $this->restRequestMock,
             ),
         );
