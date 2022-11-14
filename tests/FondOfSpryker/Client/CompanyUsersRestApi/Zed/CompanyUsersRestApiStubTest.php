@@ -111,7 +111,6 @@ class CompanyUsersRestApiStubTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-
         $this->companyUsersRestApiStub = new CompanyUsersRestApiStub(
             $this->companyUsersRestApiToZedRequestClientInterfaceMock,
         );
@@ -179,9 +178,8 @@ class CompanyUsersRestApiStubTest extends Unit
         $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
             ->method('call')
             ->with('/company-users-rest-api/gateway/update-company-user-by-rest-write-company-user-request',
-                $this->restWriteCompanyUserRequestTransferMock
-            )
-            ->willReturn($this->restWriteCompanyUserResponseTransferMock);
+                $this->restWriteCompanyUserRequestTransferMock,
+            )->willReturn($this->restWriteCompanyUserResponseTransferMock);
 
         static::assertEquals(
             $this->restWriteCompanyUserResponseTransferMock,
