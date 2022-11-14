@@ -2,11 +2,10 @@
 
 declare(strict_types = 1);
 
-namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
+namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiConfig;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -15,12 +14,9 @@ use Generated\Shared\Transfer\RestErrorMessageTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
-use Spryker\Glue\Kernel\PermissionAwareTrait;
 
-class CompanyUsersWriter implements CompanyUsersWriterInterface
+class CompanyUserCreator implements CompanyUserCreatorInterface
 {
-    use PermissionAwareTrait;
-
     /**
      * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
      */
@@ -29,7 +25,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
     /**
      * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
      */
-    protected $companyUsersRestApiClient;
+    protected $client;
 
     /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface
@@ -37,26 +33,18 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
     protected $restApiError;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface
-     */
-    protected $companyClient;
-
-    /**
      * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
      * @param \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface $companyUsersRestApiClient
-     * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface $companyClient
      * @param \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface $restApiError
      */
     public function __construct(
         RestResourceBuilderInterface $restResourceBuilder,
         CompanyUsersRestApiClientInterface $companyUsersRestApiClient,
-        CompanyUsersRestApiToCompanyClientInterface $companyClient,
         RestApiErrorInterface $restApiError
     ) {
         $this->restResourceBuilder = $restResourceBuilder;
-        $this->companyUsersRestApiClient = $companyUsersRestApiClient;
+        $this->client = $companyUsersRestApiClient;
         $this->restApiError = $restApiError;
-        $this->companyClient = $companyClient;
     }
 
     /**
@@ -65,7 +53,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    public function createCompanyUser(
+    public function create(
         RestRequestInterface $restRequest,
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface {
@@ -80,7 +68,7 @@ class CompanyUsersWriter implements CompanyUsersWriterInterface
 
         $restCompanyUsersRequestAttributesTransfer->setCurrentCustomer($restCustomerTransfer);
 
-        $restCompanyUsersResponseTransfer = $this->companyUsersRestApiClient->create(
+        $restCompanyUsersResponseTransfer = $this->client->create(
             $restCompanyUsersRequestAttributesTransfer,
         );
 
