@@ -20,7 +20,7 @@
   },
   "require": {
     "php": ">=7.3",
-    "fond-of-oryx/company-users-rest-api-extension": "^1.0.0",
+    "fond-of-oryx/company-users-rest-api-extension": "^1.1.0",
     "fond-of-spryker/companies-rest-api": "dev-spryker_upgrade",
     "fond-of-spryker/company-business-units-rest-api": "dev-master",
     "fond-of-spryker/company-user-reference": "dev-master",

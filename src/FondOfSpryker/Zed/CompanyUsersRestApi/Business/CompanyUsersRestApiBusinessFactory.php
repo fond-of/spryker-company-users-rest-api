@@ -221,7 +221,10 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
      */
     protected function createCompanyUserPluginExecutor(): CompanyUserPluginExecutorInterface
     {
-        return new CompanyUserPluginExecutor($this->getCompanyUserPostCreatePlugins());
+        return new CompanyUserPluginExecutor(
+            $this->getCompanyUserPreCreatePlugins(),
+            $this->getCompanyUserPostCreatePlugins(),
+        );
     }
 
     /**
@@ -230,7 +233,16 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyUserPostCreatePlugins(): array
     {
         return $this
-            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE)
-            ->getArrayCopy();
+            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE);
+    }
+
+    /**
+     * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPreCreatePluginInterface>
+     */
+    protected function getCompanyUserPreCreatePlugins(): array
+    {
+        return $this->getProvidedDependency(
+            CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_PRE_CREATE,
+        );
     }
 }

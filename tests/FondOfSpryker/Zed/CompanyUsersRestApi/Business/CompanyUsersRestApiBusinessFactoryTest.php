@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
-use ArrayObject;
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
@@ -164,8 +163,6 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateCompanyUserWriter(): void
     {
-        $plugins = new ArrayObject();
-
         $this->containerMock->expects($this->atLeastOnce())
             ->method('has')
             ->willReturn(true);
@@ -182,6 +179,7 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
                 [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
+                [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_PRE_CREATE],
                 [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE],
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeMock,
@@ -193,7 +191,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 $this->companyUserFacadeMock,
                 $this->companyUserReferenceFacadeMock,
                 $this->permissionFacadeMock,
-                $plugins,
+                [],
+                [],
             );
 
         static::assertInstanceOf(
