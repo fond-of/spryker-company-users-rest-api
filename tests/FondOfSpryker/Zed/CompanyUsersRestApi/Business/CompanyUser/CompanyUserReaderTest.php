@@ -320,7 +320,7 @@ class CompanyUserReaderTest extends Unit
         static::assertInstanceOf(
             CompanyUserTransfer::class,
             $this->companyUserReader->getWriteableByRestWriteCompanyUserRequest(
-                $this->restWriteCompanyUserRequestTransferMock
+                $this->restWriteCompanyUserRequestTransferMock,
             ),
         );
     }
@@ -335,7 +335,7 @@ class CompanyUserReaderTest extends Unit
             ->willReturn(null);
 
         $this->companyUserReader->getWriteableByRestWriteCompanyUserRequest(
-            $this->restWriteCompanyUserRequestTransferMock
+            $this->restWriteCompanyUserRequestTransferMock,
         );
     }
 
