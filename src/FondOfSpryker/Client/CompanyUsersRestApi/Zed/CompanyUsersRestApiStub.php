@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 
 class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
 {
@@ -94,5 +96,22 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         );
 
         return $restDeleteCompanyUserResponseTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer
+     */
+    public function updateCompanyUserByRestWriteCompanyUserRequest(
+        RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+    ): RestWriteCompanyUserResponseTransfer {
+        /** @var \Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer $restWriteCompanyUserResponseTransfer */
+        $restWriteCompanyUserResponseTransfer = $this->zedRequestClient->call(
+            '/company-users-rest-api/gateway/update-company-user-by-rest-write-company-user-request',
+            $restWriteCompanyUserRequestTransfer,
+        );
+
+        return $restWriteCompanyUserResponseTransfer;
     }
 }
