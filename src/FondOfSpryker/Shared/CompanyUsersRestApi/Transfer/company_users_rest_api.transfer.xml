@@ -139,4 +139,15 @@
     <transfer name="RestDeleteCompanyUserResponse">
         <property name="isSuccess" type="bool" />
     </transfer>
+
+    <transfer name="RestWriteCompanyUserRequest">
+        <property name="writeableCompanyUserReference" type="string" />
+        <property name="idCustomer" type="int" />
+        <property name="restCompanyUsersRequestAttributes" type="RestCompanyUsersRequestAttributes" />
+    </transfer>
+
+    <transfer name="RestWriteCompanyUserResponse">
+        <property name="isSuccess" type="bool" />
+        <property name="companyUser" type="CompanyUser" />
+    </transfer>
 </transfers>

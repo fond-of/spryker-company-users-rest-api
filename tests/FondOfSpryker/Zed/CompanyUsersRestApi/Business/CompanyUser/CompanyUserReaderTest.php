@@ -10,6 +10,7 @@ use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
 
 class CompanyUserReaderTest extends Unit
 {
@@ -37,6 +38,11 @@ class CompanyUserReaderTest extends Unit
      * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $restDeleteCompanyUserRequestTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restWriteCompanyUserRequestTransferMock;
 
     /**
      * @var \Generated\Shared\Transfer\CompanyUserResponseTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -70,6 +76,10 @@ class CompanyUserReaderTest extends Unit
             ->getMock();
 
         $this->restDeleteCompanyUserRequestTransferMock = $this->getMockBuilder(RestDeleteCompanyUserRequestTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restWriteCompanyUserRequestTransferMock = $this->getMockBuilder(RestWriteCompanyUserRequestTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -284,5 +294,87 @@ class CompanyUserReaderTest extends Unit
                 $this->restDeleteCompanyUserRequestTransferMock,
             ),
         );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetWriteableByRestWriteCompanyUserRequest(): void
+    {
+        $this->restWriteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getWriteableCompanyUserReference')
+            ->willReturn('COMPANY-USER-REFERENCE');
+
+        $this->companyUserReferenceFacadeMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn($this->companyUserTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getIsSuccessful')
+            ->willReturn(true);
+
+        static::assertInstanceOf(
+            CompanyUserTransfer::class,
+            $this->companyUserReader->getWriteableByRestWriteCompanyUserRequest(
+                $this->restWriteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetWriteableByRestWriteCompanyUserRequestWithNullCompanyUserReference(): void
+    {
+        $this->restWriteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('getWriteableCompanyUserReference')
+            ->willReturn(null);
+
+        $this->companyUserReader->getWriteableByRestWriteCompanyUserRequest(
+            $this->restWriteCompanyUserRequestTransferMock,
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetByCompanyUserReference(): void
+    {
+        $this->companyUserReferenceFacadeMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn($this->companyUserTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getIsSuccessful')
+            ->willReturn(true);
+
+        static::assertInstanceOf(
+            CompanyUserTransfer::class,
+            $this->companyUserReader->getByCompanyUserReference('COMPANY-USER-REFERENCE'),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetByCompanyUserReferenceWithNullCompanyUserTransfer(): void
+    {
+        $this->companyUserReferenceFacadeMock->expects(static::atLeastOnce())
+            ->method('findCompanyUserByCompanyUserReference')
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        $this->companyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn(null);
+
+        $this->companyUserReader->getByCompanyUserReference('COMPANY-USER-REFERENCE');
     }
 }

@@ -98,4 +98,20 @@ class CompanyUsersRestApiToCompanyUserFacadeBridgeTest extends Unit
             $this->bridge->deleteCompanyUser($this->companyUserTransferMock),
         );
     }
+
+    /**
+     * @return void
+     */
+    public function testUpdate(): void
+    {
+        $this->facadeMock->expects(static::atLeastOnce())
+            ->method('update')
+            ->with($this->companyUserTransferMock)
+            ->willReturn($this->companyUserResponseTransferMock);
+
+        static::assertEquals(
+            $this->companyUserResponseTransferMock,
+            $this->bridge->update($this->companyUserTransferMock),
+        );
+    }
 }

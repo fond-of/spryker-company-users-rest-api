@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\DeleteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
@@ -58,7 +58,7 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
 
         if (
             $companyUserTransfer === null
-            || !$this->permissionFacade->can(WriteCompanyUserPermissionPlugin::KEY, $companyUserTransfer->getIdCompanyUser())
+            || !$this->permissionFacade->can(DeleteCompanyUserPermissionPlugin::KEY, $companyUserTransfer->getIdCompanyUser())
         ) {
             return $restDeleteCompanyUserResponseTransfer;
         }

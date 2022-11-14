@@ -4,7 +4,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\WriteCompanyUserPermissionPlugin;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\DeleteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -104,7 +104,7 @@ class CompanyUserDeleterTest extends Unit
         $this->permissionFacadeMock->expects(static::atLeastOnce())
             ->method('can')
             ->with(
-                WriteCompanyUserPermissionPlugin::KEY,
+                DeleteCompanyUserPermissionPlugin::KEY,
                 $idCompanyUser,
             )->willReturn(true);
 
@@ -147,7 +147,7 @@ class CompanyUserDeleterTest extends Unit
         $this->permissionFacadeMock->expects(static::atLeastOnce())
             ->method('can')
             ->with(
-                WriteCompanyUserPermissionPlugin::KEY,
+                DeleteCompanyUserPermissionPlugin::KEY,
                 $idCompanyUser,
             )->willReturn(false);
 
@@ -182,7 +182,7 @@ class CompanyUserDeleterTest extends Unit
         $this->permissionFacadeMock->expects(static::atLeastOnce())
             ->method('can')
             ->with(
-                WriteCompanyUserPermissionPlugin::KEY,
+                DeleteCompanyUserPermissionPlugin::KEY,
                 $idCompanyUser,
             )->willReturn(true);
 
@@ -219,7 +219,7 @@ class CompanyUserDeleterTest extends Unit
         $this->permissionFacadeMock->expects(static::atLeastOnce())
             ->method('can')
             ->with(
-                WriteCompanyUserPermissionPlugin::KEY,
+                DeleteCompanyUserPermissionPlugin::KEY,
                 $idCompanyUser,
             )->willReturn(true);
 

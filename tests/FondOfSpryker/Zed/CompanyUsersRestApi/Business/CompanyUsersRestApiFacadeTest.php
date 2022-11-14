@@ -5,6 +5,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdaterInterface;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
@@ -13,6 +14,8 @@ use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 
 class CompanyUsersRestApiFacadeTest extends Unit
 {
@@ -72,6 +75,21 @@ class CompanyUsersRestApiFacadeTest extends Unit
     protected $restDeleteCompanyUserResponseTransferMock;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdaterInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyUserUpdaterMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restWriteCompanyUserRequestTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $restWriteCompanyUserResponseTransferMock;
+
+    /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacade
      */
     protected $companyUsersRestApiFacade;
@@ -122,6 +140,18 @@ class CompanyUsersRestApiFacadeTest extends Unit
             ->getMock();
 
         $this->restDeleteCompanyUserResponseTransferMock = $this->getMockBuilder(RestDeleteCompanyUserResponseTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUserUpdaterMock = $this->getMockBuilder(CompanyUserUpdaterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restWriteCompanyUserRequestTransferMock = $this->getMockBuilder(RestWriteCompanyUserRequestTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restWriteCompanyUserResponseTransferMock = $this->getMockBuilder(RestWriteCompanyUserResponseTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -188,6 +218,28 @@ class CompanyUsersRestApiFacadeTest extends Unit
             $this->restDeleteCompanyUserResponseTransferMock,
             $this->companyUsersRestApiFacade->deleteCompanyUserByRestDeleteCompanyUserRequest(
                 $this->restDeleteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateCompanyUserByRestWriteCompanyUserRequest(): void
+    {
+        $this->factoryMock->expects(static::atLeastOnce())
+            ->method('createCompanyUserUpdater')
+            ->willReturn($this->companyUserUpdaterMock);
+
+        $this->companyUserUpdaterMock->expects(static::atLeastOnce())
+            ->method('updateByRestWriteCompanyUserRequest')
+            ->with($this->restWriteCompanyUserRequestTransferMock)
+            ->willReturn($this->restWriteCompanyUserResponseTransferMock);
+
+        static::assertEquals(
+            $this->restWriteCompanyUserResponseTransferMock,
+            $this->companyUsersRestApiFacade->updateCompanyUserByRestWriteCompanyUserRequest(
+                $this->restWriteCompanyUserRequestTransferMock,
             ),
         );
     }

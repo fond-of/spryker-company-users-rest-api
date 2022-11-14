@@ -22,8 +22,12 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapper;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CustomerMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReader;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdater;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdaterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiError;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriter;
@@ -31,6 +35,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterfac
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
@@ -244,5 +249,34 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(
             CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_PRE_CREATE,
         );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdaterInterface
+     */
+    public function createCompanyUserUpdater(): CompanyUserUpdaterInterface
+    {
+        return new CompanyUserUpdater(
+            $this->createCompanyUserReader(),
+            $this->createCompanyRoleCollectionReader(),
+            $this->getCompanyUserFacade(),
+            $this->getPermissionFacade(),
+        );
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface
+     */
+    protected function createCompanyRoleCollectionReader(): CompanyRoleCollectionReaderInterface
+    {
+        return new CompanyRoleCollectionReader($this->getCompanyRoleFacade());
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
+     */
+    protected function getCompanyRoleFacade(): CompanyUsersRestApiToCompanyRoleFacadeInterface
+    {
+        return $this->getProvidedDependency(CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE);
     }
 }
