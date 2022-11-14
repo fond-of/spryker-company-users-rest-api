@@ -99,7 +99,7 @@ class CompanyUsersResourceController extends AbstractController
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface {
         return $this->getFactory()
-            ->createCompanyUsersUpdater()
+            ->createCompanyUserUpdater()
             ->update($restRequest, $restCompanyUsersRequestAttributesTransfer);
     }
 

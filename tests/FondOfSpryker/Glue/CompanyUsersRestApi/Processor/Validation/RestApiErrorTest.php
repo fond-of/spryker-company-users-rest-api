@@ -15,14 +15,14 @@ class RestApiErrorTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    protected $restResponseInterfaceMock;
+    protected $restResponseMock;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->restResponseInterfaceMock = $this->getMockBuilder(RestResponseInterface::class)
+        $this->restResponseMock = $this->getMockBuilder(RestResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -34,31 +34,14 @@ class RestApiErrorTest extends Unit
      */
     public function testAddAccessDeniedError(): void
     {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addError')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        static::assertEquals(
+            $this->restResponseMock,
             $this->restApiError->addAccessDeniedError(
-                $this->restResponseInterfaceMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testAddCompanyRoleNotFoundError(): void
-    {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
-            ->method('addError')
-            ->willReturn($this->restResponseInterfaceMock);
-
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
-            $this->restApiError->addCompanyRoleNotFoundError(
-                $this->restResponseInterfaceMock,
+                $this->restResponseMock,
             ),
         );
     }
@@ -68,14 +51,14 @@ class RestApiErrorTest extends Unit
      */
     public function testAddCompanyUserNotFoundError(): void
     {
-        $this->restResponseInterfaceMock->expects($this->atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addError')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
+        static::assertEquals(
+            $this->restResponseMock,
             $this->restApiError->addCompanyUserNotFoundError(
-                $this->restResponseInterfaceMock,
+                $this->restResponseMock,
             ),
         );
     }

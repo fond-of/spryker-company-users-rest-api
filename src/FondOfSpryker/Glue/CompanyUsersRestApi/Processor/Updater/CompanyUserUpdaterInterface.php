@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types = 1);
-
-namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
+namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater;
 
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-interface CompanyUsersUpdaterInterface
+interface CompanyUserUpdaterInterface
 {
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest

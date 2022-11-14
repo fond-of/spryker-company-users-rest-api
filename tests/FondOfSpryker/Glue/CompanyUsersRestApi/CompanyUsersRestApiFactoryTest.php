@@ -3,31 +3,46 @@
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
 use Codeception\Test\Unit;
+use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdater;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
+use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\Kernel\Container;
 
 class CompanyUsersRestApiFactoryTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory
-     */
-    protected $companyUsersRestApiFactory;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\Kernel\Container
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\Kernel\Container&\PHPUnit\Framework\MockObject\MockObject
      */
     protected $containerMock;
+    /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyUserReferenceClientMock;
+    /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyClientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserClientInterface
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $companyUsersRestApiToCompanyUserClientInterfaceMock;
+    protected $clientMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient
+     * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $companyUsersRestApiClientMock;
+    protected $restResourceBuilderMock;
+
+    /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory
+     */
+    protected $factory;
+
 
     /**
      * @return void
@@ -38,22 +53,68 @@ class CompanyUsersRestApiFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToCompanyUserClientInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserClientInterface::class)
+        $this->companyUserReferenceClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiFactory = new CompanyUsersRestApiFactory();
-        $this->companyUsersRestApiFactory->setContainer($this->containerMock);
+        $this->companyClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyClientInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->clientMock = $this->getMockBuilder(CompanyUsersRestApiClient::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->restResourceBuilderMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+
+        $this->factory = new class($this->restResourceBuilderMock) extends CompanyUsersRestApiFactory {
+            /**
+             * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
+             */
+            protected $restResourceBuilder;
+
+            /**
+             * @param \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface $restResourceBuilder
+             */
+            public function __construct(RestResourceBuilderInterface $restResourceBuilder)
+            {
+                $this->restResourceBuilder = $restResourceBuilder;
+            }
+
+            /**
+             * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
+             */
+            public function getResourceBuilder(): RestResourceBuilderInterface
+            {
+                return $this->restResourceBuilder;
+            }
+        };
+        $this->factory->setContainer($this->containerMock);
+        $this->factory->setClient($this->clientMock);
     }
 
     /**
      * @return void
      */
-    public function testCreateRestApiError(): void
+    public function testCreateCompanyUserUpdater(): void
     {
-        $this->assertInstanceOf(
-            RestApiErrorInterface::class,
-            $this->companyUsersRestApiFactory->createRestApiError(),
+        static::assertInstanceOf(
+            CompanyUserUpdater::class,
+            $this->factory->createCompanyUserUpdater()
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateCompanyUserDeleter(): void
+    {
+        static::assertInstanceOf(
+            CompanyUserDeleter::class,
+            $this->factory->createCompanyUserDeleter()
         );
     }
 }
