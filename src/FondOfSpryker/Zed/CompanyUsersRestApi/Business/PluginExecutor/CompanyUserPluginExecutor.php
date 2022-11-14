@@ -24,7 +24,7 @@ class CompanyUserPluginExecutor implements CompanyUserPluginExecutorInterface
     public function __construct(
         array $companyUserPreCreatePlugins,
         array $companyUserPostCreatePlugins
-    ){
+    ) {
         $this->companyUserPreCreatePlugins = $companyUserPreCreatePlugins;
         $this->companyUserPostCreatePlugins = $companyUserPostCreatePlugins;
     }

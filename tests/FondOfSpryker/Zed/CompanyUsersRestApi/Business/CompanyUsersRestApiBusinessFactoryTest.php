@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
-use ArrayObject;
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;

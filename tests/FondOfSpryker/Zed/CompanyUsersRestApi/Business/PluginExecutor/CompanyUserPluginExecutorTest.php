@@ -3,8 +3,8 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader;
 
 use Codeception\Test\Unit;
-use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPreCreatePluginInterface;
 use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
+use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPreCreatePluginInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
@@ -12,12 +12,12 @@ use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 class CompanyUserPluginExecutorTest extends Unit
 {
     /**
-     * @var \Generated\Shared\Transfer\CompanyUserTransfer|\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\CompanyUserTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUserTransferMock;
 
     /**
-     * @var \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer|\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUsersRequestAttributesTransferMock;
 
@@ -51,7 +51,7 @@ class CompanyUserPluginExecutorTest extends Unit
 
         $this->pluginExecutor = new CompanyUserPluginExecutor(
             [$this->companyUserPreCreatePluginMock],
-            [$this->companyUserPostCreatePluginMock]
+            [$this->companyUserPostCreatePluginMock],
         );
     }
 
@@ -69,8 +69,9 @@ class CompanyUserPluginExecutorTest extends Unit
             CompanyUserTransfer::class,
             $this->pluginExecutor->executePostCreatePlugins(
                 $this->companyUserTransferMock,
-                $this->companyUsersRequestAttributesTransferMock)
-            );
+                $this->companyUsersRequestAttributesTransferMock,
+            ),
+        );
     }
 
     /**
@@ -87,7 +88,8 @@ class CompanyUserPluginExecutorTest extends Unit
             CompanyUserTransfer::class,
             $this->pluginExecutor->executePreCreatePlugins(
                 $this->companyUserTransferMock,
-                $this->companyUsersRequestAttributesTransferMock)
+                $this->companyUsersRequestAttributesTransferMock,
+            ),
         );
     }
 }
