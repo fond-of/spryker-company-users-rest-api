@@ -177,7 +177,8 @@ class CompanyUsersRestApiStubTest extends Unit
     {
         $this->companyUsersRestApiToZedRequestClientInterfaceMock->expects($this->atLeastOnce())
             ->method('call')
-            ->with('/company-users-rest-api/gateway/update-company-user-by-rest-write-company-user-request',
+            ->with(
+                '/company-users-rest-api/gateway/update-company-user-by-rest-write-company-user-request',
                 $this->restWriteCompanyUserRequestTransferMock,
             )->willReturn($this->restWriteCompanyUserResponseTransferMock);
 
