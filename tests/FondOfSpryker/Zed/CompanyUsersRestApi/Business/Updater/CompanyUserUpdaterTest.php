@@ -59,6 +59,7 @@ class CompanyUserUpdaterTest extends Unit
      * @var \Generated\Shared\Transfer\CompanyUserResponseTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUserResponseTransferMock;
+
     /**
      * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdater
      */
@@ -111,7 +112,7 @@ class CompanyUserUpdaterTest extends Unit
             $this->companyUserReaderMock,
             $this->companyRoleCollectionReaderMock,
             $this->companyUserFacadeMock,
-            $this->permissionFacadeMock
+            $this->permissionFacadeMock,
         );
     }
 
@@ -165,17 +166,17 @@ class CompanyUserUpdaterTest extends Unit
             ->willReturn(true);
 
         $restWriteCompanyUserResponseTransfer = $this->companyUserUpdater->updateByRestWriteCompanyUserRequest(
-            $this->restWriteCompanyUserRequestTransferMock
+            $this->restWriteCompanyUserRequestTransferMock,
         );
 
         static::assertEquals(
             true,
-            $restWriteCompanyUserResponseTransfer->getIsSuccess()
+            $restWriteCompanyUserResponseTransfer->getIsSuccess(),
         );
 
         static::assertEquals(
             $this->updatableCompanyUserTransferMock,
-            $restWriteCompanyUserResponseTransfer->getCompanyUser()
+            $restWriteCompanyUserResponseTransfer->getCompanyUser(),
         );
     }
 
@@ -205,17 +206,17 @@ class CompanyUserUpdaterTest extends Unit
             ->method('update');
 
         $restWriteCompanyUserResponseTransfer = $this->companyUserUpdater->updateByRestWriteCompanyUserRequest(
-            $this->restWriteCompanyUserRequestTransferMock
+            $this->restWriteCompanyUserRequestTransferMock,
         );
 
         static::assertEquals(
             false,
-            $restWriteCompanyUserResponseTransfer->getIsSuccess()
+            $restWriteCompanyUserResponseTransfer->getIsSuccess(),
         );
 
         static::assertEquals(
             null,
-            $restWriteCompanyUserResponseTransfer->getCompanyUser()
+            $restWriteCompanyUserResponseTransfer->getCompanyUser(),
         );
     }
 
@@ -252,17 +253,17 @@ class CompanyUserUpdaterTest extends Unit
             ->method('update');
 
         $restWriteCompanyUserResponseTransfer = $this->companyUserUpdater->updateByRestWriteCompanyUserRequest(
-            $this->restWriteCompanyUserRequestTransferMock
+            $this->restWriteCompanyUserRequestTransferMock,
         );
 
         static::assertEquals(
             false,
-            $restWriteCompanyUserResponseTransfer->getIsSuccess()
+            $restWriteCompanyUserResponseTransfer->getIsSuccess(),
         );
 
         static::assertEquals(
             null,
-            $restWriteCompanyUserResponseTransfer->getCompanyUser()
+            $restWriteCompanyUserResponseTransfer->getCompanyUser(),
         );
     }
 
@@ -315,17 +316,17 @@ class CompanyUserUpdaterTest extends Unit
             ->method('getIsSuccessful');
 
         $restWriteCompanyUserResponseTransfer = $this->companyUserUpdater->updateByRestWriteCompanyUserRequest(
-            $this->restWriteCompanyUserRequestTransferMock
+            $this->restWriteCompanyUserRequestTransferMock,
         );
 
         static::assertEquals(
             false,
-            $restWriteCompanyUserResponseTransfer->getIsSuccess()
+            $restWriteCompanyUserResponseTransfer->getIsSuccess(),
         );
 
         static::assertEquals(
             null,
-            $restWriteCompanyUserResponseTransfer->getCompanyUser()
+            $restWriteCompanyUserResponseTransfer->getCompanyUser(),
         );
     }
 }

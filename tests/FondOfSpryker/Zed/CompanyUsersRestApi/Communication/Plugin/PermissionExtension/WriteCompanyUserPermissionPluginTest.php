@@ -28,7 +28,7 @@ class WriteCompanyUserPermissionPluginTest extends Unit
     {
         static::assertEquals(
             WriteCompanyUserPermissionPlugin::KEY,
-            $this->plugin->getKey()
+            $this->plugin->getKey(),
         );
     }
 }

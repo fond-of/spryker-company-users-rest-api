@@ -6,10 +6,12 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdater;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserReferenceFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCustomerFacadeInterface;
@@ -81,6 +83,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
     protected $utilTextServiceMock;
 
     /**
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyRoleFacadeMock;
+
+    /**
      * @return void
      */
     protected function _before(): void
@@ -129,6 +136,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+
+        $this->companyRoleFacadeMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyRoleFacadeInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->companyUsersRestApiBusinessFactory = new CompanyUsersRestApiBusinessFactory();
         $this->companyUsersRestApiBusinessFactory->setRepository($this->companyUsersRestApiRepositoryMock);
         $this->companyUsersRestApiBusinessFactory->setConfig($this->companyUsersRestApiConfigMock);
@@ -140,11 +152,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateCompanyUserReader(): void
     {
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
             ->willReturn(true);
 
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('get')
             ->withConsecutive(
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
@@ -163,11 +175,11 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateCompanyUserWriter(): void
     {
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
             ->willReturn(true);
 
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('get')
             ->withConsecutive(
                 [CompanyUsersRestApiDependencyProvider::FACADE_CUSTOMER],
@@ -198,6 +210,35 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
         static::assertInstanceOf(
             CompanyUserWriter::class,
             $this->companyUsersRestApiBusinessFactory->createCompanyUserWriter(),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testCreateCompanyUserUpdater(): void
+    {
+        $this->containerMock->expects(static::atLeastOnce())
+            ->method('has')
+            ->willReturn(true);
+
+        $this->containerMock->expects(static::atLeastOnce())
+            ->method('get')
+            ->withConsecutive(
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_ROLE],
+                [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
+                [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
+            )->willReturnOnConsecutiveCalls(
+                $this->companyUserReferenceFacadeMock,
+                $this->companyRoleFacadeMock,
+                $this->companyUserFacadeMock,
+                $this->permissionFacadeMock,
+            );
+
+        static::assertInstanceOf(
+            CompanyUserUpdater::class,
+            $this->companyUsersRestApiBusinessFactory->createCompanyUserUpdater(),
         );
     }
 }

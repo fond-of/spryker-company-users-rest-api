@@ -4,7 +4,6 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater;
 
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\DeleteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\UpdateCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
@@ -82,7 +81,7 @@ class CompanyUserUpdater implements CompanyUserUpdaterInterface
         }
 
         $companyRoleCollectionTransfer = $this->companyRoleCollectionReader->getByRestWriteCompanyUserRequest(
-            $restWriteCompanyUserRequestTransfer
+            $restWriteCompanyUserRequestTransfer,
         );
 
         $companyUserTransfer = $companyUserTransfer->setCompanyRoleCollection($companyRoleCollectionTransfer);

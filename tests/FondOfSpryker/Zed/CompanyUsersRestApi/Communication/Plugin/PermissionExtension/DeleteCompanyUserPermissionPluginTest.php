@@ -28,7 +28,7 @@ class DeleteCompanyUserPermissionPluginTest extends Unit
     {
         static::assertEquals(
             DeleteCompanyUserPermissionPlugin::KEY,
-            $this->plugin->getKey()
+            $this->plugin->getKey(),
         );
     }
 }

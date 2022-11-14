@@ -12,6 +12,9 @@ use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\SpyCompanyUserEntityTransfer;
 use Orm\Zed\CompanyUser\Persistence\Base\SpyCompanyUser;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CompanyUserMapper implements CompanyUserMapperInterface
 {
     /**

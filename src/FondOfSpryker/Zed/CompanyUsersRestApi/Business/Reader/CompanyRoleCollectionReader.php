@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface;
 use Generated\Shared\Transfer\CompanyRoleCollectionTransfer;
 use Generated\Shared\Transfer\CompanyRoleTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
@@ -11,14 +11,14 @@ use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
 class CompanyRoleCollectionReader implements CompanyRoleCollectionReaderInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface
      */
     protected $companyRoleFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge $companyRoleFacade
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeInterface $companyRoleFacade
      */
-    public function __construct(CompanyUsersRestApiToCompanyRoleFacadeBridge $companyRoleFacade)
+    public function __construct(CompanyUsersRestApiToCompanyRoleFacadeInterface $companyRoleFacade)
     {
         $this->companyRoleFacade = $companyRoleFacade;
     }
@@ -26,7 +26,7 @@ class CompanyRoleCollectionReader implements CompanyRoleCollectionReaderInterfac
     /**
      * @param \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
      *
-     * @return \Generated\Shared\Transfer\CompanyRoleCollectionTransfer
+     * @return \Generated\Shared\Transfer\CompanyRoleCollectionTransfer|null
      */
     public function getByRestWriteCompanyUserRequest(
         RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
