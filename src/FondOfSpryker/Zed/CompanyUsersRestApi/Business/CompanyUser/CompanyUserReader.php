@@ -9,6 +9,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiReposit
 use Generated\Shared\Transfer\CompanyUserCriteriaFilterTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
+use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
 
 class CompanyUserReader implements CompanyUserReaderInterface
 {
@@ -105,6 +106,27 @@ class CompanyUserReader implements CompanyUserReaderInterface
     }
 
     /**
+     * @param \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getCurrentByRestWriteCompanyUserRequest(
+        RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+    ): ?CompanyUserTransfer {
+        $idCustomer = $restWriteCompanyUserRequestTransfer->getIdCustomer();
+        $writeableCompanyUserReference = $restWriteCompanyUserRequestTransfer->getWriteableCompanyUserReference();
+
+        if ($idCustomer === null || $writeableCompanyUserReference === null) {
+            return null;
+        }
+
+        return $this->repository->findCompanyUserByIdCustomerAndForeignCompanyUserReference(
+            $idCustomer,
+            $writeableCompanyUserReference,
+        );
+    }
+
+    /**
      * @param \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer $restDeleteCompanyUserRequestTransfer
      *
      * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
@@ -118,8 +140,35 @@ class CompanyUserReader implements CompanyUserReaderInterface
             return null;
         }
 
+        return $this->getByCompanyUserReference($companyUserReferenceToDelete);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getWriteableByRestWriteCompanyUserRequest(
+        RestWriteCompanyUserRequestTransfer $restWriteCompanyUserRequestTransfer
+    ): ?CompanyUserTransfer {
+        $writeableCompanyUserReference = $restWriteCompanyUserRequestTransfer->getWriteableCompanyUserReference();
+
+        if ($writeableCompanyUserReference === null) {
+            return null;
+        }
+
+        return $this->getByCompanyUserReference($writeableCompanyUserReference);
+    }
+
+    /**
+     * @param string $companyUserReference
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserTransfer|null
+     */
+    public function getByCompanyUserReference(string $companyUserReference): ?CompanyUserTransfer
+    {
         $companyUserTransfer = (new CompanyUserTransfer())
-            ->setCompanyUserReference($companyUserReferenceToDelete);
+            ->setCompanyUserReference($companyUserReference);
 
         $companyUserResponseTransfer = $this->companyUserReferenceFacade->findCompanyUserByCompanyUserReference(
             $companyUserTransfer,

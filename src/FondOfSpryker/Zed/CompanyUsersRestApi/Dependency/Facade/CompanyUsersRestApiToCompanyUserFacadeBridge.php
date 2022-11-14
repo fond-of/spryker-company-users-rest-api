@@ -50,4 +50,14 @@ class CompanyUsersRestApiToCompanyUserFacadeBridge implements CompanyUsersRestAp
     {
         return $this->companyUserFacade->deleteCompanyUser($companyUserTransfer);
     }
+
+    /**
+     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
+     *
+     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
+     */
+    public function update(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
+    {
+        return $this->companyUserFacade->update($companyUserTransfer);
+    }
 }
