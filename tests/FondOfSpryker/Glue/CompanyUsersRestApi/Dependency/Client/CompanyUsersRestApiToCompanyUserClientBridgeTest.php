@@ -106,22 +106,4 @@ class CompanyUsersRestApiToCompanyUserClientBridgeTest extends Unit
             ),
         );
     }
-
-    /**
-     * @return void
-     */
-    public function testDisableCompanyUser(): void
-    {
-        $this->companyUserClientInterfaceMock->expects($this->atLeastOnce())
-            ->method('disableCompanyUser')
-            ->with($this->companyUserTransferMock)
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUsersRestApiToCompanyUserClientBridge->disableCompanyUser(
-                $this->companyUserTransferMock,
-            ),
-        );
-    }
 }

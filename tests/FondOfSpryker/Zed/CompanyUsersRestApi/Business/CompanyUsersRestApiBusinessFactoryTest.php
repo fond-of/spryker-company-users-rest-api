@@ -3,9 +3,9 @@
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdater;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiConfig;
 use FondOfSpryker\Zed\CompanyUsersRestApi\CompanyUsersRestApiDependencyProvider;
@@ -190,8 +190,8 @@ class CompanyUsersRestApiBusinessFactoryTest extends Unit
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER],
                 [CompanyUsersRestApiDependencyProvider::FACADE_COMPANY_USER_REFERENCE],
                 [CompanyUsersRestApiDependencyProvider::FACADE_PERMISSION],
-                [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_PRE_CREATE],
-                [CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE],
+                [CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_PRE_CREATE],
+                [CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_POST_CREATE],
             )->willReturnOnConsecutiveCalls(
                 $this->customerFacadeMock,
                 $this->utilTextServiceMock,

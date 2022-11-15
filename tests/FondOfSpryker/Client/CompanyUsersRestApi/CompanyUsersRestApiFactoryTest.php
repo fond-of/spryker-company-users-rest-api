@@ -4,7 +4,7 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
-use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface;
+use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStub;
 use Spryker\Client\Kernel\Container;
 
 class CompanyUsersRestApiFactoryTest extends Unit
@@ -22,7 +22,7 @@ class CompanyUsersRestApiFactoryTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface
      */
-    protected $companyUsersRestApiToZedRequestClientInterfaceMock;
+    protected $zedRequestClientMock;
 
     /**
      * @return void
@@ -33,7 +33,7 @@ class CompanyUsersRestApiFactoryTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToZedRequestClientInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToZedRequestClientInterface::class)
+        $this->zedRequestClientMock = $this->getMockBuilder(CompanyUsersRestApiToZedRequestClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -46,17 +46,17 @@ class CompanyUsersRestApiFactoryTest extends Unit
      */
     public function testCreateZedCompanyUsersRestApiStub(): void
     {
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
             ->willReturn(true);
 
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('get')
             ->with(CompanyUsersRestApiDependencyProvider::CLIENT_ZED_REQUEST)
-            ->willReturn($this->companyUsersRestApiToZedRequestClientInterfaceMock);
+            ->willReturn($this->zedRequestClientMock);
 
-        $this->assertInstanceOf(
-            CompanyUsersRestApiStubInterface::class,
+        static::assertInstanceOf(
+            CompanyUsersRestApiStub::class,
             $this->companyUsersRestApiFactory->createZedCompanyUsersRestApiStub(),
         );
     }

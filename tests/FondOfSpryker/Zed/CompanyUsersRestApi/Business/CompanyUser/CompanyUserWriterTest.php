@@ -5,6 +5,7 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Mapper\CompanyUserMapperInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutor;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Validation\RestApiErrorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Writer\CustomerWriterInterface;
@@ -69,7 +70,7 @@ class CompanyUserWriterTest extends Unit
     protected $restApiErrorInterfaceMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface
      */
     protected $companyUserReaderInterfaceMock;
 
@@ -174,7 +175,7 @@ class CompanyUserWriterTest extends Unit
     protected $restApiErrorMock;
 
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUserReaderMock;
 
@@ -925,22 +926,6 @@ class CompanyUserWriterTest extends Unit
             $this->companyUserWriter->create(
                 $this->restCompanyUsersRequestAttributesTransferMock,
             ),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testDisableCompanyUser(): void
-    {
-        $this->companyUserFacadeMock->expects(static::atLeastOnce())
-            ->method('disableCompanyUser')
-            ->with($this->companyUserTransferMock)
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        static::assertInstanceOf(
-            CompanyUserResponseTransfer::class,
-            $this->companyUserWriter->disableCompanyUser($this->companyUserTransferMock),
         );
     }
 }

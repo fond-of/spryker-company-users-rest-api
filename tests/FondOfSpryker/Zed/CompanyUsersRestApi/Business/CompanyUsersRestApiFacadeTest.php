@@ -183,27 +183,6 @@ class CompanyUsersRestApiFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testDisableCompanyUser(): void
-    {
-        $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createCompanyUserWriter')
-            ->willReturn($this->companyUserWriterMock);
-
-        $this->companyUserWriterMock->expects(static::atLeastOnce())
-            ->method('disableCompanyUser')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        static::assertEquals(
-            $this->companyUserResponseTransferMock,
-            $this->companyUsersRestApiFacade->disableCompanyUser(
-                $this->companyUserTransferMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
     public function testDeleteCompanyUserByRestDeleteCompanyUserRequest(): void
     {
         $this->factoryMock->expects(static::atLeastOnce())

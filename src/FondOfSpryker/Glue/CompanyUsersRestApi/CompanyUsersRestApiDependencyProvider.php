@@ -10,6 +10,9 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApi
 use Spryker\Glue\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Container;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProvider
 {
     /**

@@ -36,16 +36,6 @@ class CompanyUsersRestApiToCompanyUserFacadeBridge implements CompanyUsersRestAp
      *
      * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
      */
-    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
-        return $this->companyUserFacade->disableCompanyUser($companyUserTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
     public function deleteCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
     {
         return $this->companyUserFacade->deleteCompanyUser($companyUserTransfer);

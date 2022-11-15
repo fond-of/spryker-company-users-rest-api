@@ -6,8 +6,6 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -46,22 +44,6 @@ class CompanyUsersRestApiStub implements CompanyUsersRestApiStubInterface
         );
 
         return $restCompanyUsersResponseTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
-        /** @var \Generated\Shared\Transfer\CompanyUserResponseTransfer $companyUserResponseTransfer */
-        $companyUserResponseTransfer = $this->zedRequestClient->call(
-            '/company-users-rest-api/gateway/disable-company-user',
-            $companyUserTransfer,
-        );
-
-        return $companyUserResponseTransfer;
     }
 
     /**

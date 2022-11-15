@@ -4,8 +4,10 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface;
+use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
 use Generated\Shared\Transfer\CompanyUserTransfer;
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;
@@ -16,14 +18,24 @@ use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 class CompanyUsersRestApiClientTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient
-     */
-    protected $companyUsersRestApiClient;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiFactory
      */
-    protected $companyUsersRestApiFactoryMock;
+    protected $factoryMock;
+
+    /**
+     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface
+     */
+    protected $companyUsersRestApiStubMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\CustomerTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $customerTransferMock;
+
+    /**
+     * @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $companyUserCollectionTransferMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer
@@ -31,24 +43,9 @@ class CompanyUsersRestApiClientTest extends Unit
     protected $restCompanyUsersRequestAttributesTransferMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface
-     */
-    protected $companyUsersRestApiStubInterfaceMock;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
     protected $restCompanyUsersResponseTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected $companyUserTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    protected $companyUserResponseTransferMock;
 
     /**
      * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -71,11 +68,28 @@ class CompanyUsersRestApiClientTest extends Unit
     protected $restWriteCompanyUserResponseTransferMock;
 
     /**
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient
+     */
+    protected $client;
+
+    /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->companyUsersRestApiFactoryMock = $this->getMockBuilder(CompanyUsersRestApiFactory::class)
+        $this->factoryMock = $this->getMockBuilder(CompanyUsersRestApiFactory::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUsersRestApiStubMock = $this->getMockBuilder(CompanyUsersRestApiStubInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->customerTransferMock = $this->getMockBuilder(CustomerTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->companyUserCollectionTransferMock = $this->getMockBuilder(CompanyUserCollectionTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -83,19 +97,7 @@ class CompanyUsersRestApiClientTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiStubInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiStubInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
         $this->restCompanyUsersResponseTransferMock = $this->getMockBuilder(RestCompanyUsersResponseTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyUserResponseTransferMock = $this->getMockBuilder(CompanyUserResponseTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -115,8 +117,8 @@ class CompanyUsersRestApiClientTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiClient = new CompanyUsersRestApiClient();
-        $this->companyUsersRestApiClient->setFactory($this->companyUsersRestApiFactoryMock);
+        $this->client = new CompanyUsersRestApiClient();
+        $this->client->setFactory($this->factoryMock);
     }
 
     /**
@@ -124,39 +126,18 @@ class CompanyUsersRestApiClientTest extends Unit
      */
     public function testCreate(): void
     {
-        $this->companyUsersRestApiFactoryMock->expects(static::atLeastOnce())
+        $this->factoryMock->expects(static::atLeastOnce())
             ->method('createZedCompanyUsersRestApiStub')
-            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
+            ->willReturn($this->companyUsersRestApiStubMock);
 
-        $this->companyUsersRestApiStubInterfaceMock->expects(static::atLeastOnce())
+        $this->companyUsersRestApiStubMock->expects(static::atLeastOnce())
             ->method('create')
             ->willReturn($this->restCompanyUsersResponseTransferMock);
 
         static::assertEquals(
             $this->restCompanyUsersResponseTransferMock,
-            $this->companyUsersRestApiClient->create(
+            $this->client->create(
                 $this->restCompanyUsersRequestAttributesTransferMock,
-            ),
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testDisableCompanyUser(): void
-    {
-        $this->companyUsersRestApiFactoryMock->expects(static::atLeastOnce())
-            ->method('createZedCompanyUsersRestApiStub')
-            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
-
-        $this->companyUsersRestApiStubInterfaceMock->expects(static::atLeastOnce())
-            ->method('disableCompanyUser')
-            ->willReturn($this->companyUserResponseTransferMock);
-
-        static::assertEquals(
-            $this->companyUserResponseTransferMock,
-            $this->companyUsersRestApiClient->disableCompanyUser(
-                $this->companyUserTransferMock,
             ),
         );
     }
@@ -166,18 +147,18 @@ class CompanyUsersRestApiClientTest extends Unit
      */
     public function testDeleteCompanyUserByRestDeleteCompanyUserRequest(): void
     {
-        $this->companyUsersRestApiFactoryMock->expects(static::atLeastOnce())
+        $this->factoryMock->expects(static::atLeastOnce())
             ->method('createZedCompanyUsersRestApiStub')
-            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
+            ->willReturn($this->companyUsersRestApiStubMock);
 
-        $this->companyUsersRestApiStubInterfaceMock->expects(static::atLeastOnce())
+        $this->companyUsersRestApiStubMock->expects(static::atLeastOnce())
             ->method('deleteCompanyUserByRestDeleteCompanyUserRequest')
             ->with($this->restDeleteCompanyUserRequestTransferMock)
             ->willReturn($this->restDeleteCompanyUserResponseTransferMock);
 
         static::assertEquals(
             $this->restDeleteCompanyUserResponseTransferMock,
-            $this->companyUsersRestApiClient->deleteCompanyUserByRestDeleteCompanyUserRequest(
+            $this->client->deleteCompanyUserByRestDeleteCompanyUserRequest(
                 $this->restDeleteCompanyUserRequestTransferMock,
             ),
         );
@@ -186,21 +167,43 @@ class CompanyUsersRestApiClientTest extends Unit
     /**
      * @return void
      */
-    public function testuUpdateCompanyUserByRestDeleteCompanyUserRequest(): void
+    public function testUpdateCompanyUserByRestDeleteCompanyUserRequest(): void
     {
-        $this->companyUsersRestApiFactoryMock->expects(static::atLeastOnce())
+        $this->factoryMock->expects(static::atLeastOnce())
             ->method('createZedCompanyUsersRestApiStub')
-            ->willReturn($this->companyUsersRestApiStubInterfaceMock);
+            ->willReturn($this->companyUsersRestApiStubMock);
 
-        $this->companyUsersRestApiStubInterfaceMock->expects(static::atLeastOnce())
+        $this->companyUsersRestApiStubMock->expects(static::atLeastOnce())
             ->method('updateCompanyUserByRestWriteCompanyUserRequest')
             ->with($this->restWriteCompanyUserRequestTransferMock)
             ->willReturn($this->restWriteCompanyUserResponseTransferMock);
 
         static::assertEquals(
             $this->restWriteCompanyUserResponseTransferMock,
-            $this->companyUsersRestApiClient->updateCompanyUserByRestDeleteCompanyUserRequest(
+            $this->client->updateCompanyUserByRestDeleteCompanyUserRequest(
                 $this->restWriteCompanyUserRequestTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testFindActiveCompanyUsersByCustomerReference(): void
+    {
+        $this->factoryMock->expects(static::atLeastOnce())
+            ->method('createZedCompanyUsersRestApiStub')
+            ->willReturn($this->companyUsersRestApiStubMock);
+
+        $this->companyUsersRestApiStubMock->expects(static::atLeastOnce())
+            ->method('findActiveCompanyUsersByCustomerReference')
+            ->with($this->customerTransferMock)
+            ->willReturn($this->companyUserCollectionTransferMock);
+
+        static::assertEquals(
+            $this->companyUserCollectionTransferMock,
+            $this->client->findActiveCompanyUsersByCustomerReference(
+                $this->customerTransferMock,
             ),
         );
     }

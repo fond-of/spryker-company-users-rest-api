@@ -53,10 +53,6 @@
         <property name="companyUser" type="CompanyUser" />
     </transfer>
 
-    <transfer name="RestDisableCompanyUserRequestAttributes">
-        <property name="companyUserReference" type="string" />
-    </transfer>
-
     <transfer name="CompanyUser">
         <property name="companyUserReference" type="string"/>
         <property name="isDefault" type="bool"/>

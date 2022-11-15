@@ -8,6 +8,9 @@ use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestA
 use Spryker\Client\Kernel\AbstractDependencyProvider;
 use Spryker\Client\Kernel\Container;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CompanyUsersRestApiDependencyProvider extends AbstractDependencyProvider
 {
     /**
@@ -22,9 +25,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractDependencyProvider
      */
     public function provideServiceLayerDependencies(Container $container): Container
     {
-        $container = $this->addZedRequestClient($container);
+        $container = parent::provideServiceLayerDependencies($container);
 
-        return $container;
+        return $this->addZedRequestClient($container);
     }
 
     /**
@@ -35,7 +38,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractDependencyProvider
     protected function addZedRequestClient(Container $container): Container
     {
         $container[static::CLIENT_ZED_REQUEST] = static function (Container $container) {
-            return new CompanyUsersRestApiToZedRequestClientBridge($container->getLocator()->zedRequest()->client());
+            return new CompanyUsersRestApiToZedRequestClientBridge(
+                $container->getLocator()->zedRequest()->client(),
+            );
         };
 
         return $container;

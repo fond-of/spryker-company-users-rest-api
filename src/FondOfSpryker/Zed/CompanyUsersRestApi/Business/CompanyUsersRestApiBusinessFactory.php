@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriter;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserWriterInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter\CompanyUserDeleter;
@@ -24,6 +22,8 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPlu
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\PluginExecutor\CompanyUserPluginExecutorInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReader;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReader;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CustomerReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater\CompanyUserUpdater;
@@ -50,7 +50,7 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
 {
     /**
-     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
+     * @return \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface
      */
     public function createCompanyUserReader(): CompanyUserReaderInterface
     {
@@ -238,7 +238,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyUserPostCreatePlugins(): array
     {
         return $this
-            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_POST_CREATE);
+            ->getProvidedDependency(CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_POST_CREATE);
     }
 
     /**
@@ -247,7 +247,7 @@ class CompanyUsersRestApiBusinessFactory extends AbstractBusinessFactory
     protected function getCompanyUserPreCreatePlugins(): array
     {
         return $this->getProvidedDependency(
-            CompanyUsersRestApiDependencyProvider::PLUGIN_COMPANY_USER_PRE_CREATE,
+            CompanyUsersRestApiDependencyProvider::PLUGINS_COMPANY_USER_PRE_CREATE,
         );
     }
 
