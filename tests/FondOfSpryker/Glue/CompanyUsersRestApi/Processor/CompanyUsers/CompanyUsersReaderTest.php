@@ -134,7 +134,7 @@ class CompanyUsersReaderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserTransferMock =  $this->getMockBuilder(CompanyUserTransfer::class)
+        $this->companyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 

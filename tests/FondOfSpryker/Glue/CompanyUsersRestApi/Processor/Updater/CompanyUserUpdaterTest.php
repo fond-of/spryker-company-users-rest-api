@@ -147,7 +147,7 @@ class CompanyUserUpdaterTest extends Unit
             RestResponseInterface::class,
             $this->companyUserUpdater->update(
                 $this->restRequestMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
+                $this->restCompanyUsersRequestAttributesTransferMock,
             ),
         );
     }
