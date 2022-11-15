@@ -2,7 +2,7 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Deleter;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\DeleteCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
@@ -12,7 +12,7 @@ use Generated\Shared\Transfer\RestDeleteCompanyUserResponseTransfer;
 class CompanyUserDeleter implements CompanyUserDeleterInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface
      */
     protected $companyUserReader;
 
@@ -27,7 +27,7 @@ class CompanyUserDeleter implements CompanyUserDeleterInterface
     protected $permissionFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface $companyUserReader
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade
      */

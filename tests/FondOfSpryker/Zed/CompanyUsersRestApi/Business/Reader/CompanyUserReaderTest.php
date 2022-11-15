@@ -1,6 +1,6 @@
 <?php
 
-namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
+namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader;
 
 use ArrayObject;
 use Codeception\Test\Unit;
@@ -50,7 +50,7 @@ class CompanyUserReaderTest extends Unit
     protected $companyUserResponseTransferMock;
 
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReader
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReader
      */
     protected $companyUserReader;
 

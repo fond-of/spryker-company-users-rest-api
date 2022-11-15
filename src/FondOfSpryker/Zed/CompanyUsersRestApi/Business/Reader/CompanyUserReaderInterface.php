@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser;
+namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader;
 
 use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer;

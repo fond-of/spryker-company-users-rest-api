@@ -6,8 +6,6 @@ namespace FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Controller;
 
 use ArrayObject;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -18,6 +16,8 @@ use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 use Spryker\Zed\Kernel\Communication\Controller\AbstractGatewayController;
 
 /**
+ * @codeCoverageIgnore
+ *
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUsersRestApiFacadeInterface getFacade()
  * @method \FondOfSpryker\Zed\CompanyUsersRestApi\Persistence\CompanyUsersRestApiRepositoryInterface getRepository()()
  */
@@ -33,18 +33,6 @@ class GatewayController extends AbstractGatewayController
     ): RestCompanyUsersResponseTransfer {
         return $this->getFacade()
             ->create($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function disableCompanyUserAction(
-        CompanyUserTransfer $companyUserTransfer
-    ): CompanyUserResponseTransfer {
-        return $this->getFacade()
-            ->disableCompanyUser($companyUserTransfer);
     }
 
     /**

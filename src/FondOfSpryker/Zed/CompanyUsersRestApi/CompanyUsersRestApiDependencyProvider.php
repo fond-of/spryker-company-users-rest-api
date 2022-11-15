@@ -4,9 +4,6 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi;
 
-use ArrayObject;
-use FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface;
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Exception\WrongInterfaceException;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyBusinessUnitFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyFacadeBridge;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyRoleFacadeBridge;
@@ -72,12 +69,12 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     /**
      * @var string
      */
-    public const PLUGIN_COMPANY_USER_POST_CREATE = 'PLUGIN_COMPANY_USER_POST_CREATE';
+    public const PLUGINS_COMPANY_USER_POST_CREATE = 'PLUGINS_COMPANY_USER_POST_CREATE';
 
     /**
      * @var string
      */
-    public const PLUGIN_COMPANY_USER_PRE_CREATE = 'PLUGIN_COMPANY_USER_PRE_CREATE';
+    public const PLUGINS_COMPANY_USER_PRE_CREATE = 'PLUGINS_COMPANY_USER_PRE_CREATE';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -98,7 +95,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
         $container = $this->addPermissionFacade($container);
         $container = $this->addCompanyUserPostCreatePlugin($container);
 
-        return $this->addCompanyUserPreCreatePlugin($container);
+        return $this->addCompanyUserPreCreatePlugins($container);
     }
 
     /**
@@ -108,9 +105,9 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      */
     public function providePersistenceLayerDependencies(Container $container): Container
     {
-        $container = $this->addCompanyUserPropelQuery($container);
+        $container = parent::providePersistenceLayerDependencies($container);
 
-        return $container;
+        return $this->addCompanyUserPropelQuery($container);
     }
 
     /**
@@ -262,41 +259,19 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      */
     public function addCompanyUserPostCreatePlugin(Container $container): Container
     {
-        $container[static::PLUGIN_COMPANY_USER_POST_CREATE] = function (Container $container) {
-            $plugins = $this->getCompanyUserPostCreatePlugin();
-            $this->validatePlugin($plugins, CompanyUserPostCreatePluginInterface::class);
+        $self = $this;
 
-            return new ArrayObject($plugins);
+        $container[static::PLUGINS_COMPANY_USER_POST_CREATE] = static function () use ($self) {
+            return $self->getCompanyUserPostCreatePlugins();
         };
 
         return $container;
     }
 
     /**
-     * @param array $plugins
-     * @param string $class
-     *
-     * @throws \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Exception\WrongInterfaceException
-     *
-     * @return void
-     */
-    protected function validatePlugin(array $plugins, string $class): void
-    {
-        foreach ($plugins as $plugin) {
-            if (($plugin instanceof $class) === false) {
-                throw new WrongInterfaceException(sprintf(
-                    'Plugin %s has to implement interface from type %s',
-                    get_class($plugin),
-                    $class,
-                ));
-            }
-        }
-    }
-
-    /**
      * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPostCreatePluginInterface>
      */
-    protected function getCompanyUserPostCreatePlugin(): array
+    protected function getCompanyUserPostCreatePlugins(): array
     {
         return [];
     }
@@ -306,10 +281,12 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    public function addCompanyUserPreCreatePlugin(Container $container): Container
+    public function addCompanyUserPreCreatePlugins(Container $container): Container
     {
-        $container[static::PLUGIN_COMPANY_USER_PRE_CREATE] = function () {
-            return $this->getCompanyUserPreCreatePlugin();
+        $self = $this;
+
+        $container[static::PLUGINS_COMPANY_USER_PRE_CREATE] = static function () use ($self) {
+            return $self->getCompanyUserPreCreatePlugins();
         };
 
         return $container;
@@ -318,7 +295,7 @@ class CompanyUsersRestApiDependencyProvider extends AbstractBundleDependencyProv
     /**
      * @return array<\FondOfOryx\Zed\CompanyUsersRestApiExtension\Dependency\Plugin\CompanyUserPreCreatePluginInterface>
      */
-    protected function getCompanyUserPreCreatePlugin(): array
+    protected function getCompanyUserPreCreatePlugins(): array
     {
         return [];
     }

@@ -2,8 +2,8 @@
 
 namespace FondOfSpryker\Zed\CompanyUsersRestApi\Business\Updater;
 
-use FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface;
+use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\UpdateCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
@@ -13,7 +13,7 @@ use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 class CompanyUserUpdater implements CompanyUserUpdaterInterface
 {
     /**
-     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface
+     * @var \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface
      */
     protected $companyUserReader;
 
@@ -33,7 +33,7 @@ class CompanyUserUpdater implements CompanyUserUpdaterInterface
     protected $permissionFacade;
 
     /**
-     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\CompanyUser\CompanyUserReaderInterface $companyUserReader
+     * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInterface $companyUserReader
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyRoleCollectionReaderInterface $companyRoleCollectionReader
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface $companyUserFacade
      * @param \FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface $permissionFacade

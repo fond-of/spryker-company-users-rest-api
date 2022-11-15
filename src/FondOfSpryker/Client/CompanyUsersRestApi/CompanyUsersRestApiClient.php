@@ -5,8 +5,6 @@ declare(strict_types = 1);
 namespace FondOfSpryker\Client\CompanyUsersRestApi;
 
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -32,18 +30,6 @@ class CompanyUsersRestApiClient extends AbstractClient implements CompanyUsersRe
         return $this->getFactory()
             ->createZedCompanyUsersRestApiStub()
             ->create($restCompanyUsersRequestAttributesTransfer);
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\CompanyUserTransfer $companyUserTransfer
-     *
-     * @return \Generated\Shared\Transfer\CompanyUserResponseTransfer
-     */
-    public function disableCompanyUser(CompanyUserTransfer $companyUserTransfer): CompanyUserResponseTransfer
-    {
-        return $this->getFactory()
-            ->createZedCompanyUsersRestApiStub()
-            ->disableCompanyUser($companyUserTransfer);
     }
 
     /**

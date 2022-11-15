@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
+namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader;
 
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
@@ -14,7 +14,7 @@ use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-class CompanyUsersReader implements CompanyUsersReaderInterface
+class CompanyUserReader implements CompanyUserReaderInterface
 {
     /**
      * @var \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
@@ -114,8 +114,8 @@ class CompanyUsersReader implements CompanyUsersReaderInterface
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
 
         if (
-            !$companyUserResponseTransfer->getIsSuccessful()
-            || $companyUserTransfer === null
+            $companyUserTransfer === null
+            || !$companyUserResponseTransfer->getIsSuccessful()
             || $companyUserTransfer->getFkCustomer() !== $user->getSurrogateIdentifier()
         ) {
             return $this->restApiError->addCompanyUserNotFoundError($restResponse);
