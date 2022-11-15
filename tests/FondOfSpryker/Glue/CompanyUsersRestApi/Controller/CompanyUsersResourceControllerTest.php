@@ -7,7 +7,9 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreatorInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdaterInterface;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
@@ -22,14 +24,14 @@ class CompanyUsersResourceControllerTest extends Unit
     protected $companyUserDeleterMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdaterInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $companyUsersUpdaterMock;
+    protected $companyUserUpdaterMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreatorInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $companyUsersWriterMock;
+    protected $companyUserCreatorMock;
 
     /**
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
@@ -75,11 +77,11 @@ class CompanyUsersResourceControllerTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersUpdaterMock = $this->getMockBuilder(CompanyUsersUpdaterInterface::class)
+        $this->companyUserUpdaterMock = $this->getMockBuilder(CompanyUserUpdaterInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersWriterMock = $this->getMockBuilder(CompanyUsersWriterInterface::class)
+        $this->companyUserCreatorMock = $this->getMockBuilder(CompanyUserCreatorInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -138,11 +140,11 @@ class CompanyUsersResourceControllerTest extends Unit
     public function testPostAction(): void
     {
         $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createCompanyUsersWriter')
-            ->willReturn($this->companyUsersWriterMock);
+            ->method('createCompanyUserCreator')
+            ->willReturn($this->companyUserCreatorMock);
 
-        $this->companyUsersWriterMock->expects(static::atLeastOnce())
-            ->method('createCompanyUser')
+        $this->companyUserCreatorMock->expects(static::atLeastOnce())
+            ->method('create')
             ->with($this->restRequestMock, $this->restCompanyUsersRequestAttributesTransferMock)
             ->willReturn($this->restResponseMock);
 
@@ -229,10 +231,10 @@ class CompanyUsersResourceControllerTest extends Unit
     public function testPatchAction(): void
     {
         $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createCompanyUsersUpdater')
-            ->willReturn($this->companyUsersUpdaterMock);
+            ->method('createCompanyUserUpdater')
+            ->willReturn($this->companyUserUpdaterMock);
 
-        $this->companyUsersUpdaterMock->expects(static::atLeastOnce())
+        $this->companyUserUpdaterMock->expects(static::atLeastOnce())
             ->method('update')
             ->with($this->restRequestMock, $this->restCompanyUsersRequestAttributesTransferMock)
             ->willReturn($this->restResponseMock);
