@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
+/**
+ * @codeCoverageIgnore
+ */
 class CompanyUsersRestApiConfig
 {
     /**
@@ -19,20 +22,20 @@ class CompanyUsersRestApiConfig
     /**
      * @var string
      */
-    public const RESOURCE_DISABLE_COMPANY_USER = 'disable-company-user';
-
-    /**
-     * @var string
-     */
-    public const CONTROLLER_DISABLE_COMPANY_USER = 'disable-company-user-resource';
-
-    /**
-     * @var string
-     */
     public const RESPONSE_DETAIL_COULD_NOT_DELETE_COMPANY_USER = 'Could not delete company user.';
 
     /**
      * @var string
      */
     public const RESPONSE_CODE_COULD_NOT_DELETE_COMPANY_USER = '1001';
+
+    /**
+     * @var string
+     */
+    public const RESPONSE_DETAIL_COULD_NOT_UPDATE_COMPANY_USER = 'Could not update company user.';
+
+    /**
+     * @var string
+     */
+    public const RESPONSE_CODE_COULD_NOT_UPDATE_COMPANY_USER = '1002';
 }
