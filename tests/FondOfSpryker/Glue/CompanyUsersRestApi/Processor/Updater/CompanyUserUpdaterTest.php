@@ -114,8 +114,6 @@ class CompanyUserUpdaterTest extends Unit
      */
     public function testUpdate(): void
     {
-        $customerReference = 'STORE--C-1';
-
         $this->restWriteCompanyUserRequestMapperMock->expects(static::atLeastOnce())
             ->method('fromRestRequest')
             ->with($this->restRequestMock)
@@ -141,6 +139,43 @@ class CompanyUserUpdaterTest extends Unit
 
         $this->restResponseBuilderMock->expects(static::atLeastOnce())
             ->method('buildRestResponse')
+            ->willReturn($this->restResponseMock);
+
+        static::assertInstanceOf(
+            RestResponseInterface::class,
+            $this->companyUserUpdater->update(
+                $this->restRequestMock,
+                $this->restCompanyUsersRequestAttributesTransferMock,
+            ),
+        );
+    }
+
+    /**
+     * @return void
+     */
+    public function testUpdateWithMissingCompanyUserTransfer(): void
+    {
+        $this->restWriteCompanyUserRequestMapperMock->expects(static::atLeastOnce())
+            ->method('fromRestRequest')
+            ->with($this->restRequestMock)
+            ->willReturn($this->restWriteCompanyUserRequestTransferMock);
+
+        $this->restWriteCompanyUserRequestTransferMock->expects(static::atLeastOnce())
+            ->method('setRestCompanyUsersRequestAttributes')
+            ->with($this->restCompanyUsersRequestAttributesTransferMock)
+            ->willReturn($this->restWriteCompanyUserRequestTransferMock);
+
+        $this->clientMock->expects(static::atLeastOnce())
+            ->method('updateCompanyUserByRestDeleteCompanyUserRequest')
+            ->with($this->restWriteCompanyUserRequestTransferMock)
+            ->willReturn($this->restWriteCompanyUserResponseTransferMock);
+
+        $this->restWriteCompanyUserResponseTransferMock->expects(static::atLeastOnce())
+            ->method('getCompanyUser')
+            ->willReturn(null);
+
+        $this->restResponseBuilderMock->expects(static::atLeastOnce())
+            ->method('buildCouldNotUpdateCompanyUserRestResponse')
             ->willReturn($this->restResponseMock);
 
         static::assertInstanceOf(

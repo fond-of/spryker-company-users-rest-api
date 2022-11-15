@@ -62,4 +62,21 @@ class RestApiErrorTest extends Unit
             ),
         );
     }
+
+    /**
+     * @return void
+     */
+    public function testAddCompanyRoleNotFoundError(): void
+    {
+        $this->restResponseMock->expects(static::atLeastOnce())
+            ->method('addError')
+            ->willReturn($this->restResponseMock);
+
+        static::assertEquals(
+            $this->restResponseMock,
+            $this->restApiError->addCompanyRoleNotFoundError(
+                $this->restResponseMock,
+            ),
+        );
+    }
 }
