@@ -4,11 +4,10 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreator;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleter;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdater;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface;
 use Spryker\Glue\Kernel\Container;
@@ -24,11 +23,6 @@ class CompanyUsersRestApiFactoryTest extends Unit
      * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUserReferenceClientMock;
-
-    /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $companyClientMock;
 
     /**
      * @var \FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClient&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
@@ -55,10 +49,6 @@ class CompanyUsersRestApiFactoryTest extends Unit
             ->getMock();
 
         $this->companyUserReferenceClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyUserReferenceClientInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyClientMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -132,7 +122,7 @@ class CompanyUsersRestApiFactoryTest extends Unit
     /**
      * @return void
      */
-    public function testCreateCompanyUsersReader(): void
+    public function testCreateCompanyUserReader(): void
     {
         $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
@@ -144,8 +134,8 @@ class CompanyUsersRestApiFactoryTest extends Unit
             ->willReturn($this->companyUserReferenceClientMock);
 
         static::assertInstanceOf(
-            CompanyUsersReader::class,
-            $this->factory->createCompanyUsersReader(),
+            CompanyUserReader::class,
+            $this->factory->createCompanyUserReader(),
         );
     }
 }

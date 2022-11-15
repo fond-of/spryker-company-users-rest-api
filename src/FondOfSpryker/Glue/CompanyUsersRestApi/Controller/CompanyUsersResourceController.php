@@ -38,12 +38,12 @@ class CompanyUsersResourceController extends AbstractController
     {
         if ($restRequest->getResource()->getId()) {
             return $this->getFactory()
-                ->createCompanyUsersReader()
+                ->createCompanyUserReader()
                 ->findCompanyUser($restRequest);
         }
 
         return $this->getFactory()
-            ->createCompanyUsersReader()
+            ->createCompanyUserReader()
             ->findCurrentCompanyUsers($restRequest);
     }
 

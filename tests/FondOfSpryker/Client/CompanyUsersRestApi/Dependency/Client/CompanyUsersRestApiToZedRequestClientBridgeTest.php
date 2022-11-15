@@ -9,43 +9,36 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 class CompanyUsersRestApiToZedRequestClientBridgeTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientBridge
-     */
-    protected $companyUsersRestApiToZedRequestClientBridge;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Client\ZedRequest\ZedRequestClientInterface
      */
-    protected $zedRequestClientInterfaceMock;
-
-    /**
-     * @var string
-     */
-    protected $url;
+    protected $zedRequestClientMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Shared\Kernel\Transfer\TransferInterface
      */
-    protected $transferInterfaceMock;
+    protected $transferMock;
+
+    /**
+     * @var \FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientBridge
+     */
+    protected $bridge;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->zedRequestClientInterfaceMock = $this->getMockBuilder(ZedRequestClientInterface::class)
+        $this->zedRequestClientMock = $this->getMockBuilder(ZedRequestClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToZedRequestClientBridge = new CompanyUsersRestApiToZedRequestClientBridge(
-            $this->zedRequestClientInterfaceMock,
+        $this->transferMock = $this->getMockBuilder(TransferInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->bridge = new CompanyUsersRestApiToZedRequestClientBridge(
+            $this->zedRequestClientMock,
         );
-
-        $this->url = 'url';
-
-        $this->transferInterfaceMock = $this->getMockBuilder(TransferInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
     }
 
     /**
@@ -53,16 +46,18 @@ class CompanyUsersRestApiToZedRequestClientBridgeTest extends Unit
      */
     public function testCall(): void
     {
-        $this->zedRequestClientInterfaceMock->expects($this->atLeastOnce())
-            ->method('call')
-            ->with($this->url, $this->transferInterfaceMock)
-            ->willReturn($this->transferInterfaceMock);
+        $url = '...';
 
-        $this->assertInstanceOf(
-            TransferInterface::class,
-            $this->companyUsersRestApiToZedRequestClientBridge->call(
-                $this->url,
-                $this->transferInterfaceMock,
+        $this->zedRequestClientMock->expects(static::atLeastOnce())
+            ->method('call')
+            ->with($url, $this->transferMock)
+            ->willReturn($this->transferMock);
+
+        static::assertEquals(
+            $this->transferMock,
+            $this->bridge->call(
+                $url,
+                $this->transferMock,
             ),
         );
     }

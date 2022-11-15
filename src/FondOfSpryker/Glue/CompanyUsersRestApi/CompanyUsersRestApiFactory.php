@@ -8,8 +8,6 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilder;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Builder\RestResponseBuilderInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreator;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreatorInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleter;
@@ -24,6 +22,8 @@ use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUse
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestDeleteCompanyUserRequestMapperInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestWriteCompanyUserRequestMapper;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\RestWriteCompanyUserRequestMapperInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReader;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdater;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdaterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiError;
@@ -36,11 +36,11 @@ use Spryker\Glue\Kernel\AbstractFactory;
 class CompanyUsersRestApiFactory extends AbstractFactory
 {
     /**
-     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface
+     * @return \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReaderInterface
      */
-    public function createCompanyUsersReader(): CompanyUsersReaderInterface
+    public function createCompanyUserReader(): CompanyUserReaderInterface
     {
-        return new CompanyUsersReader(
+        return new CompanyUserReader(
             $this->getResourceBuilder(),
             $this->getClient(),
             $this->getCompanyUserReferenceClient(),
