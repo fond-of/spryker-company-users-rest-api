@@ -2,13 +2,13 @@
 
 declare(strict_types = 1);
 
-namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
+namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator;
 
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-interface CompanyUsersUpdaterInterface
+interface CompanyUserCreatorInterface
 {
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
@@ -16,7 +16,7 @@ interface CompanyUsersUpdaterInterface
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    public function update(
+    public function create(
         RestRequestInterface $restRequest,
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface;

@@ -4,12 +4,8 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreator;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
-use Generated\Shared\Transfer\CompanyResponseTransfer;
-use Generated\Shared\Transfer\CompanyTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
-use Generated\Shared\Transfer\RestCompanyTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -22,59 +18,29 @@ use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 class CompanyUsersWriterTest extends Unit
 {
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriter
-     */
-    protected $companyUsersWriter;
-
-    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceBuilderInterface
      */
-    protected $restResourceBuilderInterfaceMock;
+    protected $restResourceBuilder;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface
      */
-    protected $companyUsersRestApiClientInterfaceMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyClientInterface
-     */
-    protected $companyUsersRestApiToCompanyClientInterfaceMock;
+    protected $clientMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface
      */
-    protected $restApiErrorInterfaceMock;
+    protected $restApiErrorMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface
      */
-    protected $restRequestInterfaceMock;
+    protected $restRequestMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer
      */
     protected $restCompanyUsersRequestAttributesTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyTransfer
-     */
-    protected $restCompanyTransferMock;
-
-    /**
-     * @var int
-     */
-    protected $idCompany;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyResponseTransfer
-     */
-    protected $companyResponseTransferMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyTransfer
-     */
-    protected $companyTransferMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
@@ -89,63 +55,40 @@ class CompanyUsersWriterTest extends Unit
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface
      */
-    protected $restResourceInterfaceMock;
-
-    /**
-     * @var string
-     */
-    protected $companyUserReference;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\CompanyUserTransfer
-     */
-    protected $companyUserTransferMock;
+    protected $restResourceMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    protected $restResponseInterfaceMock;
+    protected $restResponseMock;
+
+    /**
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreator
+     */
+    protected $companyUsersWriter;
 
     /**
      * @return void
      */
     protected function _before(): void
     {
-        $this->restResourceBuilderInterfaceMock = $this->getMockBuilder(RestResourceBuilderInterface::class)
+        $this->restResourceBuilder = $this->getMockBuilder(RestResourceBuilderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiClientInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiClientInterface::class)
+        $this->clientMock = $this->getMockBuilder(CompanyUsersRestApiClientInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersRestApiToCompanyClientInterfaceMock = $this->getMockBuilder(CompanyUsersRestApiToCompanyClientInterface::class)
+        $this->restApiErrorMock = $this->getMockBuilder(RestApiErrorInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restApiErrorInterfaceMock = $this->getMockBuilder(RestApiErrorInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->restRequestInterfaceMock = $this->getMockBuilder(RestRequestInterface::class)
+        $this->restRequestMock = $this->getMockBuilder(RestRequestInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         $this->restCompanyUsersRequestAttributesTransferMock = $this->getMockBuilder(RestCompanyUsersRequestAttributesTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->restCompanyTransferMock = $this->getMockBuilder(RestCompanyTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->idCompany = 1;
-
-        $this->companyResponseTransferMock = $this->getMockBuilder(CompanyResponseTransfer::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyTransferMock = $this->getMockBuilder(CompanyTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -157,25 +100,18 @@ class CompanyUsersWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restResourceInterfaceMock = $this->getMockBuilder(RestResourceInterface::class)
+        $this->restResourceMock = $this->getMockBuilder(RestResourceInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserTransferMock = $this->getMockBuilder(CompanyUserTransfer::class)
+        $this->restResponseMock = $this->getMockBuilder(RestResponseInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUserReference = 'company-user-reference';
-
-        $this->restResponseInterfaceMock = $this->getMockBuilder(RestResponseInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this->companyUsersWriter = new CompanyUsersWriter(
-            $this->restResourceBuilderInterfaceMock,
-            $this->companyUsersRestApiClientInterfaceMock,
-            $this->companyUsersRestApiToCompanyClientInterfaceMock,
-            $this->restApiErrorInterfaceMock,
+        $this->companyUsersWriter = new CompanyUserCreator(
+            $this->restResourceBuilder,
+            $this->clientMock,
+            $this->restApiErrorMock,
         );
     }
 
@@ -184,18 +120,18 @@ class CompanyUsersWriterTest extends Unit
      */
     public function testCreateCompanyUserAccessDeniedError(): void
     {
-        $this->restRequestInterfaceMock->expects(static::atLeastOnce())
+        $this->restRequestMock->expects(static::atLeastOnce())
             ->method('getRestUser')
             ->willReturn(null);
 
-        $this->restApiErrorInterfaceMock->expects(static::atLeastOnce())
+        $this->restApiErrorMock->expects(static::atLeastOnce())
             ->method('addAccessDeniedError')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->assertEquals(
-            $this->restResponseInterfaceMock,
-            $this->companyUsersWriter->createCompanyUser(
-                $this->restRequestInterfaceMock,
+        static::assertEquals(
+            $this->restResponseMock,
+            $this->companyUsersWriter->create(
+                $this->restRequestMock,
                 $this->restCompanyUsersRequestAttributesTransferMock,
             ),
         );
@@ -211,7 +147,7 @@ class CompanyUsersWriterTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->restRequestInterfaceMock->expects(static::atLeastOnce())
+        $this->restRequestMock->expects(static::atLeastOnce())
             ->method('getRestUser')
             ->willReturn($restUserMock);
 
@@ -223,7 +159,7 @@ class CompanyUsersWriterTest extends Unit
             ->method('setCurrentCustomer')
             ->willReturn($this->restCompanyUsersRequestAttributesTransferMock);
 
-        $this->companyUsersRestApiClientInterfaceMock->expects($this->atLeastOnce())
+        $this->clientMock->expects($this->atLeastOnce())
             ->method('create')
             ->with($this->restCompanyUsersRequestAttributesTransferMock)
             ->willReturn($this->restCompanyUsersResponseTransferMock);
@@ -236,27 +172,27 @@ class CompanyUsersWriterTest extends Unit
             ->method('getRestCompanyUsersResponseAttributes')
             ->willReturn($this->restCompanyUsersResponseAttributesTransferMock);
 
-        $this->restResourceBuilderInterfaceMock->expects(static::atLeastOnce())
+        $this->restResourceBuilder->expects(static::atLeastOnce())
             ->method('createRestResource')
-            ->willReturn($this->restResourceInterfaceMock);
+            ->willReturn($this->restResourceMock);
 
-        $this->restResourceInterfaceMock->expects(static::atLeastOnce())
+        $this->restResourceMock->expects(static::atLeastOnce())
             ->method('setPayload')
-            ->willReturn($this->restResourceInterfaceMock);
+            ->willReturn($this->restResourceMock);
 
-        $this->restResourceBuilderInterfaceMock->expects(static::atLeastOnce())
+        $this->restResourceBuilder->expects(static::atLeastOnce())
             ->method('createRestResponse')
-            ->willReturn($this->restResponseInterfaceMock);
+            ->willReturn($this->restResponseMock);
 
-        $this->restResponseInterfaceMock->expects(static::atLeastOnce())
+        $this->restResponseMock->expects(static::atLeastOnce())
             ->method('addResource')
-            ->with($this->restResourceInterfaceMock)
-            ->willReturn($this->restResponseInterfaceMock);
+            ->with($this->restResourceMock)
+            ->willReturn($this->restResponseMock);
 
-        $this->assertInstanceOf(
-            RestResponseInterface::class,
-            $this->companyUsersWriter->createCompanyUser(
-                $this->restRequestInterfaceMock,
+        static::assertEquals(
+            $this->restResponseMock,
+            $this->companyUsersWriter->create(
+                $this->restRequestMock,
                 $this->restCompanyUsersRequestAttributesTransferMock,
             ),
         );

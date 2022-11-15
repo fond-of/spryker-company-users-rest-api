@@ -76,6 +76,33 @@ class RestResponseBuilderTest extends Unit
     /**
      * @return void
      */
+    public function testBuildCouldNotUpdateCompanyUserRestResponse(): void
+    {
+        $this->restResourceBuilderMock->expects(static::atLeastOnce())
+            ->method('createRestResponse')
+            ->willReturn($this->restResponseMock);
+
+        $this->restResponseMock->expects(static::atLeastOnce())
+            ->method('addError')
+            ->with(
+                static::callback(
+                    static function (RestErrorMessageTransfer $restErrorMessageTransfer) {
+                        return $restErrorMessageTransfer->getDetail() === CompanyUsersRestApiConfig::RESPONSE_DETAIL_COULD_NOT_UPDATE_COMPANY_USER
+                            && $restErrorMessageTransfer->getCode() === CompanyUsersRestApiConfig::RESPONSE_CODE_COULD_NOT_UPDATE_COMPANY_USER
+                            && $restErrorMessageTransfer->getStatus() === Response::HTTP_BAD_REQUEST;
+                    },
+                ),
+            )->willReturn($this->restResponseMock);
+
+        static::assertEquals(
+            $this->restResponseMock,
+            $this->restResponseBuilder->buildCouldNotUpdateCompanyUserRestResponse(),
+        );
+    }
+
+    /**
+     * @return void
+     */
     public function testBuildEmptyRestResponse(): void
     {
         $this->restResourceBuilderMock->expects(static::atLeastOnce())

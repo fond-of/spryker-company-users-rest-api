@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types = 1);
-
-namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers;
+namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater;
 
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface;
 use Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface;
 
-interface CompanyUsersWriterInterface
+interface CompanyUserUpdaterInterface
 {
     /**
      * @param \Spryker\Glue\GlueApplication\Rest\Request\Data\RestRequestInterface $restRequest
@@ -16,7 +14,7 @@ interface CompanyUsersWriterInterface
      *
      * @return \Spryker\Glue\GlueApplication\Rest\JsonApi\RestResponseInterface
      */
-    public function createCompanyUser(
+    public function update(
         RestRequestInterface $restRequest,
         RestCompanyUsersRequestAttributesTransfer $restCompanyUsersRequestAttributesTransfer
     ): RestResponseInterface;
