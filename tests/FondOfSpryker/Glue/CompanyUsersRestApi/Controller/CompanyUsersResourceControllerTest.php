@@ -5,8 +5,6 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Controller;
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreatorInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdaterInterface;

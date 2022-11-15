@@ -49,7 +49,7 @@ class RestDeleteCompanyUserRequestMapperTest extends Unit
 
         $this->restDeleteCompanyUserRequestMapper = new RestDeleteCompanyUserRequestMapper(
             $this->idCustomerFilterMock,
-            $this->companyUserReferenceFilterMock
+            $this->companyUserReferenceFilterMock,
         );
     }
 

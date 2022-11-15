@@ -5,8 +5,6 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi\Zed;
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToZedRequestClientInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
@@ -26,11 +24,11 @@ class CompanyUsersRestApiStubTest extends Unit
      * @var \Generated\Shared\Transfer\CustomerTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $customerTransferMock;
+
     /**
      * @var \Generated\Shared\Transfer\CompanyUserCollectionTransfer&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUserCollectionTransferMock;
-
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer
@@ -41,7 +39,6 @@ class CompanyUsersRestApiStubTest extends Unit
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\RestCompanyUsersResponseTransfer
      */
     protected $restCompanyUsersResponseTransferMock;
-
 
     /**
      * @var \Generated\Shared\Transfer\RestDeleteCompanyUserRequestTransfer|\PHPUnit\Framework\MockObject\MockObject
@@ -67,6 +64,7 @@ class CompanyUsersRestApiStubTest extends Unit
      * @var \FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStub
      */
     protected $companyUsersRestApiStub;
+
     /**
      * @return void
      */

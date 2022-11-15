@@ -5,8 +5,6 @@ namespace FondOfSpryker\Client\CompanyUsersRestApi;
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\Zed\CompanyUsersRestApiStubInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
-use Generated\Shared\Transfer\CompanyUserResponseTransfer;
-use Generated\Shared\Transfer\CompanyUserTransfer;
 use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Generated\Shared\Transfer\RestCompanyUsersResponseTransfer;
