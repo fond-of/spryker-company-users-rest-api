@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator;
 
+use ArrayObject;
 use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiError;
@@ -218,7 +219,7 @@ class CompanyUserCreatorTest extends Unit
             $this->restResponseMock,
             $this->companyUserCreator->create(
                 $this->restRequestMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
+                $this->restCompanyUsersRequestAttributesTransferMock,
             ),
         );
     }
@@ -228,7 +229,7 @@ class CompanyUserCreatorTest extends Unit
      */
     public function testCreateWithFalseCompanyUserResponseTransfer(): void
     {
-        $errors = new \ArrayObject();
+        $errors = new ArrayObject();
         $errors->append($this->restCompanyUsersErrorTransfer);
 
         $this->restRequestMock->expects(static::atLeastOnce())
@@ -276,7 +277,7 @@ class CompanyUserCreatorTest extends Unit
             $this->restResponseMock,
             $this->companyUserCreator->create(
                 $this->restRequestMock,
-                $this->restCompanyUsersRequestAttributesTransferMock
+                $this->restCompanyUsersRequestAttributesTransferMock,
             ),
         );
     }
