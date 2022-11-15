@@ -56,12 +56,12 @@ class CompanyUsersRestApiToCompanyUserReferenceFacadeBridgeTest extends Unit
      */
     public function testFindCompanyUserByCompanyUserReference(): void
     {
-        $this->companyUserReferenceFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->companyUserReferenceFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findCompanyUserByCompanyUserReference')
             ->willReturn($this->companyUserResponseTransferMock);
 
-        $this->assertInstanceOf(
-            CompanyUserResponseTransfer::class,
+        static::assertEquals(
+            $this->companyUserResponseTransferMock,
             $this->companyUsersRestApiToCompanyUserReferenceFacadeBridge->findCompanyUserByCompanyUserReference(
                 $this->companyUserTransferMock,
             ),

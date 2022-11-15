@@ -6,6 +6,7 @@ use Codeception\Test\Unit;
 use FondOfSpryker\Client\CompanyUsersRestApi\CompanyUsersRestApiClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Dependency\Client\CompanyUsersRestApiToCompanyUserReferenceClientInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Mapper\CompanyUsersMapperInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReader;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Validation\RestApiErrorInterface;
 use Generated\Shared\Transfer\CompanyUserCollectionTransfer;
 use Generated\Shared\Transfer\CompanyUserResponseTransfer;
@@ -85,7 +86,7 @@ class CompanyUsersReaderTest extends Unit
     protected $companyUserResponseTransferMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReader
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReader
      */
     protected $companyUsersReader;
 
@@ -144,7 +145,7 @@ class CompanyUsersReaderTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersReader = new CompanyUsersReader(
+        $this->companyUsersReader = new CompanyUserReader(
             $this->restResourceBuilderMock,
             $this->clientMock,
             $this->companyUserReferenceClientMock,

@@ -44,24 +44,24 @@ class CompanyUserMapperTest extends Unit
      */
     public function testMapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer(): void
     {
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getIsActive')
             ->willReturn(true);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('setIsActive')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->restCompanyUsersRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCompanyUsersRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getIsDefault')
             ->willReturn(true);
 
-        $this->companyUserTransferMock->expects($this->atLeastOnce())
+        $this->companyUserTransferMock->expects(static::atLeastOnce())
             ->method('setIsDefault')
             ->willReturn($this->companyUserTransferMock);
 
-        $this->assertInstanceOf(
-            CompanyUserTransfer::class,
+        static::assertEquals(
+            $this->companyUserTransferMock,
             $this->companyUserMapper->mapRestCompanyUserRequestAttributesTransferToCompanyUserTransfer(
                 $this->restCompanyUsersRequestAttributesTransferMock,
                 $this->companyUserTransferMock,

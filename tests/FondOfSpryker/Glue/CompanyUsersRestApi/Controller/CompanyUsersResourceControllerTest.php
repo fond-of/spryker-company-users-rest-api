@@ -4,11 +4,9 @@ namespace FondOfSpryker\Glue\CompanyUsersRestApi\Controller;
 
 use Codeception\Test\Unit;
 use FondOfSpryker\Glue\CompanyUsersRestApi\CompanyUsersRestApiFactory;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersUpdaterInterface;
-use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersWriterInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Creator\CompanyUserCreatorInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Deleter\CompanyUserDeleterInterface;
+use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReaderInterface;
 use FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Updater\CompanyUserUpdaterInterface;
 use Generated\Shared\Transfer\RestCompanyUsersRequestAttributesTransfer;
 use Spryker\Glue\GlueApplication\Rest\JsonApi\RestResourceInterface;
@@ -34,7 +32,7 @@ class CompanyUsersResourceControllerTest extends Unit
     protected $companyUserCreatorMock;
 
     /**
-     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\CompanyUsers\CompanyUsersReaderInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
+     * @var \FondOfSpryker\Glue\CompanyUsersRestApi\Processor\Reader\CompanyUserReaderInterface&\PHPUnit\Framework\MockObject\MockObject|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $companyUsersReaderMock;
 
@@ -85,7 +83,7 @@ class CompanyUsersResourceControllerTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->companyUsersReaderMock = $this->getMockBuilder(CompanyUsersReaderInterface::class)
+        $this->companyUsersReaderMock = $this->getMockBuilder(CompanyUserReaderInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -165,7 +163,7 @@ class CompanyUsersResourceControllerTest extends Unit
         $uuid = '6486c64d-cb3f-410f-8df3-352fc2d2ec49';
 
         $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createCompanyUsersReader')
+            ->method('createCompanyUserReader')
             ->willReturn($this->companyUsersReaderMock);
 
         $this->restRequestMock->expects(static::atLeastOnce())
@@ -198,7 +196,7 @@ class CompanyUsersResourceControllerTest extends Unit
     public function testGetAction(): void
     {
         $this->factoryMock->expects(static::atLeastOnce())
-            ->method('createCompanyUsersReader')
+            ->method('createCompanyUserReader')
             ->willReturn($this->companyUsersReaderMock);
 
         $this->restRequestMock->expects(static::atLeastOnce())
