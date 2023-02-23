@@ -87,7 +87,7 @@ class CompanyUserUpdater implements CompanyUserUpdaterInterface
 
         $companyUserTransfer = $companyUserTransfer->setCompanyRoleCollection($companyRoleCollectionTransfer);
         $companyUserTransfer = $companyUserTransfer->setCustomer(
-            (new CustomerTransfer())->setIdCustomer($companyUserTransfer->getFkCustomer())
+            (new CustomerTransfer())->setIdCustomer($companyUserTransfer->getFkCustomer()),
         );
         $companyUserResponseTransfer = $this->companyUserFacade->update($companyUserTransfer);
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
