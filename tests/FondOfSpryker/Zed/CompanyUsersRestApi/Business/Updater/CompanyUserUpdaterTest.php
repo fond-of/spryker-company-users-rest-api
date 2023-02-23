@@ -152,6 +152,14 @@ class CompanyUserUpdaterTest extends Unit
             ->with($this->companyRoleCollectionTransferMock)
             ->willReturn($this->updatableCompanyUserTransferMock);
 
+        $this->updatableCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getFkCustomer')
+            ->willReturn(1);
+
+        $this->updatableCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('setCustomer')
+            ->willReturnSelf();
+
         $this->companyUserFacadeMock->expects(static::atLeastOnce())
             ->method('update')
             ->with($this->updatableCompanyUserTransferMock)
@@ -302,6 +310,14 @@ class CompanyUserUpdaterTest extends Unit
             ->method('setCompanyRoleCollection')
             ->with($this->companyRoleCollectionTransferMock)
             ->willReturn($this->updatableCompanyUserTransferMock);
+
+        $this->updatableCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('getFkCustomer')
+            ->willReturn(1);
+
+        $this->updatableCompanyUserTransferMock->expects(static::atLeastOnce())
+            ->method('setCustomer')
+            ->willReturnSelf();
 
         $this->companyUserFacadeMock->expects(static::atLeastOnce())
             ->method('update')
