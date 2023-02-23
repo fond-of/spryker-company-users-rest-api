@@ -57,19 +57,17 @@ class CompanyUsersRestApiRepository extends AbstractRepository implements Compan
 
             $company = $companyUser->getCompany();
 
-            if ($companyUser->getCompany() !== null) {
-                $companyTransfer = (new CompanyTransfer())
-                    ->fromArray($companyUser->getCompany()->toArray(), true);
+            $companyTransfer = (new CompanyTransfer())
+                ->fromArray($companyUser->getCompany()->toArray(), true);
 
-                if ($company->getPriceList() !== null) {
-                    $companyTransfer->setPriceList(
-                        (new PriceListTransfer())
-                            ->fromArray($company->getPriceList()->toArray(), true),
-                    );
-                }
-
-                $companyUserTransfer->setCompany($companyTransfer);
+            if ($company->getPriceList() !== null) {
+                $companyTransfer->setPriceList(
+                    (new PriceListTransfer())
+                        ->fromArray($company->getPriceList()->toArray(), true),
+                );
             }
+
+            $companyUserTransfer->setCompany($companyTransfer);
 
             if ($companyUser->getCompanyBusinessUnit() !== null) {
                 $companyUserTransfer->setCompanyBusinessUnit(
