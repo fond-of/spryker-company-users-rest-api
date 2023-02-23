@@ -7,6 +7,7 @@ use FondOfSpryker\Zed\CompanyUsersRestApi\Business\Reader\CompanyUserReaderInter
 use FondOfSpryker\Zed\CompanyUsersRestApi\Communication\Plugin\PermissionExtension\UpdateCompanyUserPermissionPlugin;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToCompanyUserFacadeInterface;
 use FondOfSpryker\Zed\CompanyUsersRestApi\Dependency\Facade\CompanyUsersRestApiToPermissionFacadeInterface;
+use Generated\Shared\Transfer\CustomerTransfer;
 use Generated\Shared\Transfer\RestWriteCompanyUserRequestTransfer;
 use Generated\Shared\Transfer\RestWriteCompanyUserResponseTransfer;
 
@@ -85,6 +86,9 @@ class CompanyUserUpdater implements CompanyUserUpdaterInterface
         );
 
         $companyUserTransfer = $companyUserTransfer->setCompanyRoleCollection($companyRoleCollectionTransfer);
+        $companyUserTransfer = $companyUserTransfer->setCustomer(
+            (new CustomerTransfer())->setIdCustomer($companyUserTransfer->getFkCustomer()),
+        );
         $companyUserResponseTransfer = $this->companyUserFacade->update($companyUserTransfer);
         $companyUserTransfer = $companyUserResponseTransfer->getCompanyUser();
 
